@@ -16,7 +16,7 @@ public class CraftContainer extends net.minecraft.world.inventory.AbstractContai
         super(getNotchInventoryType(view.getTopInventory()), id);
         this.view = view;
         // TODO: Do we need to check that it really is a CraftInventory?
-        net.minecraft.world.inventory.AbstractContainerMenu top = ((CraftInventory) view.getTopInventory()).getInventory();
+        net.minecraft.world.Container top = ((CraftInventory) view.getTopInventory()).getInventory();
         net.minecraft.world.entity.player.Inventory bottom = (net.minecraft.world.entity.player.Inventory) ((CraftInventory) view.getBottomInventory()).getInventory();
         cachedType = view.getType();
         setupSlots(top, bottom, player);
@@ -106,7 +106,7 @@ public class CraftContainer extends net.minecraft.world.inventory.AbstractContai
         }
     }
 
-    private void setupSlots(net.minecraft.world.inventory.AbstractContainerMenu top, net.minecraft.world.entity.player.Inventory bottom, net.minecraft.world.entity.player.Player entityhuman) {
+    private void setupSlots(net.minecraft.world.Container top, net.minecraft.world.entity.player.Inventory bottom, net.minecraft.world.entity.player.Player entityhuman) {
         int windowId = -1;
         switch (cachedType) {
             case CREATIVE:
@@ -196,7 +196,7 @@ public class CraftContainer extends net.minecraft.world.inventory.AbstractContai
         }
     }
 
-    private void setupWorkbench(net.minecraft.world.inventory.AbstractContainerMenu top, net.minecraft.world.inventory.AbstractContainerMenu bottom) {
+    private void setupWorkbench(net.minecraft.world.Container top, net.minecraft.world.Container bottom) {
         // This code copied from net.minecraft.world.inventory.CraftingMenu
         this.addSlot(new net.minecraft.world.inventory.Slot(top, 0, 124, 35));
 
@@ -221,7 +221,7 @@ public class CraftContainer extends net.minecraft.world.inventory.AbstractContai
         // End copy from net.minecraft.world.inventory.CraftingMenu
     }
 
-    private void setupAnvil(net.minecraft.world.inventory.AbstractContainerMenu top, net.minecraft.world.inventory.AbstractContainerMenu bottom) {
+    private void setupAnvil(net.minecraft.world.Container top, net.minecraft.world.Container bottom) {
         // This code copied from ContainerAnvilAbstract
         this.addSlot(new net.minecraft.world.inventory.Slot(top, 0, 27, 47));
         this.addSlot(new net.minecraft.world.inventory.Slot(top, 1, 76, 47));
@@ -242,7 +242,7 @@ public class CraftContainer extends net.minecraft.world.inventory.AbstractContai
         // End copy from ContainerAnvilAbstract
     }
 
-    private void setupSmithing(net.minecraft.world.inventory.AbstractContainerMenu top, net.minecraft.world.inventory.AbstractContainerMenu bottom) {
+    private void setupSmithing(net.minecraft.world.Container top, net.minecraft.world.Container bottom) {
         // This code copied from ContainerSmithing
         this.addSlot(new net.minecraft.world.inventory.Slot(top, 0, 8, 48));
         this.addSlot(new net.minecraft.world.inventory.Slot(top, 1, 26, 48));
@@ -264,7 +264,7 @@ public class CraftContainer extends net.minecraft.world.inventory.AbstractContai
         // End copy from ContainerSmithing
     }
 
-    private void setupStoneCutter(net.minecraft.world.inventory.AbstractContainerMenu top, net.minecraft.world.inventory.AbstractContainerMenu bottom) {
+    private void setupStoneCutter(net.minecraft.world.Container top, net.minecraft.world.Container bottom) {
         // This code copied from ContainerStonecutter
         this.addSlot(new net.minecraft.world.inventory.Slot(top, 0, 20, 33));
         this.addSlot(new net.minecraft.world.inventory.Slot(top, 1, 143, 33));
