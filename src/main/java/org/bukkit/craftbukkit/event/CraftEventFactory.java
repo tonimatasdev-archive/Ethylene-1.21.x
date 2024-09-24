@@ -1405,7 +1405,7 @@ public class CraftEventFactory {
     }
 
     public static void callRecipeBookSettingsEvent(net.minecraft.server.level.ServerPlayer player, net.minecraft.world.inventory.RecipeBookType type, boolean open, boolean filter) {
-        PlayerRecipeBookSettingsChangeEvent.net.minecraft.world.inventory.RecipeBookType bukkitType = PlayerRecipeBookSettingsChangeEvent.net.minecraft.world.inventory.RecipeBookType.values()[type.ordinal()];
+        net.minecraft.world.inventory.RecipeBookType bukkitType = net.minecraft.world.inventory.RecipeBookType.values()[type.ordinal()];
         Bukkit.getPluginManager().callEvent(new PlayerRecipeBookSettingsChangeEvent(player.getBukkitEntity(), bukkitType, open, filter));
     }
 

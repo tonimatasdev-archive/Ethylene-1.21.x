@@ -498,7 +498,7 @@ public class CraftBlock implements Block {
 
         // Modelled off EntityHuman#hasBlock
         if (item == null || CraftBlockData.isPreferredTool(iblockdata, nms)) {
-            return net.minecraft.world.level.block.Block.getDrops(iblockdata, (net.minecraft.server.level.ServerLevel) world.getMinecraftWorld(), position, world.getBlockEntity(position), entity == null ? null : ((CraftEntity) entity).getHandle(), nms)
+            return net.minecraft.world.level.block.Block.getDrops(iblockdata, (net.minecraft.server.level.ServerLevel) ((EthyleneWorldGenLevel) world).getMinecraftWorld(), position, world.getBlockEntity(position), entity == null ? null : ((CraftEntity) entity).getHandle(), nms)
                     .stream().map(CraftItemStack::asBukkitCopy).collect(Collectors.toList());
         } else {
             return Collections.emptyList();
@@ -588,7 +588,7 @@ public class CraftBlock implements Block {
     public boolean canPlace(BlockData data) {
         Preconditions.checkArgument(data != null, "BlockData cannot be null");
         net.minecraft.world.level.block.state.BlockState iblockdata = ((CraftBlockData) data).getState();
-        net.minecraft.world.level.Level world = this.world.getMinecraftWorld();
+        net.minecraft.world.level.Level world = ((EthyleneWorldGenLevel) this.world).getMinecraftWorld();
 
         return iblockdata.canSurvive(world, this.position);
     }

@@ -458,6 +458,11 @@ accessible field net/minecraft/world/level/block/entity/trialspawner/TrialSpawne
 accessible field net/minecraft/world/level/block/entity/trialspawner/TrialSpawner ominousConfig Lnet/minecraft/world/level/block/entity/trialspawner/TrialSpawnerConfig;
 accessible field net/minecraft/server/ReloadableServerResources commands Lnet/minecraft/commands/Commands;
 
+mutable field net/minecraft/world/level/saveddata/maps/MapItemSavedData scale B
+mutable field net/minecraft/world/level/saveddata/maps/MapItemSavedData locked Z
+mutable field net/minecraft/world/item/enchantment/ItemEnchantments$Mutable showInTooltip Z
+mutable field net/minecraft/server/dedicated/DedicatedServer serverLinks Lnet/minecraft/server/ServerLinks;
+mutable field net/minecraft/world/entity/LivingEntity invulnerableDuration I
 mutable field net/minecraft/server/ReloadableServerResources commands Lnet/minecraft/commands/Commands;
 mutable field net/minecraft/world/inventory/AbstractContainerMenu lastSlots Lnet/minecraft/core/NonNullList;
 mutable field net/minecraft/world/inventory/AbstractContainerMenu slots Lnet/minecraft/core/NonNullList;
