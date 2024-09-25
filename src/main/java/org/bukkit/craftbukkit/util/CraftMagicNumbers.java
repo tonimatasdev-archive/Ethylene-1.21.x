@@ -17,6 +17,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import net.ethylenemc.EthyleneStatic;
 import org.bukkit.Bukkit;
 import org.bukkit.FeatureFlag;
 import org.bukkit.Keyed;
@@ -219,7 +221,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
         net.minecraft.world.item.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
 
         try {
-            nmsStack.applyComponents(new net.minecraft.commands.arguments.item.ItemParser(net.minecraft.commands.Commands.createValidationContext(net.minecraft.server.MinecraftServer.getDefaultRegistryAccess())).parse(new StringReader(arguments)).components());
+            nmsStack.applyComponents(new net.minecraft.commands.arguments.item.ItemParser(net.minecraft.commands.Commands.createValidationContext(EthyleneStatic.getDefaultRegistryAccess())).parse(new StringReader(arguments)).components());
         } catch (CommandSyntaxException ex) {
             Logger.getLogger(CraftMagicNumbers.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -230,7 +232,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
     }
 
     private static File getBukkitDataPackFolder() {
-        return new File(net.minecraft.server.MinecraftServer.getServer().getWorldPath(net.minecraft.world.level.storage.LevelResource.DATAPACK_DIR).toFile(), "bukkit");
+        return new File(EthyleneStatic.getServer().getWorldPath(net.minecraft.world.level.storage.LevelResource.DATAPACK_DIR).toFile(), "bukkit");
     }
 
     @Override
@@ -241,7 +243,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
         JsonElement jsonelement = net.minecraft.server.ServerAdvancementManager.GSON.fromJson(advancement, JsonElement.class);
         net.minecraft.advancements.Advancement nms = net.minecraft.advancements.Advancement.CODEC.parse(JsonOps.INSTANCE, jsonelement).getOrThrow(JsonParseException::new);
         if (nms != null) {
-            net.minecraft.server.MinecraftServer.getServer().getAdvancements().advancements.put(minecraftkey, new net.minecraft.advancements.AdvancementHolder(minecraftkey, nms));
+            EthyleneStatic.getServer().getAdvancements().advancements.put(minecraftkey, new net.minecraft.advancements.AdvancementHolder(minecraftkey, nms));
             Advancement bukkit = Bukkit.getAdvancement(key);
 
             if (bukkit != null) {
@@ -254,7 +256,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
                     Bukkit.getLogger().log(Level.SEVERE, "Error saving advancement " + key, ex);
                 }
 
-                net.minecraft.server.MinecraftServer.getServer().getPlayerList().reloadResources();
+                EthyleneStatic.getServer().getPlayerList().reloadResources();
 
                 return bukkit;
             }
@@ -272,7 +274,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
     @Override
     public void checkSupported(PluginDescriptionFile pdf) throws InvalidPluginException {
         ApiVersion toCheck = ApiVersion.getOrCreateVersion(pdf.getAPIVersion());
-        ApiVersion minimumVersion = net.minecraft.server.MinecraftServer.getServer().server.minimumAPI;
+        ApiVersion minimumVersion = EthyleneStatic.getServer().server.minimumAPI;
 
         if (toCheck.isNewerThan(ApiVersion.CURRENT)) {
             // Newer than supported

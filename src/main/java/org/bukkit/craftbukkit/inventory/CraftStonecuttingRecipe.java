@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.inventory;
 
+import net.ethylenemc.EthyleneStatic;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -24,6 +25,6 @@ public class CraftStonecuttingRecipe extends StonecuttingRecipe implements Craft
     public void addToCraftingManager() {
         ItemStack result = this.getResult();
 
-        net.minecraft.server.MinecraftServer.getServer().getRecipeManager().addRecipe(new net.minecraft.world.item.crafting.RecipeHolder<>(CraftNamespacedKey.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.StonecutterRecipe(this.getGroup(), toNMS(this.getInputChoice(), true), CraftItemStack.asNMSCopy(result))));
+        EthyleneStatic.getServer().getRecipeManager().addRecipe(new net.minecraft.world.item.crafting.RecipeHolder<>(CraftNamespacedKey.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.StonecutterRecipe(this.getGroup(), toNMS(this.getInputChoice(), true), CraftItemStack.asNMSCopy(result))));
     }
 }

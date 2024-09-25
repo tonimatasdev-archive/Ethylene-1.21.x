@@ -44,6 +44,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import jline.console.ConsoleReader;
+import net.ethylenemc.EthyleneStatic;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
@@ -308,7 +309,7 @@ public final class CraftServer implements Server {
         overrideSpawnLimits();
         console.autosavePeriod = configuration.getInt("ticks-per.autosave");
         warningState = WarningState.value(configuration.getString("settings.deprecated-verbose"));
-        net.minecraft.server.level.TicketType.PLUGIN.timeout = configuration.getInt("chunk-gc.period-in-ticks");
+        EthyleneStatic.PLUGIN.timeout = configuration.getInt("chunk-gc.period-in-ticks");
         minimumAPI = ApiVersion.getOrCreateVersion(configuration.getString("settings.minimum-api"));
         loadIcon();
         loadCompatibilities();
@@ -853,7 +854,7 @@ public final class CraftServer implements Server {
         console.setMotd(config.motd);
         overrideSpawnLimits();
         warningState = WarningState.value(configuration.getString("settings.deprecated-verbose"));
-        net.minecraft.server.level.TicketType.PLUGIN.timeout = configuration.getInt("chunk-gc.period-in-ticks");
+        EthyleneStatic.PLUGIN.timeout = configuration.getInt("chunk-gc.period-in-ticks");
         minimumAPI = ApiVersion.getOrCreateVersion(configuration.getString("settings.minimum-api"));
         printSaveWarning = false;
         console.autosavePeriod = configuration.getInt("ticks-per.autosave");

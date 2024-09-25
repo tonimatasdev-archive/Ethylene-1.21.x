@@ -1,6 +1,8 @@
 package org.bukkit.craftbukkit.block;
 
 import java.util.Set;
+
+import net.ethylenemc.EthyleneStatic;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.TileState;
@@ -37,7 +39,7 @@ public class CraftBlockEntityState<T extends net.minecraft.world.level.block.ent
 
     private net.minecraft.core.RegistryAccess getRegistryAccess() {
         net.minecraft.world.level.LevelAccessor worldHandle = getWorldHandle();
-        return (worldHandle != null) ? worldHandle.registryAccess() : net.minecraft.server.MinecraftServer.getDefaultRegistryAccess();
+        return (worldHandle != null) ? worldHandle.registryAccess() : EthyleneStatic.getDefaultRegistryAccess();
     }
 
     private T createSnapshot(T tileEntity) {

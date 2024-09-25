@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.logging.Level;
+
+import net.ethylenemc.interfaces.commands.EthyleneCommandSourceStack;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
@@ -38,12 +40,12 @@ public class BukkitCommandWrapper implements com.mojang.brigadier.Command<net.mi
 
     @Override
     public boolean test(net.minecraft.commands.CommandSourceStack wrapper) {
-        return command.testPermissionSilent(wrapper.getBukkitSender());
+        return command.testPermissionSilent(((EthyleneCommandSourceStack) wrapper).getBukkitSender());
     }
 
     @Override
     public int run(CommandContext<net.minecraft.commands.CommandSourceStack> context) throws CommandSyntaxException {
-        CommandSender sender = context.getSource().getBukkitSender();
+        CommandSender sender = ((EthyleneCommandSourceStack) context.getSource()).getBukkitSender();
 
         try {
             return server.dispatchCommand(sender, context.getInput()) ? 1 : 0;
@@ -56,7 +58,7 @@ public class BukkitCommandWrapper implements com.mojang.brigadier.Command<net.mi
 
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<net.minecraft.commands.CommandSourceStack> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-        List<String> results = server.tabComplete(context.getSource().getBukkitSender(), builder.getInput(), context.getSource().getLevel(), context.getSource().getPosition(), true);
+        List<String> results = server.tabComplete(((EthyleneCommandSourceStack) context.getSource()).getBukkitSender(), builder.getInput(), context.getSource().getLevel(), context.getSource().getPosition(), true);
 
         // Defaults to sub nodes, but we have just one giant args node, so offset accordingly
         builder = builder.createOffset(builder.getInput().lastIndexOf(' ') + 1);

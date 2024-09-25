@@ -2,6 +2,7 @@ package org.bukkit.craftbukkit.block;
 
 import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
+import net.ethylenemc.EthyleneStatic;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -58,7 +59,7 @@ public class CraftSkull extends CraftBlockEntityState<net.minecraft.world.level.
             return false;
         }
 
-        GameProfile profile = net.minecraft.server.MinecraftServer.getServer().getProfileCache().get(name).orElse(null);
+        GameProfile profile = EthyleneStatic.getServer().getProfileCache().get(name).orElse(null);
         if (profile == null) {
             return false;
         }

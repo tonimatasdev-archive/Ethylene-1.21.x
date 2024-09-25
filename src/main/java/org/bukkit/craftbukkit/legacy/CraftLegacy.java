@@ -8,6 +8,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
+import net.ethylenemc.EthyleneStatic;
+import net.ethylenemc.interfaces.server.EthyleneMinecraftServer;
+import net.minecraft.server.MinecraftServer;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.entity.EntityType;
@@ -246,7 +250,7 @@ public final class CraftLegacy {
 
     static {
         System.err.println("Initializing Legacy Material Support. Unless you have legacy plugins and/or data this is a bug!");
-        if (net.minecraft.server.MinecraftServer.getServer() != null && net.minecraft.server.MinecraftServer.getServer().isDebugging()) {
+        if (EthyleneStatic.getServer() != null && ((EthyleneMinecraftServer) EthyleneStatic.getServer()).isDebugging()) {
             new Exception().printStackTrace();
         }
 

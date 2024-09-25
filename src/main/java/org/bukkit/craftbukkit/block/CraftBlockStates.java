@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import javax.annotation.Nullable;
+
+import net.ethylenemc.EthyleneStatic;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -349,7 +351,7 @@ public final class CraftBlockStates {
 
     @Deprecated
     public static BlockState getBlockState(net.minecraft.core.BlockPos blockPosition, Material material, @Nullable net.minecraft.nbt.CompoundTag blockEntityTag) {
-        return getBlockState(net.minecraft.server.MinecraftServer.getDefaultRegistryAccess(), blockPosition, material, blockEntityTag);
+        return getBlockState(EthyleneStatic.getDefaultRegistryAccess(), blockPosition, material, blockEntityTag);
     }
 
     public static BlockState getBlockState(net.minecraft.world.level.LevelReader world, net.minecraft.core.BlockPos blockPosition, Material material, @Nullable net.minecraft.nbt.CompoundTag blockEntityTag) {
@@ -364,7 +366,7 @@ public final class CraftBlockStates {
 
     @Deprecated
     public static BlockState getBlockState(net.minecraft.world.level.block.state.BlockState blockData, @Nullable net.minecraft.nbt.CompoundTag blockEntityTag) {
-        return getBlockState(net.minecraft.server.MinecraftServer.getDefaultRegistryAccess(), net.minecraft.core.BlockPos.ZERO, blockData, blockEntityTag);
+        return getBlockState(EthyleneStatic.getDefaultRegistryAccess(), net.minecraft.core.BlockPos.ZERO, blockData, blockEntityTag);
     }
 
     public static BlockState getBlockState(net.minecraft.world.level.LevelReader world, net.minecraft.core.BlockPos blockPosition, net.minecraft.world.level.block.state.BlockState blockData, @Nullable net.minecraft.nbt.CompoundTag blockEntityTag) {

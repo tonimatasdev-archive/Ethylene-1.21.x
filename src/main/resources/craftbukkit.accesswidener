@@ -460,6 +460,9 @@ accessible field net/minecraft/server/ReloadableServerResources commands Lnet/mi
 accessible method net/minecraft/world/item/crafting/Ingredient$ItemValue <init> (Lnet/minecraft/world/item/ItemStack;)V
 accessible method net/minecraft/world/item/crafting/Ingredient <init> (Ljava/util/stream/Stream;)V
 accessible method net/minecraft/world/level/biome/Biome$ClimateSettings downfall ()F
+accessible field net/minecraft/server/ServerAdvancementManager advancements Ljava/util/Map;
+accessible field net/minecraft/world/item/crafting/RecipeManager byType Lcom/google/common/collect/Multimap;
+accessible field net/minecraft/server/level/TicketType timeout J
 
 mutable field net/minecraft/world/level/saveddata/maps/MapItemSavedData scale B
 mutable field net/minecraft/world/level/saveddata/maps/MapItemSavedData locked Z

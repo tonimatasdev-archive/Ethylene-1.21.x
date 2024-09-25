@@ -2,13 +2,15 @@ package org.bukkit.craftbukkit.inventory;
 
 import java.util.Iterator;
 import java.util.Map;
+
+import net.ethylenemc.EthyleneStatic;
 import org.bukkit.inventory.Recipe;
 
 public class RecipeIterator implements Iterator<Recipe> {
     private final Iterator<Map.Entry<net.minecraft.world.item.crafting.RecipeType<?>, net.minecraft.world.item.crafting.RecipeHolder<?>>> recipes;
 
     public RecipeIterator() {
-        this.recipes = net.minecraft.server.MinecraftServer.getServer().getRecipeManager().byType.entries().iterator();
+        this.recipes = EthyleneStatic.getServer().getRecipeManager().byType.entries().iterator();
     }
 
     @Override

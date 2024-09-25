@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.ethylenemc.EthyleneStatic;
 import org.bukkit.ChatColor;
 
 public final class CraftChatMessage {
@@ -189,7 +191,7 @@ public final class CraftChatMessage {
     }
 
     public static String toJSON(net.minecraft.network.chat.Component component) {
-        return net.minecraft.network.chat.Component.Serializer.toJson(component, net.minecraft.server.MinecraftServer.getDefaultRegistryAccess());
+        return net.minecraft.network.chat.Component.Serializer.toJson(component, EthyleneStatic.getDefaultRegistryAccess());
     }
 
     public static String toJSONOrNull(net.minecraft.network.chat.Component component) {
@@ -200,7 +202,7 @@ public final class CraftChatMessage {
     public static net.minecraft.network.chat.Component fromJSON(String jsonMessage) throws JsonParseException {
         // Note: This also parses plain Strings to text components.
         // Note: An empty message (empty, or only consisting of whitespace) results in null rather than a parse exception.
-        return net.minecraft.network.chat.Component.Serializer.fromJson(jsonMessage, net.minecraft.server.MinecraftServer.getDefaultRegistryAccess());
+        return net.minecraft.network.chat.Component.Serializer.fromJson(jsonMessage, EthyleneStatic.getDefaultRegistryAccess());
     }
 
     public static net.minecraft.network.chat.Component fromJSONOrNull(String jsonMessage) {

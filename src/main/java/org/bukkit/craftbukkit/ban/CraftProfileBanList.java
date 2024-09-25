@@ -8,6 +8,8 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
+
+import net.ethylenemc.EthyleneStatic;
 import org.bukkit.BanEntry;
 import org.bukkit.ban.ProfileBanList;
 import org.bukkit.craftbukkit.profile.CraftPlayerProfile;
@@ -158,10 +160,10 @@ public class CraftProfileBanList implements ProfileBanList {
     }
 
     static GameProfile getProfileByUUID(UUID uuid) {
-        return (net.minecraft.server.MinecraftServer.getServer() != null) ? net.minecraft.server.MinecraftServer.getServer().getProfileCache().get(uuid).orElse(null) : null;
+        return (EthyleneStatic.getServer() != null) ? EthyleneStatic.getServer().getProfileCache().get(uuid).orElse(null) : null;
     }
 
     static GameProfile getProfileByName(String name) {
-        return (net.minecraft.server.MinecraftServer.getServer() != null) ? net.minecraft.server.MinecraftServer.getServer().getProfileCache().get(name).orElse(null) : null;
+        return (EthyleneStatic.getServer() != null) ? EthyleneStatic.getServer().getProfileCache().get(name).orElse(null) : null;
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import jline.console.completer.Completer;
+import net.ethylenemc.interfaces.server.EthyleneMinecraftServer;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.util.Waitable;
 import org.bukkit.event.server.TabCompleteEvent;
@@ -29,7 +30,7 @@ public class ConsoleCommandCompleter implements Completer {
                 return tabEvent.isCancelled() ? Collections.EMPTY_LIST : tabEvent.getCompletions();
             }
         };
-        this.server.getServer().processQueue.add(waitable);
+        ((EthyleneMinecraftServer) this.server.getServer()).getProcessQueue().add(waitable);
         try {
             List<String> offers = waitable.get();
             if (offers == null) {

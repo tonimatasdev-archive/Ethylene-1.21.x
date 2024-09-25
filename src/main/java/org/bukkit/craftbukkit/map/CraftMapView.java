@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+import net.ethylenemc.EthyleneStatic;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -50,7 +51,7 @@ public final class CraftMapView implements MapView {
     @Override
     public World getWorld() {
         net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension = worldMap.dimension;
-        net.minecraft.server.level.ServerLevel world = net.minecraft.server.MinecraftServer.getServer().getLevel(dimension);
+        net.minecraft.server.level.ServerLevel world = EthyleneStatic.getServer().getLevel(dimension);
 
         if (world != null) {
             return ((EthyleneLevel) world).getWorld();

@@ -24,6 +24,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import net.ethylenemc.EthyleneStatic;
 import org.bukkit.BlockChangeDelegate;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -238,7 +240,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
     @Override
     public boolean unloadChunkRequest(int x, int z) {
         if (isChunkLoaded(x, z)) {
-            world.getChunkSource().removeRegionTicket(net.minecraft.server.level.TicketType.PLUGIN, new net.minecraft.world.level.ChunkPos(x, z), 1, net.minecraft.util.Unit.INSTANCE);
+            world.getChunkSource().removeRegionTicket(EthyleneStatic.PLUGIN, new net.minecraft.world.level.ChunkPos(x, z), 1, net.minecraft.util.Unit.INSTANCE);
         }
 
         return true;
@@ -345,7 +347,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         }
 
         if (chunk instanceof net.minecraft.world.level.chunk.LevelChunk) {
-            world.getChunkSource().addRegionTicket(net.minecraft.server.level.TicketType.PLUGIN, new net.minecraft.world.level.ChunkPos(x, z), 1, net.minecraft.util.Unit.INSTANCE);
+            world.getChunkSource().addRegionTicket(EthyleneStatic.PLUGIN, new net.minecraft.world.level.ChunkPos(x, z), 1, net.minecraft.util.Unit.INSTANCE);
             return true;
         }
 
@@ -373,7 +375,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
         net.minecraft.server.level.DistanceManager chunkDistanceManager = this.world.getChunkSource().chunkMap.distanceManager;
 
-        if (chunkDistanceManager.addRegionTicketAtDistance(net.minecraft.server.level.TicketType.PLUGIN_TICKET, new net.minecraft.world.level.ChunkPos(x, z), 2, plugin)) { // keep in-line with force loading, add at level 31
+        if (chunkDistanceManager.addRegionTicketAtDistance(EthyleneStatic.PLUGIN_TICKET, new net.minecraft.world.level.ChunkPos(x, z), 2, plugin)) { // keep in-line with force loading, add at level 31
             this.getChunkAt(x, z); // ensure loaded
             return true;
         }
@@ -386,7 +388,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         Preconditions.checkNotNull(plugin, "null plugin");
 
         net.minecraft.server.level.DistanceManager chunkDistanceManager = this.world.getChunkSource().chunkMap.distanceManager;
-        return chunkDistanceManager.removeRegionTicketAtDistance(net.minecraft.server.level.TicketType.PLUGIN_TICKET, new net.minecraft.world.level.ChunkPos(x, z), 2, plugin); // keep in-line with force loading, remove at level 31
+        return chunkDistanceManager.removeRegionTicketAtDistance(EthyleneStatic.PLUGIN_TICKET, new net.minecraft.world.level.ChunkPos(x, z), 2, plugin); // keep in-line with force loading, remove at level 31
     }
 
     @Override
@@ -394,7 +396,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         Preconditions.checkNotNull(plugin, "null plugin");
 
         net.minecraft.server.level.DistanceManager chunkDistanceManager = this.world.getChunkSource().chunkMap.distanceManager;
-        chunkDistanceManager.removeAllTicketsFor(net.minecraft.server.level.TicketType.PLUGIN_TICKET, 31, plugin); // keep in-line with force loading, remove at level 31
+        chunkDistanceManager.removeAllTicketsFor(EthyleneStatic.PLUGIN_TICKET, 31, plugin); // keep in-line with force loading, remove at level 31
     }
 
     @Override
@@ -408,7 +410,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
         ImmutableList.Builder<Plugin> ret = ImmutableList.builder();
         for (net.minecraft.server.level.Ticket<?> ticket : tickets) {
-            if (ticket.getType() == net.minecraft.server.level.TicketType.PLUGIN_TICKET) {
+            if (ticket.getType() == EthyleneStatic.PLUGIN_TICKET) {
                 ret.add((Plugin) ticket.key);
             }
         }
@@ -427,7 +429,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
             Chunk chunk = null;
             for (net.minecraft.server.level.Ticket<?> ticket : tickets) {
-                if (ticket.getType() != net.minecraft.server.level.TicketType.PLUGIN_TICKET) {
+                if (ticket.getType() != EthyleneStatic.PLUGIN_TICKET) {
                     continue;
                 }
 
@@ -686,7 +688,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         if (!breakBlocks) {
             explosionType = net.minecraft.world.level.Level.ExplosionInteraction.NONE; // Don't break blocks
         } else if (source == null) {
-            explosionType = net.minecraft.world.level.Level.ExplosionInteraction.STANDARD; // Break blocks, don't decay drops
+            explosionType = net.minecraft.world.level.Level.ExplosionInteraction.valueOf("standard"); // Break blocks, don't decay drops
         } else {
             explosionType = net.minecraft.world.level.Level.ExplosionInteraction.MOB; // Respect mobGriefing gamerule
         }

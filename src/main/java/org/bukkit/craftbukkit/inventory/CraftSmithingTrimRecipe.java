@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.inventory;
 
+import net.ethylenemc.EthyleneStatic;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.RecipeChoice;
@@ -21,6 +22,6 @@ public class CraftSmithingTrimRecipe extends SmithingTrimRecipe implements Craft
 
     @Override
     public void addToCraftingManager() {
-        net.minecraft.server.MinecraftServer.getServer().getRecipeManager().addRecipe(new net.minecraft.world.item.crafting.RecipeHolder<>(CraftNamespacedKey.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.SmithingTrimRecipe(toNMS(this.getTemplate(), false), toNMS(this.getBase(), false), toNMS(this.getAddition(), false))));
+        EthyleneStatic.getServer().getRecipeManager().addRecipe(new net.minecraft.world.item.crafting.RecipeHolder<>(CraftNamespacedKey.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.SmithingTrimRecipe(toNMS(this.getTemplate(), false), toNMS(this.getBase(), false), toNMS(this.getAddition(), false))));
     }
 }

@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import java.util.Optional;
+
+import net.ethylenemc.EthyleneStatic;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -135,7 +137,7 @@ public final class CraftItemFactory implements ItemFactory {
     @Override
     public ItemStack createItemStack(String input) throws IllegalArgumentException {
         try {
-            net.minecraft.commands.arguments.item.ItemParser.ItemResult arg = new net.minecraft.commands.arguments.item.ItemParser(net.minecraft.server.MinecraftServer.getDefaultRegistryAccess()).parse(new StringReader(input));
+            net.minecraft.commands.arguments.item.ItemParser.ItemResult arg = new net.minecraft.commands.arguments.item.ItemParser(EthyleneStatic.getDefaultRegistryAccess()).parse(new StringReader(input));
 
             net.minecraft.world.item.Item item = arg.item().value();
             net.minecraft.world.item.ItemStack nmsItemStack = new net.minecraft.world.item.ItemStack(item);
