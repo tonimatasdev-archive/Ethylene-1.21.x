@@ -35,6 +35,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
+
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.BanEntry;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
@@ -1067,7 +1069,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
             Optional<net.minecraft.server.level.ServerPlayer.RespawnPosAngle> spawnLoc = net.minecraft.server.level.ServerPlayer.findRespawnAndUseSpawnBlock(world, bed, getHandle().getRespawnAngle(), getHandle().isRespawnForced(), true);
             if (spawnLoc.isPresent()) {
                 net.minecraft.server.level.ServerPlayer.RespawnPosAngle vec = spawnLoc.get();
-                return CraftLocation.toBukkit(vec.position(), world.getWorld(), vec.yaw(), 0);
+                return CraftLocation.toBukkit(vec.position(), ((EthyleneLevel) world).getWorld(), vec.yaw(), 0);
             }
         }
         return null;

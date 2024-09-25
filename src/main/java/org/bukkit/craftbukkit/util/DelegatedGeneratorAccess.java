@@ -6,9 +6,11 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+
+import net.ethylenemc.interfaces.world.level.EthyleneWorldGenLevel;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-public abstract class DelegatedGeneratorAccess implements net.minecraft.world.level.WorldGenLevel {
+public abstract class DelegatedGeneratorAccess implements net.minecraft.world.level.WorldGenLevel, EthyleneWorldGenLevel {
 
     private net.minecraft.world.level.WorldGenLevel handle;
 
@@ -52,7 +54,7 @@ public abstract class DelegatedGeneratorAccess implements net.minecraft.world.le
 
     @Override
     public net.minecraft.server.level.ServerLevel getMinecraftWorld() {
-        return handle.getMinecraftWorld();
+        return ((EthyleneWorldGenLevel) handle).getMinecraftWorld();
     }
 
     @Override

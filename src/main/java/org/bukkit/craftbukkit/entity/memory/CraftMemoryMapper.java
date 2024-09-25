@@ -1,6 +1,8 @@
 package org.bukkit.craftbukkit.entity.memory;
 
 import java.util.UUID;
+
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftServer;
@@ -45,7 +47,7 @@ public final class CraftMemoryMapper {
     }
 
     public static Location fromNms(net.minecraft.core.GlobalPos globalPos) {
-        return new org.bukkit.Location(((CraftServer) Bukkit.getServer()).getServer().getLevel(globalPos.dimension()).getWorld(), globalPos.pos().getX(), globalPos.pos().getY(), globalPos.pos().getZ());
+        return new org.bukkit.Location(((EthyleneLevel) ((CraftServer) Bukkit.getServer()).getServer().getLevel(globalPos.dimension())).getWorld(), globalPos.pos().getX(), globalPos.pos().getY(), globalPos.pos().getZ());
     }
 
     public static net.minecraft.core.GlobalPos toNms(Location location) {

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
+
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.boss.BossBar;
@@ -40,7 +42,7 @@ public class CraftDragonBattle implements DragonBattle {
             return null;
         }
 
-        return CraftLocation.toBukkit(this.handle.portalLocation, this.handle.level.getWorld());
+        return CraftLocation.toBukkit(this.handle.portalLocation, ((EthyleneLevel) this.handle.level).getWorld());
     }
 
     @Override

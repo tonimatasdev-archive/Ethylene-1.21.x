@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import net.ethylenemc.interfaces.world.level.EthyleneWorldGenLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -70,7 +71,7 @@ public class CraftBlock implements Block {
 
     @Override
     public World getWorld() {
-        return ((EthyleneWorldGenLevel) world).getMinecraftWorld().getWorld();
+        return ((EthyleneLevel) ((EthyleneWorldGenLevel) world).getMinecraftWorld()).getWorld();
     }
 
     public CraftWorld getCraftWorld() {

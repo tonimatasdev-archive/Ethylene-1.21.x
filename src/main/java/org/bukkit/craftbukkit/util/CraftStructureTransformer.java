@@ -3,6 +3,7 @@ package org.bukkit.craftbukkit.util;
 import java.util.Collection;
 import java.util.Objects;
 
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import net.ethylenemc.interfaces.world.level.EthyleneWorldGenLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.block.BlockState;
@@ -59,7 +60,7 @@ public class CraftStructureTransformer {
     private EntityTransformer[] entityTransformers;
 
     public CraftStructureTransformer(Cause cause, net.minecraft.world.level.WorldGenLevel generatoraccessseed, net.minecraft.world.level.StructureManager structuremanager, net.minecraft.world.level.levelgen.structure.Structure structure, net.minecraft.world.level.levelgen.structure.BoundingBox structureboundingbox, net.minecraft.world.level.ChunkPos chunkcoordintpair) {
-        AsyncStructureGenerateEvent event = new AsyncStructureGenerateEvent(((EthyleneWorldGenLevel) structuremanager.level).getMinecraftWorld().getWorld(), !Bukkit.isPrimaryThread(), cause, CraftStructure.minecraftToBukkit(structure), new org.bukkit.util.BoundingBox(structureboundingbox.minX(), structureboundingbox.minY(), structureboundingbox.minZ(), structureboundingbox.maxX(), structureboundingbox.maxY(), structureboundingbox.maxZ()), chunkcoordintpair.x, chunkcoordintpair.z);
+        AsyncStructureGenerateEvent event = new AsyncStructureGenerateEvent(((EthyleneLevel) ((EthyleneWorldGenLevel) structuremanager.level).getMinecraftWorld()).getWorld(), !Bukkit.isPrimaryThread(), cause, CraftStructure.minecraftToBukkit(structure), new org.bukkit.util.BoundingBox(structureboundingbox.minX(), structureboundingbox.minY(), structureboundingbox.minZ(), structureboundingbox.maxX(), structureboundingbox.maxY(), structureboundingbox.maxZ()), chunkcoordintpair.x, chunkcoordintpair.z);
         Bukkit.getPluginManager().callEvent(event);
         this.blockTransformers = event.getBlockTransformers().values().toArray(BlockTransformer[]::new);
         this.entityTransformers = event.getEntityTransformers().values().toArray(EntityTransformer[]::new);

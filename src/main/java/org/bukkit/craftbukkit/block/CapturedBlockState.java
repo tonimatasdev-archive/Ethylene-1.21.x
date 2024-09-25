@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.block;
 
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -73,11 +74,11 @@ public final class CapturedBlockState extends CraftBlockState {
     }
 
     public static CapturedBlockState getBlockState(net.minecraft.world.level.Level world, net.minecraft.core.BlockPos pos, int flag) {
-        return new CapturedBlockState(world.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ()), flag, false);
+        return new CapturedBlockState(((EthyleneLevel) world).getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ()), flag, false);
     }
 
     public static CapturedBlockState getTreeBlockState(net.minecraft.world.level.Level world, net.minecraft.core.BlockPos pos, int flag) {
-        return new CapturedBlockState(world.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ()), flag, true);
+        return new CapturedBlockState(((EthyleneLevel) world).getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ()), flag, true);
     }
 
     public static void setBlockState(BlockState blockState) {

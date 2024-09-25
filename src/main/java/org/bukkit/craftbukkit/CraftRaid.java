@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
+
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Location;
 import org.bukkit.Raid;
 import org.bukkit.Raid.RaidStatus;
@@ -47,7 +49,7 @@ public final class CraftRaid implements Raid {
     public Location getLocation() {
         net.minecraft.core.BlockPos pos = handle.getCenter();
         net.minecraft.world.level.Level world = handle.getLevel();
-        return CraftLocation.toBukkit(pos, world.getWorld());
+        return CraftLocation.toBukkit(pos, ((EthyleneLevel) world).getWorld());
     }
 
     @Override

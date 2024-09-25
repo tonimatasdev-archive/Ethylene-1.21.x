@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.util;
 
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -24,7 +25,7 @@ public final class CraftLocation {
         return toBukkit(blockPosition, (World) null);
     }
     public static Location toBukkit(net.minecraft.core.BlockPos blockPosition, net.minecraft.world.level.Level world) {
-        return toBukkit(blockPosition, world.getWorld(), 0.0F, 0.0F);
+        return toBukkit(blockPosition, ((EthyleneLevel) world).getWorld(), 0.0F, 0.0F);
     }
     public static Location toBukkit(net.minecraft.core.BlockPos blockPosition, World world) {
         return toBukkit(blockPosition, world, 0.0F, 0.0F);

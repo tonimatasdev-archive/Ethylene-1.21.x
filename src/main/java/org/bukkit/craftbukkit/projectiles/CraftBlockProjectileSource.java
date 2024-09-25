@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.projectiles;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
@@ -32,7 +33,7 @@ public class CraftBlockProjectileSource implements BlockProjectileSource {
 
     @Override
     public Block getBlock() {
-        return dispenserBlock.getLevel().getWorld().getBlockAt(dispenserBlock.getBlockPos().getX(), dispenserBlock.getBlockPos().getY(), dispenserBlock.getBlockPos().getZ());
+        return ((EthyleneLevel) dispenserBlock.getLevel()).getWorld().getBlockAt(dispenserBlock.getBlockPos().getX(), dispenserBlock.getBlockPos().getY(), dispenserBlock.getBlockPos().getZ());
     }
 
     @Override

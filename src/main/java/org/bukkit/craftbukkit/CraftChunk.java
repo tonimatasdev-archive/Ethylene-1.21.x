@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.concurrent.locks.LockSupport;
 import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
+
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;
@@ -48,7 +50,7 @@ public class CraftChunk implements Chunk {
 
     @Override
     public World getWorld() {
-        return worldServer.getWorld();
+        return ((EthyleneLevel) worldServer).getWorld();
     }
 
     public CraftWorld getCraftWorld() {
@@ -157,7 +159,7 @@ public class CraftChunk implements Chunk {
         BlockState[] entities = new BlockState[chunk.blockEntities.size()];
 
         for (net.minecraft.core.BlockPos position : chunk.blockEntities.keySet()) {
-            entities[index++] = worldServer.getWorld().getBlockAt(position.getX(), position.getY(), position.getZ()).getState();
+            entities[index++] = ((EthyleneLevel) worldServer).getWorld().getBlockAt(position.getX(), position.getY(), position.getZ()).getState();
         }
 
         return entities;
@@ -318,7 +320,7 @@ public class CraftChunk implements Chunk {
 
         if (includeMaxBlockY) {
             hmap = new net.minecraft.world.level.levelgen.Heightmap(chunk, net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING);
-            hmap.setRawData(chunk, net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, chunk.heightmaps.get(net.minecraft.world.level.levelgen.Heightmap.Type.MOTION_BLOCKING).getRawData());
+            hmap.setRawData(chunk, net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, chunk.heightmaps.get(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING).getRawData());
         }
 
         World world = getWorld();

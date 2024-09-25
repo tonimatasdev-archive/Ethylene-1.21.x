@@ -457,6 +457,9 @@ accessible field net/minecraft/world/level/block/entity/trialspawner/TrialSpawne
 accessible field net/minecraft/world/level/block/entity/trialspawner/TrialSpawner normalConfig Lnet/minecraft/world/level/block/entity/trialspawner/TrialSpawnerConfig;
 accessible field net/minecraft/world/level/block/entity/trialspawner/TrialSpawner ominousConfig Lnet/minecraft/world/level/block/entity/trialspawner/TrialSpawnerConfig;
 accessible field net/minecraft/server/ReloadableServerResources commands Lnet/minecraft/commands/Commands;
+accessible method net/minecraft/world/item/crafting/Ingredient$ItemValue <init> (Lnet/minecraft/world/item/ItemStack;)V
+accessible method net/minecraft/world/item/crafting/Ingredient <init> (Ljava/util/stream/Stream;)V
+accessible method net/minecraft/world/level/biome/Biome$ClimateSettings downfall ()F
 
 mutable field net/minecraft/world/level/saveddata/maps/MapItemSavedData scale B
 mutable field net/minecraft/world/level/saveddata/maps/MapItemSavedData locked Z

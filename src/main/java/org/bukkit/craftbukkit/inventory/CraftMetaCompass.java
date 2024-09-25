@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap.Builder;
 import java.util.Map;
 import java.util.Optional;
+
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
@@ -112,7 +114,7 @@ public class CraftMetaCompass extends CraftMetaItem implements CompassMeta {
             return null;
         }
         net.minecraft.server.level.ServerLevel worldServer = net.minecraft.server.MinecraftServer.getServer().getLevel(lodestoneWorld);
-        World world = worldServer != null ? worldServer.getWorld() : null;
+        World world = worldServer != null ? ((EthyleneLevel) worldServer).getWorld() : null;
         return new Location(world, lodestoneX, lodestoneY, lodestoneZ); // world may be null here, if the referenced world is not loaded
     }
 

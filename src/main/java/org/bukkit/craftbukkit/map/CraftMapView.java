@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -51,7 +53,7 @@ public final class CraftMapView implements MapView {
         net.minecraft.server.level.ServerLevel world = net.minecraft.server.MinecraftServer.getServer().getLevel(dimension);
 
         if (world != null) {
-            return world.getWorld();
+            return ((EthyleneLevel) world).getWorld();
         }
 
         if (worldMap.uniqueId != null) {

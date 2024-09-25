@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import net.ethylenemc.interfaces.world.level.EthyleneWorldGenLevel;
 import org.bukkit.HeightMap;
 import org.bukkit.Location;
@@ -46,7 +47,7 @@ public class CraftLimitedRegion extends CraftRegionAccessor implements LimitedRe
         centerChunkX = center.x;
         centerChunkZ = center.z;
 
-        World world = ((EthyleneWorldGenLevel) access).getMinecraftWorld().getWorld();
+        World world = ((EthyleneLevel) ((EthyleneWorldGenLevel) access).getMinecraftWorld()).getWorld();
         int xCenter = centerChunkX << 4;
         int zCenter = centerChunkZ << 4;
         int xMin = xCenter - getBuffer();

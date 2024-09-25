@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -142,7 +144,7 @@ public class CraftLootTable implements org.bukkit.loot.LootTable {
         if (position == null) {
             position = info.getParamOrNull(net.minecraft.world.level.storage.loot.parameters.LootContextParams.THIS_ENTITY).position(); // Every vanilla context has origin or this_entity, see LootContextParameterSets
         }
-        Location location = CraftLocation.toBukkit(position, info.getLevel().getWorld());
+        Location location = CraftLocation.toBukkit(position, ((EthyleneLevel) info.getLevel()).getWorld());
         LootContext.Builder contextBuilder = new LootContext.Builder(location);
 
         if (info.hasParam(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ATTACKING_ENTITY)) {

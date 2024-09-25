@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import net.minecraft.world.level.NoiseColumn;
 import org.bukkit.block.Biome;
 import org.bukkit.craftbukkit.CraftHeightMap;
@@ -40,7 +41,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
 
         @Override
         public void setBiome(int x, int z, Biome bio) {
-            for (int y = world.getWorld().getMinHeight(); y < world.getWorld().getMaxHeight(); y += 4) {
+            for (int y = ((EthyleneLevel) world).getWorld().getMinHeight(); y < ((EthyleneLevel) world).getWorld().getMaxHeight(); y += 4) {
                 setBiome(x, y, z, bio);
             }
         }
@@ -95,7 +96,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
         int z = ichunkaccess.getPos().z;
 
         random.setSeed(net.minecraft.util.Mth.getSeed(x, "should-structures".hashCode(), z) ^ world.getSeed());
-        if (generator.shouldGenerateStructures(this.world.getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z)) {
+        if (generator.shouldGenerateStructures(((EthyleneLevel) this.world).getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z)) {
             super.createStructures(iregistrycustom, chunkgeneratorstructurestate, structuremanager, ichunkaccess, structuretemplatemanager);
         }
     }
@@ -107,14 +108,14 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
         int z = ichunkaccess.getPos().z;
 
         random.setSeed(net.minecraft.util.Mth.getSeed(x, "should-surface".hashCode(), z) ^ regionlimitedworldaccess.getSeed());
-        if (generator.shouldGenerateSurface(this.world.getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z)) {
+        if (generator.shouldGenerateSurface(((EthyleneLevel) this.world).getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z)) {
             delegate.buildSurface(regionlimitedworldaccess, structuremanager, randomstate, ichunkaccess);
         }
 
-        CraftChunkData chunkData = new CraftChunkData(this.world.getWorld(), ichunkaccess);
+        CraftChunkData chunkData = new CraftChunkData(((EthyleneLevel) this.world).getWorld(), ichunkaccess);
 
         random.setSeed((long) x * 341873128712L + (long) z * 132897987541L);
-        generator.generateSurface(this.world.getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z, chunkData);
+        generator.generateSurface(((EthyleneLevel) this.world).getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z, chunkData);
 
         if (generator.shouldGenerateBedrock()) {
             random = getSeededRandom();
@@ -124,7 +125,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
 
         random = getSeededRandom();
         random.setSeed((long) x * 341873128712L + (long) z * 132897987541L);
-        generator.generateBedrock(this.world.getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z, chunkData);
+        generator.generateBedrock(((EthyleneLevel) this.world).getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z, chunkData);
         chunkData.breakLink();
 
         // return if new api is used
@@ -142,10 +143,10 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
         ChunkData data;
         try {
             if (generator.isParallelCapable()) {
-                data = generator.generateChunkData(this.world.getWorld(), this.random, x, z, biomegrid);
+                data = generator.generateChunkData(((EthyleneLevel) (this.world)).getWorld(), this.random, x, z, biomegrid);
             } else {
                 synchronized (this) {
-                    data = generator.generateChunkData(this.world.getWorld(), this.random, x, z, biomegrid);
+                    data = generator.generateChunkData(((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) this.world)))))).getWorld(), this.random, x, z, biomegrid);
                 }
             }
         } catch (UnsupportedOperationException exception) {
@@ -203,16 +204,16 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
         int z = ichunkaccess.getPos().z;
 
         random.setSeed(net.minecraft.util.Mth.getSeed(x, "should-caves".hashCode(), z) ^ regionlimitedworldaccess.getSeed());
-        if (generator.shouldGenerateCaves(this.world.getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z)) {
+        if (generator.shouldGenerateCaves(((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) this.world)))))).getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z)) {
             delegate.applyCarvers(regionlimitedworldaccess, seed, randomstate, biomemanager, structuremanager, ichunkaccess, worldgenstage_features);
         }
 
         // Minecraft removed the LIQUID_CARVERS stage from world generation, without removing the LIQUID Carving enum.
         // Meaning this method is only called once for each chunk, so no check is required.
-        CraftChunkData chunkData = new CraftChunkData(this.world.getWorld(), ichunkaccess);
+        CraftChunkData chunkData = new CraftChunkData(((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) this.world)))))).getWorld(), ichunkaccess);
         random.setDecorationSeed(seed, 0, 0);
 
-        generator.generateCaves(this.world.getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z, chunkData);
+        generator.generateCaves(((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) this.world)))))).getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z, chunkData);
         chunkData.breakLink();
     }
 
@@ -223,16 +224,16 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
         int x = ichunkaccess.getPos().x;
         int z = ichunkaccess.getPos().z;
 
-        random.setSeed(net.minecraft.util.Mth.getSeed(x, "should-noise".hashCode(), z) ^ this.world.getSeed());
-        if (generator.shouldGenerateNoise(this.world.getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z)) {
+        random.setSeed(net.minecraft.util.Mth.getSeed(x, "should-noise".hashCode(), z) ^ ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) this.world)))))).getSeed());
+        if (generator.shouldGenerateNoise(((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) this.world)))))).getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z)) {
             future = delegate.fillFromNoise(blender, randomstate, structuremanager, ichunkaccess);
         }
 
         java.util.function.Function<net.minecraft.world.level.chunk.ChunkAccess, net.minecraft.world.level.chunk.ChunkAccess> function = (ichunkaccess1) -> {
-            CraftChunkData chunkData = new CraftChunkData(this.world.getWorld(), ichunkaccess1);
+            CraftChunkData chunkData = new CraftChunkData(((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) this.world)))))).getWorld(), ichunkaccess1);
             random.setSeed((long) x * 341873128712L + (long) z * 132897987541L);
 
-            generator.generateNoise(this.world.getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z, chunkData);
+            generator.generateNoise(((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) this.world)))))).getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z, chunkData);
             chunkData.breakLink();
             return ichunkaccess1;
         };
@@ -249,7 +250,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
                 int zChunk = j >> 4;
                 random.setSeed((long) xChunk * 341873128712L + (long) zChunk * 132897987541L);
 
-                return generator.getBaseHeight(this.world.getWorld(), new RandomSourceWrapper.RandomWrapper(random), i, j, CraftHeightMap.fromNMS(heightmap_type));
+                return generator.getBaseHeight(((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) this.world)))))).getWorld(), new RandomSourceWrapper.RandomWrapper(random), i, j, CraftHeightMap.fromNMS(heightmap_type));
             } catch (UnsupportedOperationException exception) {
                 implementBaseHeight = false;
             }
@@ -270,7 +271,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
         int z = ichunkaccess.getPos().z;
 
         random.setSeed(net.minecraft.util.Mth.getSeed(x, "should-decoration".hashCode(), z) ^ generatoraccessseed.getSeed());
-        super.applyBiomeDecoration(generatoraccessseed, ichunkaccess, structuremanager, generator.shouldGenerateDecorations(this.world.getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z));
+        super.applyBiomeDecoration(generatoraccessseed, ichunkaccess, structuremanager, generator.shouldGenerateDecorations(((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) this.world)))))).getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z));
     }
 
     @Override
@@ -285,7 +286,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
         int z = regionlimitedworldaccess.getCenter().z;
 
         random.setSeed(net.minecraft.util.Mth.getSeed(x, "should-mobs".hashCode(), z) ^ regionlimitedworldaccess.getSeed());
-        if (generator.shouldGenerateMobs(this.world.getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z)) {
+        if (generator.shouldGenerateMobs(((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) ((EthyleneLevel) this.world)))))).getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z)) {
             delegate.spawnOriginalMobs(regionlimitedworldaccess);
         }
     }

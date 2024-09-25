@@ -8,6 +8,8 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -149,7 +151,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public World getWorld() {
-        return entity.level().getWorld();
+        return ((EthyleneLevel) entity.level()).getWorld();
     }
 
     @Override

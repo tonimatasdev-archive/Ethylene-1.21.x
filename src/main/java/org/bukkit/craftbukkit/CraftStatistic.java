@@ -3,6 +3,7 @@ package org.bukkit.craftbukkit;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.Statistic.Type;
@@ -225,7 +226,7 @@ public enum CraftStatistic {
 
         // Update scoreboards
         if (player != null) {
-            player.level().getCraftServer().getScoreboardManager().forAllObjectives(nmsStatistic, player, score -> {
+            ((EthyleneLevel) player.level()).getCraftServer().getScoreboardManager().forAllObjectives(nmsStatistic, player, score -> {
                 score.set(newValue);
             });
         }
@@ -269,7 +270,7 @@ public enum CraftStatistic {
 
         // Update scoreboards
         if (player != null) {
-            player.level().getCraftServer().getScoreboardManager().forAllObjectives(nmsStatistic, player, score -> {
+            ((EthyleneLevel) player.level()).getCraftServer().getScoreboardManager().forAllObjectives(nmsStatistic, player, score -> {
                 score.set(newValue);
             });
         }
@@ -313,7 +314,7 @@ public enum CraftStatistic {
 
         // Update scoreboards
         if (player != null) {
-            player.level().getCraftServer().getScoreboardManager().forAllObjectives(nmsStatistic, player, score -> {
+            ((EthyleneLevel) player.level()).getCraftServer().getScoreboardManager().forAllObjectives(nmsStatistic, player, score -> {
                 score.set(newValue);
             });
         }
