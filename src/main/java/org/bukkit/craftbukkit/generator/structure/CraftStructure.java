@@ -1,11 +1,14 @@
 package org.bukkit.craftbukkit.generator.structure;
 
+import com.google.common.base.Suppliers;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.craftbukkit.CraftRegistry;
 import org.bukkit.craftbukkit.util.Handleable;
 import org.bukkit.generator.structure.Structure;
 import org.bukkit.generator.structure.StructureType;
+
+import java.util.function.Supplier;
 
 public class CraftStructure extends Structure implements Handleable<net.minecraft.world.level.levelgen.structure.Structure> {
 
@@ -19,12 +22,12 @@ public class CraftStructure extends Structure implements Handleable<net.minecraf
 
     private final NamespacedKey key;
     private final net.minecraft.world.level.levelgen.structure.Structure structure;
-    private final StructureType structureType;
+    private final Supplier<StructureType> structureType;
 
     public CraftStructure(NamespacedKey key, net.minecraft.world.level.levelgen.structure.Structure structure) {
         this.key = key;
         this.structure = structure;
-        this.structureType = CraftStructureType.minecraftToBukkit(structure.type());
+        this.structureType = Suppliers.memoize(() -> CraftStructureType.minecraftToBukkit(structure.type()));
     }
 
     @Override
@@ -34,7 +37,7 @@ public class CraftStructure extends Structure implements Handleable<net.minecraf
 
     @Override
     public StructureType getStructureType() {
-        return structureType;
+        return structureType.get();
     }
 
     @Override

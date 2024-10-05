@@ -8,6 +8,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
+import net.minecraft.world.entity.projectile.windcharge.BreezeWindCharge;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -465,10 +469,15 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
                 launch = new net.minecraft.world.entity.projectile.WitherSkull(world, getHandle(), vec);
             } else if (DragonFireball.class.isAssignableFrom(projectile)) {
                 launch = new net.minecraft.world.entity.projectile.DragonFireball(world, getHandle(), vec);
-            } else if (WindCharge.class.isAssignableFrom(projectile)) {
-                launch = net.minecraft.world.entity.EntityType.WIND_CHARGE.create(world);
-                ((net.minecraft.world.entity.projectile.windcharge.WindCharge) launch).setOwner(getHandle());
-                ((net.minecraft.world.entity.projectile.windcharge.WindCharge) launch).assignDirectionalMovement(vec, 0.1D);
+            }  else if (AbstractWindCharge.class.isAssignableFrom(projectile)) {
+                if (BreezeWindCharge.class.isAssignableFrom(projectile)) {
+                    launch = EntityType.BREEZE_WIND_CHARGE.create(world);
+                } else {
+                    launch = EntityType.WIND_CHARGE.create(world);
+                }
+
+                ((net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge) launch).setOwner(getHandle());
+                ((net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge) launch).shootFromRotation(getHandle(), getHandle().getXRot(), getHandle().getYRot(), 0.0F, 1.5F, 1.0F); // WindChargeItem
             } else {
                 launch = new net.minecraft.world.entity.projectile.LargeFireball(world, getHandle(), vec, 1);
             }

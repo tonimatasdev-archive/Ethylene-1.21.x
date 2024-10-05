@@ -109,6 +109,10 @@ class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
     void applyToItem(CraftMetaItem.Applicator tag) {
         super.applyToItem(tag);
 
+        if (isPotionEmpty()) {
+            return;
+        }
+
         Optional<net.minecraft.core.Holder<net.minecraft.world.item.alchemy.Potion>> defaultPotion = (hasBasePotionType()) ? Optional.of(CraftPotionType.bukkitToMinecraftHolder(type)) : Optional.empty();
         Optional<Integer> potionColor = (hasColor()) ? Optional.of(this.color.asRGB()) : Optional.empty();
 
