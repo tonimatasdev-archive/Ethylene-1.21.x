@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Entity;
@@ -58,7 +59,7 @@ public class CraftWarden extends CraftMonster implements org.bukkit.entity.Warde
 
     @Override
     public LivingEntity getEntityAngryAt() {
-        return (LivingEntity) getHandle().getEntityAngryAt().map(net.minecraft.world.entity.Entity::getBukkitEntity).orElse(null);
+        return (LivingEntity) getHandle().getEntityAngryAt().map(entity -> ((EthyleneEntity) entity).getBukkitEntity()).orElse(null);
     }
 
     @Override

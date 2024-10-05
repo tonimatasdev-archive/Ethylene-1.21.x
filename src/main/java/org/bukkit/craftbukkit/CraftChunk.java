@@ -10,6 +10,7 @@ import java.util.concurrent.locks.LockSupport;
 import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
@@ -106,7 +107,7 @@ public class CraftChunk implements Chunk {
 
         if (entityManager.areEntitiesLoaded(pair)) {
             return entityManager.getEntities(new net.minecraft.world.level.ChunkPos(x, z)).stream()
-                    .map(net.minecraft.world.entity.Entity::getBukkitEntity)
+                    .map(entity -> ((EthyleneEntity) entity).getBukkitEntity())
                     .filter(Objects::nonNull).toArray(Entity[]::new);
         }
 
@@ -144,7 +145,7 @@ public class CraftChunk implements Chunk {
         }
 
         return entityManager.getEntities(new net.minecraft.world.level.ChunkPos(x, z)).stream()
-                .map(net.minecraft.world.entity.Entity::getBukkitEntity)
+                .map(entity -> ((EthyleneEntity) entity).getBukkitEntity())
                 .filter(Objects::nonNull).toArray(Entity[]::new);
     }
 

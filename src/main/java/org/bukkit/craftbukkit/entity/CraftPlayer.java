@@ -36,6 +36,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.BanEntry;
 import org.bukkit.BanList;
@@ -2084,7 +2085,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     @Override
     public org.bukkit.entity.Entity getSpectatorTarget() {
         net.minecraft.world.entity.Entity followed = getHandle().getCamera();
-        return followed == getHandle() ? null : followed.getBukkitEntity();
+        return followed == getHandle() ? null : ((EthyleneEntity) followed).getBukkitEntity();
     }
 
     @Override

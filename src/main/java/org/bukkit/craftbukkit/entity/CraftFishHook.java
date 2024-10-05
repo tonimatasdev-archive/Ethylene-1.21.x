@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
@@ -168,7 +169,7 @@ public class CraftFishHook extends CraftProjectile implements FishHook {
     @Override
     public Entity getHookedEntity() {
         net.minecraft.world.entity.Entity hooked = getHandle().hookedIn;
-        return (hooked != null) ? hooked.getBukkitEntity() : null;
+        return (hooked != null) ? ((EthyleneEntity) hooked).getBukkitEntity() : null;
     }
 
     @Override

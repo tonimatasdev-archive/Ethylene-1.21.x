@@ -26,6 +26,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import net.ethylenemc.EthyleneStatic;
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.BlockChangeDelegate;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -879,7 +880,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         List<Entity> bukkitEntityList = new ArrayList<org.bukkit.entity.Entity>(entityList.size());
 
         for (net.minecraft.world.entity.Entity entity : entityList) {
-            Entity bukkitEntity = entity.getBukkitEntity();
+            Entity bukkitEntity = ((EthyleneEntity) entity).getBukkitEntity();
             if (filter == null || filter.test(bukkitEntity)) {
                 bukkitEntityList.add(bukkitEntity);
             }

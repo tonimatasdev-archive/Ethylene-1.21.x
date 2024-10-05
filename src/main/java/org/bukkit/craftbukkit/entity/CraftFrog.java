@@ -2,6 +2,8 @@ package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
 import java.util.Locale;
+
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.craftbukkit.CraftRegistry;
@@ -27,7 +29,7 @@ public class CraftFrog extends CraftAnimals implements org.bukkit.entity.Frog {
 
     @Override
     public Entity getTongueTarget() {
-        return getHandle().getTongueTarget().map(net.minecraft.world.entity.Entity::getBukkitEntity).orElse(null);
+        return getHandle().getTongueTarget().map(entity1 -> ((EthyleneEntity) entity1).getBukkitEntity()).orElse(null);
     }
 
     @Override

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
@@ -220,7 +221,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         List<org.bukkit.entity.Entity> bukkitEntityList = new java.util.ArrayList<org.bukkit.entity.Entity>(notchEntityList.size());
 
         for (net.minecraft.world.entity.Entity e : notchEntityList) {
-            bukkitEntityList.add(e.getBukkitEntity());
+            bukkitEntityList.add(((EthyleneEntity) e).getBukkitEntity());
         }
         return bukkitEntityList;
     }
@@ -318,7 +319,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public org.bukkit.entity.Entity getPassenger() {
-        return isEmpty() ? null : getHandle().passengers.get(0).getBukkitEntity();
+        return isEmpty() ? null : ((EthyleneEntity) getHandle().passengers.get(0)).getBukkitEntity();
     }
 
     @Override
@@ -334,7 +335,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public List<org.bukkit.entity.Entity> getPassengers() {
-        return Lists.newArrayList(Lists.transform(getHandle().passengers, (Function<net.minecraft.world.entity.Entity, org.bukkit.entity.Entity>) input -> input.getBukkitEntity()));
+        return Lists.newArrayList(Lists.transform(getHandle().passengers, (Function<net.minecraft.world.entity.Entity, org.bukkit.entity.Entity>) input -> ((EthyleneEntity) input).getBukkitEntity()));
     }
 
     @Override
@@ -507,7 +508,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
             return null;
         }
 
-        return getHandle().getVehicle().getBukkitEntity();
+        return ((EthyleneEntity) getHandle().getVehicle()).getBukkitEntity();
     }
 
     @Override
@@ -788,7 +789,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         net.minecraft.world.entity.Entity copy = copy(getHandle().level());
         Preconditions.checkArgument(copy != null, "Error creating new entity.");
 
-        return copy.getBukkitEntity();
+        return ((EthyleneEntity) copy).getBukkitEntity();
     }
 
     @Override
@@ -799,7 +800,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         Preconditions.checkArgument(copy != null, "Error creating new entity.");
 
         copy.setPos(location.getX(), location.getY(), location.getZ());
-        return location.getWorld().addEntity(copy.getBukkitEntity());
+        return location.getWorld().addEntity(((EthyleneEntity) copy).getBukkitEntity());
     }
 
     private net.minecraft.world.entity.Entity copy(net.minecraft.world.level.Level level) {

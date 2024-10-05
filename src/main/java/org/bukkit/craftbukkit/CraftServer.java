@@ -46,6 +46,7 @@ import javax.imageio.ImageIO;
 import jline.console.ConsoleReader;
 import net.ethylenemc.EthyleneStatic;
 import net.ethylenemc.interfaces.world.EthyleneContainer;
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
@@ -2288,7 +2289,7 @@ public final class CraftServer implements Server {
         for (net.minecraft.server.level.ServerLevel world : getServer().getAllLevels()) {
             net.minecraft.world.entity.Entity entity = world.getEntity(uuid);
             if (entity != null) {
-                return entity.getBukkitEntity();
+                return ((EthyleneEntity) entity).getBukkitEntity();
             }
         }
 
@@ -2445,7 +2446,7 @@ public final class CraftServer implements Server {
             throw new IllegalArgumentException("Could not parse selector: " + selector, ex);
         }
 
-        return new ArrayList<>(Lists.transform(nms, (entity) -> entity.getBukkitEntity()));
+        return new ArrayList<>(Lists.transform(nms, (entity) -> ((EthyleneEntity) entity).getBukkitEntity()));
     }
 
     @Override

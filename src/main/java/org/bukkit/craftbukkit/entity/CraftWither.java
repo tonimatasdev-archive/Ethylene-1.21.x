@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.boss.BossBar;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.boss.CraftBossBar;
@@ -51,7 +52,7 @@ public class CraftWither extends CraftMonster implements Wither {
             return null;
         }
         net.minecraft.world.entity.Entity target = getHandle().level().getEntity(entityId);
-        return (target != null) ? (LivingEntity) target.getBukkitEntity() : null;
+        return (target != null) ? (LivingEntity) ((EthyleneEntity) target).getBukkitEntity() : null;
     }
 
     @Override

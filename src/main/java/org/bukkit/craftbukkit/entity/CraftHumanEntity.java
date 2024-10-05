@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import net.ethylenemc.interfaces.world.EthyleneContainer;
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -545,7 +546,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         if (!getHandle().getShoulderEntityLeft().isEmpty()) {
             Optional<net.minecraft.world.entity.Entity> shoulder = net.minecraft.world.entity.EntityType.create(getHandle().getShoulderEntityLeft(), getHandle().level());
 
-            return (!shoulder.isPresent()) ? null : shoulder.get().getBukkitEntity();
+            return (!shoulder.isPresent()) ? null : ((EthyleneEntity) shoulder.get()).getBukkitEntity();
         }
 
         return null;
@@ -564,7 +565,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         if (!getHandle().getShoulderEntityRight().isEmpty()) {
             Optional<net.minecraft.world.entity.Entity> shoulder = net.minecraft.world.entity.EntityType.create(getHandle().getShoulderEntityRight(), getHandle().level());
 
-            return (!shoulder.isPresent()) ? null : shoulder.get().getBukkitEntity();
+            return (!shoulder.isPresent()) ? null : ((EthyleneEntity) shoulder.get()).getBukkitEntity();
         }
 
         return null;

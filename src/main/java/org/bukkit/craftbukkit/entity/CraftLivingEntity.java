@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
 import net.minecraft.world.entity.projectile.windcharge.BreezeWindCharge;
@@ -435,7 +436,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         } else if (AbstractArrow.class.isAssignableFrom(projectile)) {
             if (TippedArrow.class.isAssignableFrom(projectile)) {
                 launch = new net.minecraft.world.entity.projectile.Arrow(world, getHandle(), new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ARROW), null);
-                ((Arrow) launch.getBukkitEntity()).setBasePotionType(PotionType.WATER);
+                ((Arrow) ((EthyleneEntity) launch).getBukkitEntity()).setBasePotionType(PotionType.WATER);
             } else if (SpectralArrow.class.isAssignableFrom(projectile)) {
                 launch = new net.minecraft.world.entity.projectile.SpectralArrow(world, getHandle(), new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.SPECTRAL_ARROW), null);
             } else if (Trident.class.isAssignableFrom(projectile)) {
@@ -508,11 +509,11 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         Preconditions.checkArgument(launch != null, "Projectile (%s) not supported", projectile.getName());
 
         if (velocity != null) {
-            ((T) launch.getBukkitEntity()).setVelocity(velocity);
+            ((T) ((EthyleneEntity) launch).getBukkitEntity()).setVelocity(velocity);
         }
 
         world.addFreshEntity(launch);
-        return (T) launch.getBukkitEntity();
+        return (T) ((EthyleneEntity) launch).getBukkitEntity();
     }
 
     @Override
@@ -577,7 +578,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     @Override
     public Entity getLeashHolder() throws IllegalStateException {
         Preconditions.checkState(isLeashed(), "Entity not leashed");
-        return ((net.minecraft.world.entity.Mob) getHandle()).getLeashHolder().getBukkitEntity();
+        return ((EthyleneEntity) ((net.minecraft.world.entity.Mob) getHandle()).getLeashHolder()).getBukkitEntity();
     }
 
     private boolean unleash() {

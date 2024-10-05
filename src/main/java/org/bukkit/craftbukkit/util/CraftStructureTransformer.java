@@ -3,6 +3,7 @@ package org.bukkit.craftbukkit.util;
 import java.util.Collection;
 import java.util.Objects;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import net.ethylenemc.interfaces.world.level.EthyleneWorldGenLevel;
 import org.bukkit.Bukkit;
@@ -83,7 +84,7 @@ public class CraftStructureTransformer {
             return true;
         }
         entity.generation = true;
-        CraftEntity craftEntity = entity.getBukkitEntity();
+        CraftEntity craftEntity = ((EthyleneEntity) entity).getBukkitEntity();
         int x = entity.getBlockX();
         int y = entity.getBlockY();
         int z = entity.getBlockZ();

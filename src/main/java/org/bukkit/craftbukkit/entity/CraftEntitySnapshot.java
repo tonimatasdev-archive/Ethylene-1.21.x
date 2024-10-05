@@ -2,6 +2,8 @@ package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
 import java.util.function.Function;
+
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -27,7 +29,7 @@ public class CraftEntitySnapshot implements EntitySnapshot {
     public Entity createEntity(World world) {
         net.minecraft.world.entity.Entity internal = createInternal(world);
 
-        return internal.getBukkitEntity();
+        return ((EthyleneEntity) internal).getBukkitEntity();
     }
 
     @Override
@@ -37,7 +39,7 @@ public class CraftEntitySnapshot implements EntitySnapshot {
         net.minecraft.world.entity.Entity internal = createInternal(location.getWorld());
 
         internal.setPos(location.getX(), location.getY(), location.getZ());
-        return location.getWorld().addEntity(internal.getBukkitEntity());
+        return location.getWorld().addEntity(((EthyleneEntity) internal).getBukkitEntity());
     }
 
     @Override

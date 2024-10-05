@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import net.ethylenemc.interfaces.world.level.EthyleneWorldGenLevel;
 import org.bukkit.Location;
@@ -284,7 +285,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
         List<Entity> list = new ArrayList<Entity>();
 
         getNMSEntities().forEach(entity -> {
-            Entity bukkitEntity = entity.getBukkitEntity();
+            Entity bukkitEntity = ((EthyleneEntity) entity).getBukkitEntity();
 
             // Assuming that bukkitEntity isn't null
             if (bukkitEntity != null && (!isNormalWorld() || bukkitEntity.isValid())) {
@@ -300,7 +301,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
         List<LivingEntity> list = new ArrayList<LivingEntity>();
 
         getNMSEntities().forEach(entity -> {
-            Entity bukkitEntity = entity.getBukkitEntity();
+            Entity bukkitEntity = ((EthyleneEntity) entity).getBukkitEntity();
 
             // Assuming that bukkitEntity isn't null
             if (bukkitEntity != null && bukkitEntity instanceof LivingEntity && (!isNormalWorld() || bukkitEntity.isValid())) {
@@ -317,7 +318,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
         Collection<T> list = new ArrayList<T>();
 
         getNMSEntities().forEach(entity -> {
-            Entity bukkitEntity = entity.getBukkitEntity();
+            Entity bukkitEntity = ((EthyleneEntity) entity).getBukkitEntity();
 
             if (bukkitEntity == null) {
                 return;
@@ -338,7 +339,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
         Collection<Entity> list = new ArrayList<Entity>();
 
         getNMSEntities().forEach(entity -> {
-            Entity bukkitEntity = entity.getBukkitEntity();
+            Entity bukkitEntity = ((EthyleneEntity) entity).getBukkitEntity();
 
             if (bukkitEntity == null) {
                 return;
@@ -370,7 +371,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
             entity.generation = true;
         }
 
-        return (T) entity.getBukkitEntity();
+        return (T) ((EthyleneEntity) entity).getBukkitEntity();
     }
 
     @Override
@@ -408,7 +409,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
         }
 
         addEntityWithPassengers(nmsEntity, CreatureSpawnEvent.SpawnReason.CUSTOM);
-        return (T) nmsEntity.getBukkitEntity();
+        return (T) ((EthyleneEntity) nmsEntity).getBukkitEntity();
     }
 
     @SuppressWarnings("unchecked")
@@ -429,11 +430,11 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
         }
 
         if (function != null) {
-            function.accept((T) entity.getBukkitEntity());
+            function.accept((T) ((EthyleneEntity) entity).getBukkitEntity());
         }
 
         addEntityToWorld(entity, reason);
-        return (T) entity.getBukkitEntity();
+        return (T) ((EthyleneEntity) entity).getBukkitEntity();
     }
 
     public abstract void addEntityToWorld(net.minecraft.world.entity.Entity entity, CreatureSpawnEvent.SpawnReason reason);
@@ -469,7 +470,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
             clazz = ThrownPotion.class;
         } else if (clazz == TippedArrow.class) {
             clazz = Arrow.class;
-            runOld = other -> ((Arrow) other.getBukkitEntity()).setBasePotionType(PotionType.WATER);
+            runOld = other -> ((Arrow) ((EthyleneEntity) other).getBukkitEntity()).setBasePotionType(PotionType.WATER);
         }
 
         CraftEntityTypes.EntityTypeData<?, ?> entityTypeData = CraftEntityTypes.getEntityTypeData(clazz);

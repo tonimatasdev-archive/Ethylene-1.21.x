@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.util;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -20,7 +21,7 @@ public final class CraftRayTraceResult {
         BlockFace hitBlockFace = null;
 
         if (nmsHitResult.getType() == net.minecraft.world.phys.HitResult.Type.ENTITY) {
-            Entity hitEntity = ((net.minecraft.world.phys.EntityHitResult) nmsHitResult).getEntity().getBukkitEntity();
+            Entity hitEntity = ((EthyleneEntity) ((net.minecraft.world.phys.EntityHitResult) nmsHitResult).getEntity()).getBukkitEntity();
             return new RayTraceResult(hitPosition, hitEntity, null);
         }
 

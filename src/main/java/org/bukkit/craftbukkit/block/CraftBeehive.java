@@ -3,6 +3,8 @@ package org.bukkit.craftbukkit.block;
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Beehive;
@@ -68,7 +70,7 @@ public class CraftBeehive extends CraftBlockEntityState<net.minecraft.world.leve
         if (isPlaced()) {
             net.minecraft.world.level.block.entity.BeehiveBlockEntity beehive = ((net.minecraft.world.level.block.entity.BeehiveBlockEntity) this.getTileEntityFromWorld());
             for (net.minecraft.world.entity.Entity bee : beehive.releaseBees(this.getHandle(), net.minecraft.world.level.block.entity.BeehiveBlockEntity.BeeReleaseStatus.BEE_RELEASED, true)) {
-                bees.add((Bee) bee.getBukkitEntity());
+                bees.add((Bee) ((EthyleneEntity) bee).getBukkitEntity());
             }
         }
 

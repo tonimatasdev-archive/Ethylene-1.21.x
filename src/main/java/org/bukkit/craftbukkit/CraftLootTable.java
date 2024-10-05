@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -148,14 +149,14 @@ public class CraftLootTable implements org.bukkit.loot.LootTable {
         LootContext.Builder contextBuilder = new LootContext.Builder(location);
 
         if (info.hasParam(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ATTACKING_ENTITY)) {
-            CraftEntity killer = info.getParamOrNull(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ATTACKING_ENTITY).getBukkitEntity();
+            CraftEntity killer = ((EthyleneEntity) info.getParamOrNull(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ATTACKING_ENTITY)).getBukkitEntity();
             if (killer instanceof CraftHumanEntity) {
                 contextBuilder.killer((CraftHumanEntity) killer);
             }
         }
 
         if (info.hasParam(net.minecraft.world.level.storage.loot.parameters.LootContextParams.THIS_ENTITY)) {
-            contextBuilder.lootedEntity(info.getParamOrNull(net.minecraft.world.level.storage.loot.parameters.LootContextParams.THIS_ENTITY).getBukkitEntity());
+            contextBuilder.lootedEntity(((EthyleneEntity) info.getParamOrNull(net.minecraft.world.level.storage.loot.parameters.LootContextParams.THIS_ENTITY)).getBukkitEntity());
         }
 
         contextBuilder.luck(info.getLuck());

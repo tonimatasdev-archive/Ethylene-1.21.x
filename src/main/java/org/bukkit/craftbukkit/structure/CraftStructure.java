@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.RegionAccessor;
@@ -123,7 +125,7 @@ public class CraftStructure implements Structure {
         for (net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureEntityInfo entity : structure.entityInfoList) {
             net.minecraft.world.entity.EntityType.create(entity.nbt, ((CraftWorld) Bukkit.getServer().getWorlds().get(0)).getHandle()).ifPresent(dummyEntity -> {
                 dummyEntity.setPos(entity.pos.x, entity.pos.y, entity.pos.z);
-                entities.add(dummyEntity.getBukkitEntity());
+                entities.add(((EthyleneEntity) dummyEntity).getBukkitEntity());
             });
         }
         return Collections.unmodifiableList(entities);
