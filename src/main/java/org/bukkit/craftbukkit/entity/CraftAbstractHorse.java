@@ -2,6 +2,8 @@ package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
 import java.util.UUID;
+
+import net.ethylenemc.interfaces.world.entity.animal.horse.EthyleneAbstractHorse;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.inventory.CraftInventoryAbstractHorse;
 import org.bukkit.entity.AbstractHorse;
@@ -44,7 +46,7 @@ public abstract class CraftAbstractHorse extends CraftAnimals implements Abstrac
     @Override
     public void setMaxDomestication(int value) {
         Preconditions.checkArgument(value > 0, "Max domestication (%s) cannot be zero or less", value);
-        getHandle().maxDomestication = value;
+        ((EthyleneAbstractHorse) getHandle()).setMaxDomestication(value);
     }
 
     @Override

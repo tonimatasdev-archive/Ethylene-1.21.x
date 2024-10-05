@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.inventory;
 
+import net.ethylenemc.interfaces.world.EthyleneContainer;
 import org.bukkit.block.ChiseledBookshelf;
 import org.bukkit.inventory.ChiseledBookshelfInventory;
 import org.bukkit.inventory.ItemStack;
@@ -24,6 +25,6 @@ public class CraftInventoryChiseledBookshelf extends CraftInventory implements C
 
     @Override
     public ChiseledBookshelf getHolder() {
-        return (ChiseledBookshelf) inventory.getOwner();
+        return (ChiseledBookshelf) ((EthyleneContainer) inventory).getOwner();
     }
 }

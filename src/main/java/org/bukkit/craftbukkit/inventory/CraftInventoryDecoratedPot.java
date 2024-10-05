@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.inventory;
 
+import net.ethylenemc.interfaces.world.EthyleneContainer;
 import org.bukkit.block.DecoratedPot;
 import org.bukkit.inventory.DecoratedPotInventory;
 import org.bukkit.inventory.ItemStack;
@@ -22,6 +23,6 @@ public class CraftInventoryDecoratedPot extends CraftInventory implements Decora
 
     @Override
     public DecoratedPot getHolder() {
-        return (DecoratedPot) inventory.getOwner();
+        return (DecoratedPot) ((EthyleneContainer) inventory).getOwner();
     }
 }

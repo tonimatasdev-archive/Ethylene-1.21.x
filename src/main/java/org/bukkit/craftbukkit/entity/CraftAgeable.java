@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneAgeableMob;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Ageable;
 
@@ -20,12 +21,12 @@ public class CraftAgeable extends CraftCreature implements Ageable {
 
     @Override
     public void setAgeLock(boolean lock) {
-        getHandle().ageLocked = lock;
+        ((EthyleneAgeableMob) getHandle()).setAgeLocked(lock);
     }
 
     @Override
     public boolean getAgeLock() {
-        return getHandle().ageLocked;
+        return ((EthyleneAgeableMob) getHandle()).getAgeLocked();
     }
 
     @Override

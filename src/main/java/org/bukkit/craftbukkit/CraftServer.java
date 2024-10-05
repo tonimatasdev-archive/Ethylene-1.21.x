@@ -45,6 +45,7 @@ import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import jline.console.ConsoleReader;
 import net.ethylenemc.EthyleneStatic;
+import net.ethylenemc.interfaces.world.EthyleneContainer;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
@@ -1455,7 +1456,7 @@ public final class CraftServer implements Server {
             }
         }
 
-        for (int i = 0; i < inventoryCrafting.getContents().size(); i++) {
+        for (int i = 0; i < ((EthyleneContainer) inventoryCrafting).getContents().size(); i++) {
             craftItemResult.setResultMatrix(i, CraftItemStack.asBukkitCopy(inventoryCrafting.getItem(i)));
         }
 

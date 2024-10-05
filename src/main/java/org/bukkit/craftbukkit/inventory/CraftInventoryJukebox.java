@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.inventory;
 
+import net.ethylenemc.interfaces.world.EthyleneContainer;
 import org.bukkit.block.Jukebox;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.JukeboxInventory;
@@ -26,6 +27,6 @@ public class CraftInventoryJukebox extends CraftInventory implements JukeboxInve
 
     @Override
     public Jukebox getHolder() {
-        return (Jukebox) inventory.getOwner();
+        return (Jukebox) ((EthyleneContainer) inventory).getOwner();
     }
 }

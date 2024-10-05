@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import net.ethylenemc.interfaces.world.EthyleneContainer;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
@@ -27,7 +29,7 @@ public class CraftInventoryCustom extends CraftInventory {
         super(new MinecraftInventory(owner, size, title));
     }
 
-    static class MinecraftInventory implements net.minecraft.world.Container {
+    static class MinecraftInventory implements net.minecraft.world.Container, EthyleneContainer {
         private final net.minecraft.core.NonNullList<net.minecraft.world.item.ItemStack> items;
         private int maxStack = MAX_STACK;
         private final List<HumanEntity> viewers;

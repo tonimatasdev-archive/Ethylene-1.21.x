@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.world.EthyleneContainer;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.EntityEquipment;
@@ -277,7 +278,7 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
 
     @Override
     public HumanEntity getHolder() {
-        return (HumanEntity) inventory.getOwner();
+        return (HumanEntity) ((EthyleneContainer) inventory).getOwner();
     }
 
     @Override

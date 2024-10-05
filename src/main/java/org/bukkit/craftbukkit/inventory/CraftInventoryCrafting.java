@@ -3,6 +3,8 @@ package org.bukkit.craftbukkit.inventory;
 import com.google.common.base.Preconditions;
 import java.util.Arrays;
 import java.util.List;
+
+import net.ethylenemc.interfaces.world.EthyleneContainer;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -37,14 +39,14 @@ public class CraftInventoryCrafting extends CraftInventory implements CraftingIn
     @Override
     public ItemStack[] getContents() {
         ItemStack[] items = new ItemStack[getSize()];
-        List<net.minecraft.world.item.ItemStack> mcResultItems = getResultInventory().getContents();
+        List<net.minecraft.world.item.ItemStack> mcResultItems = ((EthyleneContainer) getResultInventory()).getContents();
 
         int i = 0;
         for (i = 0; i < mcResultItems.size(); i++) {
             items[i] = CraftItemStack.asCraftMirror(mcResultItems.get(i));
         }
 
-        List<net.minecraft.world.item.ItemStack> mcItems = getMatrixInventory().getContents();
+        List<net.minecraft.world.item.ItemStack> mcItems = ((EthyleneContainer) getMatrixInventory()).getContents();
 
         for (int j = 0; j < mcItems.size(); j++) {
             items[i + j] = CraftItemStack.asCraftMirror(mcItems.get(j));
@@ -80,7 +82,7 @@ public class CraftInventoryCrafting extends CraftInventory implements CraftingIn
 
     @Override
     public ItemStack[] getMatrix() {
-        List<net.minecraft.world.item.ItemStack> matrix = getMatrixInventory().getContents();
+        List<net.minecraft.world.item.ItemStack> matrix = ((EthyleneContainer) getMatrixInventory()).getContents();
 
         return asCraftMirror(matrix);
     }
@@ -107,7 +109,7 @@ public class CraftInventoryCrafting extends CraftInventory implements CraftingIn
 
     @Override
     public void setResult(ItemStack item) {
-        List<net.minecraft.world.item.ItemStack> contents = getResultInventory().getContents();
+        List<net.minecraft.world.item.ItemStack> contents = ((EthyleneContainer) getResultInventory()).getContents();
         contents.set(0, CraftItemStack.asNMSCopy(item));
     }
 

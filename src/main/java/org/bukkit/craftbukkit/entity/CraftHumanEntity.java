@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
+
+import net.ethylenemc.interfaces.world.EthyleneContainer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -286,7 +288,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
 
         if (tileInventory instanceof net.minecraft.world.MenuProvider) {
             getHandle().openMenu(tileInventory);
-        } else if (inventory instanceof CraftInventoryAbstractHorse craft && craft.getInventory().getOwner() instanceof CraftAbstractHorse horse) {
+        } else if (inventory instanceof CraftInventoryAbstractHorse craft && ((EthyleneContainer) craft.getInventory()).getOwner() instanceof CraftAbstractHorse horse) {
             getHandle().openHorseInventory(horse.getHandle(), craft.getInventory());
         } else {
             net.minecraft.world.inventory.MenuType<?> container = CraftContainer.getNotchInventoryType(inventory);

@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+
+import net.ethylenemc.interfaces.world.EthyleneContainer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.util.CraftLegacy;
@@ -59,7 +61,7 @@ public class CraftInventory implements Inventory {
 
     @Override
     public ItemStack[] getContents() {
-        List<net.minecraft.world.item.ItemStack> mcItems = getInventory().getContents();
+        List<net.minecraft.world.item.ItemStack> mcItems = ((EthyleneContainer) getInventory()).getContents();
 
         return asCraftMirror(mcItems);
     }
@@ -429,7 +431,7 @@ public class CraftInventory implements Inventory {
 
     @Override
     public List<HumanEntity> getViewers() {
-        return this.inventory.getViewers();
+        return ((EthyleneContainer) this.inventory).getViewers();
     }
 
     @Override
@@ -498,7 +500,7 @@ public class CraftInventory implements Inventory {
 
     @Override
     public InventoryHolder getHolder() {
-        return inventory.getOwner();
+        return ((EthyleneContainer) inventory).getOwner();
     }
 
     @Override
@@ -508,7 +510,7 @@ public class CraftInventory implements Inventory {
 
     @Override
     public void setMaxStackSize(int size) {
-        inventory.setMaxStackSize(size);
+        ((EthyleneContainer) inventory).setMaxStackSize(size);
     }
 
     @Override
@@ -523,6 +525,6 @@ public class CraftInventory implements Inventory {
 
     @Override
     public Location getLocation() {
-        return inventory.getLocation();
+        return ((EthyleneContainer) inventory).getLocation();
     }
 }

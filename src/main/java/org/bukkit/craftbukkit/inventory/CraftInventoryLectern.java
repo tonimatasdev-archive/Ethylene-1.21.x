@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.inventory;
 
+import net.ethylenemc.interfaces.world.EthyleneContainer;
 import org.bukkit.block.Lectern;
 import org.bukkit.inventory.LecternInventory;
 
@@ -16,6 +17,6 @@ public class CraftInventoryLectern extends CraftInventory implements LecternInve
 
     @Override
     public Lectern getHolder() {
-        return (Lectern) inventory.getOwner();
+        return (Lectern) ((EthyleneContainer) inventory).getOwner();
     }
 }
