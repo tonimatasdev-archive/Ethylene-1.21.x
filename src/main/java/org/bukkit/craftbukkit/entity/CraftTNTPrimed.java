@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -55,7 +56,7 @@ public class CraftTNTPrimed extends CraftEntity implements TNTPrimed {
     public Entity getSource() {
         net.minecraft.world.entity.LivingEntity source = getHandle().getOwner();
 
-        return (source != null) ? source.getBukkitEntity() : null;
+        return (source != null) ? ((EthyleneEntity) source).getBukkitEntity() : null;
     }
 
     @Override

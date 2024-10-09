@@ -1,6 +1,8 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.entity.EthyleneMob;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.CraftLootTable;
 import org.bukkit.craftbukkit.CraftServer;
@@ -20,9 +22,9 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
 
         net.minecraft.world.entity.Mob entity = getHandle();
         if (target == null) {
-            entity.setTarget(null, null, false);
+            ((EthyleneMob) entity).setTarget(null, null, false);
         } else if (target instanceof CraftLivingEntity) {
-            entity.setTarget(((CraftLivingEntity) target).getHandle(), null, false);
+            ((EthyleneMob) entity).setTarget(((CraftLivingEntity) target).getHandle(), null, false);
         }
     }
 
@@ -30,7 +32,7 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
     public CraftLivingEntity getTarget() {
         if (getHandle().getTarget() == null) return null;
 
-        return (CraftLivingEntity) getHandle().getTarget().getBukkitEntity();
+        return (CraftLivingEntity) ((EthyleneEntity) getHandle().getTarget()).getBukkitEntity();
     }
 
     @Override
@@ -45,7 +47,7 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
 
     @Override
     public Sound getAmbientSound() {
-        net.minecraft.sounds.SoundEvent sound = getHandle().getAmbientSound0();
+        net.minecraft.sounds.SoundEvent sound = getHandle().getAmbientSound();
         return (sound != null) ? CraftSound.minecraftToBukkit(sound) : null;
     }
 

@@ -90,7 +90,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
         // during world generation, we don't want to run logic for dropping items and xp
         if (getHandle().generation && health == 0) {
-            getHandle().discard(null); // Add Bukkit remove cause
+            ((EthyleneEntity) getHandle()).discard(null); // Add Bukkit remove cause
             return;
         }
 
@@ -363,7 +363,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public Player getKiller() {
-        return getHandle().lastHurtByPlayer == null ? null : (Player) getHandle().lastHurtByPlayer.getBukkitEntity();
+        return getHandle().lastHurtByPlayer == null ? null : (Player) ((EthyleneEntity) getHandle().lastHurtByPlayer).getBukkitEntity();
     }
 
     @Override
@@ -483,7 +483,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
                 launch = new net.minecraft.world.entity.projectile.LargeFireball(world, getHandle(), vec, 1);
             }
 
-            ((net.minecraft.world.entity.projectile.AbstractHurtingProjectile) launch).projectileSource = this;
+            ((EthyleneEntity) ((net.minecraft.world.entity.projectile.AbstractHurtingProjectile) launch)).setProjectileSource(this);
             launch.moveTo(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         } else if (LlamaSpit.class.isAssignableFrom(projectile)) {
             Location location = getEyeLocation();

@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.ProjectileSource;
@@ -11,7 +12,7 @@ public abstract class CraftProjectile extends AbstractProjectile implements Proj
 
     @Override
     public ProjectileSource getShooter() {
-        return getHandle().projectileSource;
+        return ((EthyleneEntity) getHandle()).getProjectileSource();
     }
 
     @Override
@@ -21,7 +22,7 @@ public abstract class CraftProjectile extends AbstractProjectile implements Proj
         } else {
             getHandle().setOwner(null);
         }
-        getHandle().projectileSource = shooter;
+        ((EthyleneEntity) getHandle()).setProjectileSource(shooter);
     }
 
     @Override

@@ -252,7 +252,7 @@ public final class CraftServer implements Server {
         this.playerView = Collections.unmodifiableList(Lists.transform(playerList.players, new Function<net.minecraft.server.level.ServerPlayer, CraftPlayer>() {
             @Override
             public CraftPlayer apply(net.minecraft.server.level.ServerPlayer player) {
-                return player.getBukkitEntity();
+                return (CraftPlayer) ((EthyleneEntity) player).getBukkitEntity();
             }
         }));
         this.serverVersion = CraftServer.class.getPackage().getImplementationVersion();
@@ -548,7 +548,7 @@ public final class CraftServer implements Server {
         Preconditions.checkArgument(name != null, "name cannot be null");
 
         net.minecraft.server.level.ServerPlayer player = playerList.getPlayerByName(name);
-        return (player != null) ? player.getBukkitEntity() : null;
+        return (player != null) ? (Player) ((EthyleneEntity) player).getBukkitEntity() : null;
     }
 
     @Override
@@ -557,7 +557,7 @@ public final class CraftServer implements Server {
 
         net.minecraft.server.level.ServerPlayer player = playerList.getPlayer(id);
         if (player != null) {
-            return player.getBukkitEntity();
+            return (Player) ((EthyleneEntity) player).getBukkitEntity();
         }
 
         return null;
@@ -2255,7 +2255,7 @@ public final class CraftServer implements Server {
         return Iterators.unmodifiableIterator(Iterators.transform(getServer().getCustomBossEvents().getEvents().iterator(), new Function<net.minecraft.server.bossevents.CustomBossEvent, org.bukkit.boss.KeyedBossBar>() {
             @Override
             public org.bukkit.boss.KeyedBossBar apply(net.minecraft.server.bossevents.CustomBossEvent bossBattleCustom) {
-                return bossBattleCustom.getBukkitEntity();
+                return (KeyedBossBar) ((EthyleneEntity) bossBattleCustom).getBukkitEntity();
             }
         }));
     }
@@ -2265,7 +2265,7 @@ public final class CraftServer implements Server {
         Preconditions.checkArgument(key != null, "key");
         net.minecraft.server.bossevents.CustomBossEvent bossBattleCustom = getServer().getCustomBossEvents().get(CraftNamespacedKey.toMinecraft(key));
 
-        return (bossBattleCustom == null) ? null : bossBattleCustom.getBukkitEntity();
+        return (bossBattleCustom == null) ? null : (KeyedBossBar) ((EthyleneEntity) bossBattleCustom).getBukkitEntity();
     }
 
     @Override

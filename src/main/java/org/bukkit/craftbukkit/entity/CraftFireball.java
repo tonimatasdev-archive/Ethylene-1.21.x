@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Fireball;
 import org.bukkit.projectiles.ProjectileSource;
@@ -34,7 +35,7 @@ public class CraftFireball extends AbstractProjectile implements Fireball {
 
     @Override
     public ProjectileSource getShooter() {
-        return getHandle().projectileSource;
+        return ((EthyleneEntity) getHandle()).getProjectileSource();
     }
 
     @Override
@@ -44,7 +45,7 @@ public class CraftFireball extends AbstractProjectile implements Fireball {
         } else {
             getHandle().setOwner(null);
         }
-        getHandle().projectileSource = shooter;
+        ((EthyleneEntity) getHandle()).setProjectileSource(shooter);
     }
 
     @Override

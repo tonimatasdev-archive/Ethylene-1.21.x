@@ -3,6 +3,7 @@ package org.bukkit.craftbukkit.entity;
 import com.google.common.base.Preconditions;
 import java.util.UUID;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneMob;
 import net.ethylenemc.interfaces.world.entity.animal.horse.EthyleneAbstractHorse;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.inventory.CraftInventoryAbstractHorse;
@@ -80,7 +81,7 @@ public abstract class CraftAbstractHorse extends CraftAnimals implements Abstrac
     public void setOwner(AnimalTamer owner) {
         if (owner != null) {
             setTamed(true);
-            getHandle().setTarget(null, null, false);
+            ((EthyleneMob) getHandle()).setTarget(null, null, false);
             setOwnerUUID(owner.getUniqueId());
         } else {
             setTamed(false);

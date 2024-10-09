@@ -1,6 +1,8 @@
 package org.bukkit.craftbukkit.damage;
 
 import java.util.Objects;
+
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -41,13 +43,13 @@ public class CraftDamageSource implements DamageSource {
     @Override
     public org.bukkit.entity.Entity getCausingEntity() {
         net.minecraft.world.entity.Entity entity = this.getHandle().getCausingDamager();
-        return (entity != null) ? entity.getBukkitEntity() : null;
+        return (entity != null) ? ((EthyleneEntity) entity).getBukkitEntity() : null;
     }
 
     @Override
     public org.bukkit.entity.Entity getDirectEntity() {
         net.minecraft.world.entity.Entity entity = this.getHandle().getDamager();
-        return (entity != null) ? entity.getBukkitEntity() : null;
+        return (entity != null) ? ((EthyleneEntity) entity).getBukkitEntity() : null;
     }
 
     @Override

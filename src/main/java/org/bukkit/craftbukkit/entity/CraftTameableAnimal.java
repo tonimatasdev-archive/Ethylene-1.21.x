@@ -1,6 +1,8 @@
 package org.bukkit.craftbukkit.entity;
 
 import java.util.UUID;
+
+import net.ethylenemc.interfaces.world.entity.EthyleneMob;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Creature;
@@ -51,7 +53,7 @@ public class CraftTameableAnimal extends CraftAnimals implements Tameable, Creat
     public void setOwner(AnimalTamer tamer) {
         if (tamer != null) {
             setTamed(true);
-            getHandle().setTarget(null, null, false);
+            ((EthyleneMob) getHandle()).setTarget(null, null, false);
             setOwnerUUID(tamer.getUniqueId());
         } else {
             setTamed(false);

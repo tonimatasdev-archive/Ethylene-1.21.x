@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
+import net.minecraft.server.level.ServerLevel;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;
@@ -38,7 +39,7 @@ public class CraftChunk implements Chunk {
     private static final byte[] EMPTY_LIGHT = new byte[2048];
 
     public CraftChunk(net.minecraft.world.level.chunk.LevelChunk chunk) {
-        worldServer = chunk.level;
+        worldServer = (ServerLevel) chunk.level;
         x = chunk.getPos().x;
         z = chunk.getPos().z;
     }

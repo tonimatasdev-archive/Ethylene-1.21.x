@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ShulkerBullet;
@@ -14,7 +15,7 @@ public class CraftShulkerBullet extends AbstractProjectile implements ShulkerBul
 
     @Override
     public ProjectileSource getShooter() {
-        return getHandle().projectileSource;
+        return ((EthyleneEntity) getHandle()).getProjectileSource();
     }
 
     @Override
@@ -24,7 +25,7 @@ public class CraftShulkerBullet extends AbstractProjectile implements ShulkerBul
         } else {
             getHandle().setOwner(null);
         }
-        getHandle().projectileSource = shooter;
+        ((EthyleneEntity) getHandle()).setProjectileSource(shooter);
     }
 
     @Override

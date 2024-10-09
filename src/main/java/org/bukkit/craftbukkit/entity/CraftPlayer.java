@@ -339,7 +339,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         }
         getHandle().listName = name.equals(getName()) ? null : CraftChatMessage.fromStringOrNull(name);
         for (net.minecraft.server.level.ServerPlayer player : (List<net.minecraft.server.level.ServerPlayer>) server.getHandle().players) {
-            if (player.getBukkitEntity().canSee(this)) {
+            if (((Player) ((EthyleneEntity) player).getBukkitEntity()).canSee(this)) {
                 player.connection.send(new net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket(net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME, getHandle()));
             }
         }

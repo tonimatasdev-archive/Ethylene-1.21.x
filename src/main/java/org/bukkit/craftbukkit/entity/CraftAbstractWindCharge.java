@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.AbstractWindCharge;
 import org.bukkit.event.entity.EntityRemoveEvent;
@@ -12,7 +13,7 @@ public abstract class CraftAbstractWindCharge extends CraftFireball implements A
     @Override
     public void explode() {
         this.getHandle().explode(this.getHandle().position());
-        this.getHandle().discard(EntityRemoveEvent.Cause.EXPLODE); // SPIGOT-7577 - explode doesn't discard the entity, this happens only in tick and onHitBlock
+        ((EthyleneEntity) this.getHandle()).discard(EntityRemoveEvent.Cause.EXPLODE); // SPIGOT-7577 - explode doesn't discard the entity, this happens only in tick and onHitBlock
     }
 
     @Override

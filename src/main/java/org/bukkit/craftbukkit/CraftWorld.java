@@ -328,7 +328,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
         return players.stream()
                 .filter(Objects::nonNull)
-                .map(net.minecraft.server.level.ServerPlayer::getBukkitEntity)
+                .map(serverPlayer -> (CraftPlayer) ((EthyleneEntity) serverPlayer).getBukkitEntity())
                 .collect(Collectors.toUnmodifiableSet());
     }
 
@@ -500,7 +500,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         Preconditions.checkArgument(item != null, "ItemStack cannot be null");
 
         net.minecraft.world.entity.item.ItemEntity entity = new net.minecraft.world.entity.item.ItemEntity(world, loc.getX(), loc.getY(), loc.getZ(), CraftItemStack.asNMSCopy(item));
-        org.bukkit.entity.Item itemEntity = (org.bukkit.entity.Item) entity.getBukkitEntity();
+        org.bukkit.entity.Item itemEntity = (org.bukkit.entity.Item) ((EthyleneEntity) entity).getBukkitEntity();
         entity.pickupDelay = 10;
         if (function != null) {
             function.accept(itemEntity);
@@ -540,7 +540,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         net.minecraft.world.entity.projectile.AbstractArrow arrow;
         if (TippedArrow.class.isAssignableFrom(clazz)) {
             arrow = net.minecraft.world.entity.EntityType.ARROW.create(world);
-            ((Arrow) arrow.getBukkitEntity()).setBasePotionType(PotionType.WATER);
+            ((Arrow) ((EthyleneEntity) arrow).getBukkitEntity()).setBasePotionType(PotionType.WATER);
         } else if (SpectralArrow.class.isAssignableFrom(clazz)) {
             arrow = net.minecraft.world.entity.EntityType.SPECTRAL_ARROW.create(world);
         } else if (Trident.class.isAssignableFrom(clazz)) {
@@ -552,7 +552,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         arrow.moveTo(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
         arrow.shoot(velocity.getX(), velocity.getY(), velocity.getZ(), speed, spread);
         world.addFreshEntity(arrow);
-        return (T) arrow.getBukkitEntity();
+        return (T) ((EthyleneEntity) arrow).getBukkitEntity();
     }
 
     @Override
@@ -572,7 +572,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         lightning.moveTo(loc.getX(), loc.getY(), loc.getZ());
         lightning.setVisualOnly(isVisual);
         world.strikeLightning(lightning, LightningStrikeEvent.Cause.CUSTOM);
-        return (LightningStrike) lightning.getBukkitEntity();
+        return (LightningStrike) ((EthyleneEntity) lightning).getBukkitEntity();
     }
 
     @Override
@@ -1015,7 +1015,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         List<Player> list = new ArrayList<Player>(world.players().size());
 
         for (net.minecraft.world.entity.player.Player human : world.players()) {
-            HumanEntity bukkitEntity = human.getBukkitEntity();
+            HumanEntity bukkitEntity = (HumanEntity) ((EthyleneEntity) human).getBukkitEntity();
 
             if ((bukkitEntity != null) && (bukkitEntity instanceof Player)) {
                 list.add((Player) bukkitEntity);
@@ -1206,7 +1206,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         Preconditions.checkArgument(material.isBlock(), "Material.%s must be a block", material);
 
         net.minecraft.world.entity.item.FallingBlockEntity entity = net.minecraft.world.entity.item.FallingBlockEntity.fall(world, net.minecraft.core.BlockPos.containing(location.getX(), location.getY(), location.getZ()), CraftBlockType.bukkitToMinecraft(material).defaultBlockState(), SpawnReason.CUSTOM);
-        return (FallingBlock) entity.getBukkitEntity();
+        return (FallingBlock) ((EthyleneEntity) entity).getBukkitEntity();
     }
 
     @Override
@@ -1215,7 +1215,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         Preconditions.checkArgument(data != null, "BlockData cannot be null");
 
         net.minecraft.world.entity.item.FallingBlockEntity entity = net.minecraft.world.entity.item.FallingBlockEntity.fall(world, net.minecraft.core.BlockPos.containing(location.getX(), location.getY(), location.getZ()), ((CraftBlockData) data).getState(), SpawnReason.CUSTOM);
-        return (FallingBlock) entity.getBukkitEntity();
+        return (FallingBlock) ((EthyleneEntity) entity).getBukkitEntity();
     }
 
     @Override

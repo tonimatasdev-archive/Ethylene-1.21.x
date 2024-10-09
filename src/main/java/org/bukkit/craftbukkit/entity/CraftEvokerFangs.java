@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.EvokerFangs;
 import org.bukkit.entity.LivingEntity;
@@ -25,7 +26,7 @@ public class CraftEvokerFangs extends CraftEntity implements EvokerFangs {
     public LivingEntity getOwner() {
         net.minecraft.world.entity.LivingEntity owner = getHandle().getOwner();
 
-        return (owner == null) ? null : (LivingEntity) owner.getBukkitEntity();
+        return (owner == null) ? null : (LivingEntity) ((EthyleneEntity) owner).getBukkitEntity();
     }
 
     @Override

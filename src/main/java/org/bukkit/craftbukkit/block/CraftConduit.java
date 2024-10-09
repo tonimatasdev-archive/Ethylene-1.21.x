@@ -2,6 +2,8 @@ package org.bukkit.craftbukkit.block;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -110,7 +112,7 @@ public class CraftConduit extends CraftBlockEntityState<net.minecraft.world.leve
         }
 
         net.minecraft.world.entity.LivingEntity nmsEntity = conduit.destroyTarget;
-        return (nmsEntity != null) ? (LivingEntity) nmsEntity.getBukkitEntity() : null;
+        return (nmsEntity != null) ? (LivingEntity) ((EthyleneEntity) nmsEntity).getBukkitEntity() : null;
     }
 
     @Override

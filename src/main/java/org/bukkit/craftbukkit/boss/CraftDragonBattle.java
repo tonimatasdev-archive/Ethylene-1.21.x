@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -28,7 +29,7 @@ public class CraftDragonBattle implements DragonBattle {
     @Override
     public EnderDragon getEnderDragon() {
         net.minecraft.world.entity.Entity entity = handle.level.getEntity(handle.dragonUUID);
-        return (entity != null) ? (EnderDragon) entity.getBukkitEntity() : null;
+        return (entity != null) ? (EnderDragon) ((EthyleneEntity) entity).getBukkitEntity() : null;
     }
 
     @Override

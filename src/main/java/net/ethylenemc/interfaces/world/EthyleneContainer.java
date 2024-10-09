@@ -6,10 +6,6 @@ import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 public interface EthyleneContainer {
     java.util.List<ItemStack> getContents();
 
-    void onOpen(CraftHumanEntity who);
-
-    void onClose(CraftHumanEntity who);
-
     java.util.List<org.bukkit.entity.HumanEntity> getViewers();
 
     org.bukkit.inventory.InventoryHolder getOwner();

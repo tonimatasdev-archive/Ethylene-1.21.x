@@ -2,6 +2,8 @@ package org.bukkit.craftbukkit.block;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Beacon;
@@ -33,7 +35,7 @@ public class CraftBeacon extends CraftBlockEntityState<net.minecraft.world.level
             Collection<LivingEntity> bukkit = new ArrayList<LivingEntity>(nms.size());
 
             for (net.minecraft.world.entity.player.Player human : nms) {
-                bukkit.add(human.getBukkitEntity());
+                bukkit.add((LivingEntity) ((EthyleneEntity) human).getBukkitEntity());
             }
 
             return bukkit;

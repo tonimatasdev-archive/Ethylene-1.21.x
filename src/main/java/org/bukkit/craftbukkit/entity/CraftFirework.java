@@ -2,6 +2,8 @@ package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
 import java.util.Random;
+
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
@@ -70,7 +72,7 @@ public class CraftFirework extends CraftProjectile implements Firework {
     @Override
     public LivingEntity getAttachedTo() {
         net.minecraft.world.entity.LivingEntity entity = getHandle().attachedToEntity;
-        return (entity != null) ? (LivingEntity) entity.getBukkitEntity() : null;
+        return (entity != null) ? (LivingEntity) ((EthyleneEntity) entity).getBukkitEntity() : null;
     }
 
     @Override

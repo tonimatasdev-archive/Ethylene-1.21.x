@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
@@ -179,7 +181,7 @@ public class CraftBossBar implements BossBar {
     public List<Player> getPlayers() {
         ImmutableList.Builder<Player> players = ImmutableList.builder();
         for (net.minecraft.server.level.ServerPlayer p : handle.getPlayers()) {
-            players.add(p.getBukkitEntity());
+            players.add((Player) ((EthyleneEntity) p).getBukkitEntity());
         }
         return players.build();
     }

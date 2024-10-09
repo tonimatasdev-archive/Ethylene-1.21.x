@@ -4,6 +4,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
+
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantRecipe;
@@ -54,6 +56,6 @@ public interface CraftMerchant extends Merchant {
     @Override
     default HumanEntity getTrader() {
         net.minecraft.world.entity.player.Player eh = getMerchant().getTradingPlayer();
-        return eh == null ? null : eh.getBukkitEntity();
+        return eh == null ? null : (HumanEntity) ((EthyleneEntity) eh).getBukkitEntity();
     }
 }

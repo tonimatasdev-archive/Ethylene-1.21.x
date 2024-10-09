@@ -3,6 +3,8 @@ package org.bukkit.craftbukkit.entity;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Optional;
+
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.craftbukkit.CraftParticle;
@@ -214,7 +216,7 @@ public class CraftAreaEffectCloud extends CraftEntity implements AreaEffectCloud
     @Override
     public ProjectileSource getSource() {
         net.minecraft.world.entity.LivingEntity source = getHandle().getOwner();
-        return (source == null) ? null : (LivingEntity) source.getBukkitEntity();
+        return (source == null) ? null : (LivingEntity) ((EthyleneEntity) source).getBukkitEntity();
     }
 
     @Override

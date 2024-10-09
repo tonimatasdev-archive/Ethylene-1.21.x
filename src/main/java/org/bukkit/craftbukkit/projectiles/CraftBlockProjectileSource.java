@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.projectiles;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -72,14 +73,14 @@ public class CraftBlockProjectileSource implements BlockProjectileSource {
         } else if (AbstractArrow.class.isAssignableFrom(projectile)) {
             if (TippedArrow.class.isAssignableFrom(projectile)) {
                 launch = new net.minecraft.world.entity.projectile.Arrow(world, iposition.x(), iposition.y(), iposition.z(), new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ARROW), null);
-                ((Arrow) launch.getBukkitEntity()).setBasePotionType(PotionType.WATER);
+                ((Arrow) ((EthyleneEntity) launch).getBukkitEntity()).setBasePotionType(PotionType.WATER);
             } else if (SpectralArrow.class.isAssignableFrom(projectile)) {
                 launch = new net.minecraft.world.entity.projectile.SpectralArrow(world, iposition.x(), iposition.y(), iposition.z(), new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.SPECTRAL_ARROW), null);
             } else {
                 launch = new net.minecraft.world.entity.projectile.Arrow(world, iposition.x(), iposition.y(), iposition.z(), new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ARROW), null);
             }
             ((net.minecraft.world.entity.projectile.AbstractArrow) launch).pickup = net.minecraft.world.entity.projectile.AbstractArrow.Pickup.ALLOWED;
-            ((net.minecraft.world.entity.projectile.AbstractArrow) launch).projectileSource = this;
+            ((EthyleneEntity) ((net.minecraft.world.entity.projectile.AbstractArrow) launch)).setProjectileSource(this);
         } else if (Fireball.class.isAssignableFrom(projectile)) {
             double d0 = iposition.x() + (double) ((float) enumdirection.getStepX() * 0.3F);
             double d1 = iposition.y() + (double) ((float) enumdirection.getStepY() * 0.3F);
@@ -103,14 +104,14 @@ public class CraftBlockProjectileSource implements BlockProjectileSource {
                 ((net.minecraft.world.entity.projectile.AbstractHurtingProjectile) launch).assignDirectionalMovement(new net.minecraft.world.phys.Vec3(d3, d4, d5), 0.1D);
             }
 
-            ((net.minecraft.world.entity.projectile.AbstractHurtingProjectile) launch).projectileSource = this;
+            ((EthyleneEntity) ((net.minecraft.world.entity.projectile.AbstractHurtingProjectile) launch)).setProjectileSource(this);
         }
 
         Preconditions.checkArgument(launch != null, "Projectile not supported");
 
         if (launch instanceof net.minecraft.world.entity.projectile.Projectile) {
             if (launch instanceof net.minecraft.world.entity.projectile.ThrowableProjectile) {
-                ((net.minecraft.world.entity.projectile.ThrowableProjectile) launch).projectileSource = this;
+                ((EthyleneEntity) ((net.minecraft.world.entity.projectile.ThrowableProjectile) launch)).setProjectileSource(this);
             }
             // Values from DispenseBehaviorProjectile
             float a = 6.0F;
@@ -125,10 +126,10 @@ public class CraftBlockProjectileSource implements BlockProjectileSource {
         }
 
         if (velocity != null) {
-            ((T) launch.getBukkitEntity()).setVelocity(velocity);
+            ((T) ((EthyleneEntity) launch).getBukkitEntity()).setVelocity(velocity);
         }
 
         world.addFreshEntity(launch);
-        return (T) launch.getBukkitEntity();
+        return (T) ((EthyleneEntity) launch).getBukkitEntity();
     }
 }

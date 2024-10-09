@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
@@ -59,7 +60,7 @@ public class CraftAbstractArrow extends AbstractProjectile implements AbstractAr
 
     @Override
     public ProjectileSource getShooter() {
-        return getHandle().projectileSource;
+        return ((EthyleneEntity) getHandle()).getProjectileSource();
     }
 
     @Override
@@ -69,7 +70,7 @@ public class CraftAbstractArrow extends AbstractProjectile implements AbstractAr
         } else {
             getHandle().setOwner(null);
         }
-        getHandle().projectileSource = shooter;
+        ((EthyleneEntity) getHandle()).setProjectileSource(shooter);
     }
 
     @Override

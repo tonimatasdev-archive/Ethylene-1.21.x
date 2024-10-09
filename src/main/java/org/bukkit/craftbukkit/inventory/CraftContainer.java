@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.inventory;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -40,7 +41,7 @@ public class CraftContainer extends net.minecraft.world.inventory.AbstractContai
 
             @Override
             public HumanEntity getPlayer() {
-                return player.getBukkitEntity();
+                return (HumanEntity) ((EthyleneEntity) player).getBukkitEntity();
             }
 
             @Override

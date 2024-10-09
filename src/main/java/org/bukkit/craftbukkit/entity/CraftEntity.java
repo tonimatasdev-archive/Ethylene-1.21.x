@@ -281,7 +281,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     @Override
     public void remove() {
         entity.pluginRemoved = true;
-        entity.discard(getHandle().generation ? null : EntityRemoveEvent.Cause.PLUGIN);
+        ((EthyleneEntity) entity).discard(getHandle().generation ? null : EntityRemoveEvent.Cause.PLUGIN);
     }
 
     @Override
@@ -426,17 +426,17 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public Sound getSwimSound() {
-        return CraftSound.minecraftToBukkit(getHandle().getSwimSound0());
+        return CraftSound.minecraftToBukkit(getHandle().getSwimSound());
     }
 
     @Override
     public Sound getSwimSplashSound() {
-        return CraftSound.minecraftToBukkit(getHandle().getSwimSplashSound0());
+        return CraftSound.minecraftToBukkit(getHandle().getSwimSplashSound());
     }
 
     @Override
     public Sound getSwimHighSpeedSplashSound() {
-        return CraftSound.minecraftToBukkit(getHandle().getSwimHighSpeedSplashSound0());
+        return CraftSound.minecraftToBukkit(getHandle().getSwimHighSpeedSplashSound());
     }
 
     public void setHandle(final net.minecraft.world.entity.Entity entity) {
@@ -576,7 +576,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
         if (entityTracker != null) {
             for (net.minecraft.server.network.ServerPlayerConnection connection : entityTracker.seenBy) {
-                players.add(connection.getPlayer().getBukkitEntity());
+                players.add((Player) ((EthyleneEntity) connection.getPlayer()).getBukkitEntity());
             }
         }
 
