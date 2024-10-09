@@ -9,6 +9,8 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import net.ethylenemc.EthyleneStatic;
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneWorldGenLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -441,8 +443,8 @@ public final class CraftEntityTypes {
                 if (nmsBlock.isSolid() || net.minecraft.world.level.block.DiodeBlock.isDiode(nmsBlock)) {
                     boolean taken = false;
                     net.minecraft.world.phys.AABB bb = (ItemFrame.class.isAssignableFrom(clazz))
-                            ? net.minecraft.world.entity.decoration.ItemFrame.calculateBoundingBoxStatic(pos, CraftBlock.blockFaceToNotch(dir).getOpposite())
-                            : net.minecraft.world.entity.decoration.Painting.calculateBoundingBoxStatic(pos, CraftBlock.blockFaceToNotch(dir).getOpposite(), width, height);
+                            ? EthyleneStatic.calculateItemFrameBoundingBox(pos, CraftBlock.blockFaceToNotch(dir).getOpposite())
+                            : EthyleneStatic.calculatePaintingBoundingBox(pos, CraftBlock.blockFaceToNotch(dir).getOpposite(), width, height);
                     List<net.minecraft.world.entity.Entity> list = spawnData.world().getEntities(null, bb);
                     for (Iterator<net.minecraft.world.entity.Entity> it = list.iterator(); !taken && it.hasNext(); ) {
                         net.minecraft.world.entity.Entity e = it.next();
