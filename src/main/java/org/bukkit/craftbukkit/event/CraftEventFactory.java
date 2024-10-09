@@ -1304,7 +1304,7 @@ public class CraftEventFactory {
         }
 
         BlockIgniteEvent event = new BlockIgniteEvent(bukkitWorld.getBlockAt(block.getX(), block.getY(), block.getZ()), cause, igniter);
-        world.getCraftServer().getPluginManager().callEvent(event);
+        ((EthyleneLevel) world).getCraftServer().getPluginManager().callEvent(event);
         return event;
     }
 

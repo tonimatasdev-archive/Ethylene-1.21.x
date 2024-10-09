@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.EthyleneCaptures;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -82,8 +83,11 @@ public class CraftAllay extends CraftCreature implements org.bukkit.entity.Allay
 
     @Override
     public org.bukkit.entity.Allay duplicateAllay() {
-        net.minecraft.world.entity.animal.allay.Allay nmsAllay = getHandle().duplicateAllay();
+        // Ethylene start - Allay#duplicateAllay is void method.
+        getHandle().duplicateAllay();
+        net.minecraft.world.entity.animal.allay.Allay nmsAllay = EthyleneCaptures.duplicateAllay.getAndSet(null);
         return (nmsAllay != null) ? (org.bukkit.entity.Allay) ((EthyleneEntity) nmsAllay).getBukkitEntity() : null;
+        // Ethylene end
     }
 
     public Location getJukebox() {
