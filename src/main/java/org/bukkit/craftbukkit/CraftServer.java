@@ -47,6 +47,7 @@ import jline.console.ConsoleReader;
 import net.ethylenemc.EthyleneStatic;
 import net.ethylenemc.interfaces.world.EthyleneContainer;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.inventory.EthyleneAbstractContainerMenu;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
@@ -1345,7 +1346,6 @@ public final class CraftServer implements Server {
     private net.minecraft.world.inventory.CraftingContainer createInventoryCrafting() {
         // Create a players Crafting Inventory
         net.minecraft.world.inventory.AbstractContainerMenu container = new net.minecraft.world.inventory.AbstractContainerMenu(null, -1) {
-            @Override
             public InventoryView getBukkitView() {
                 return null;
             }
@@ -1400,7 +1400,7 @@ public final class CraftServer implements Server {
         }
 
         // Call Bukkit event to check for matrix/result changes.
-        net.minecraft.world.item.ItemStack result = CraftEventFactory.callPreCraftEvent(inventoryCrafting, craftResult, itemstack, container.getBukkitView(), recipe.map(net.minecraft.world.item.crafting.RecipeHolder::value).orElse(null) instanceof net.minecraft.world.item.crafting.RepairItemRecipe);
+        net.minecraft.world.item.ItemStack result = CraftEventFactory.callPreCraftEvent(inventoryCrafting, craftResult, itemstack, ((EthyleneAbstractContainerMenu) container).getBukkitView(), recipe.map(net.minecraft.world.item.crafting.RecipeHolder::value).orElse(null) instanceof net.minecraft.world.item.crafting.RepairItemRecipe);
 
         return createItemCraftResult(CraftItemStack.asBukkitCopy(result), inventoryCrafting, craftWorld.getHandle());
     }

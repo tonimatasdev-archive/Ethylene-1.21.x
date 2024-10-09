@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.Art;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftArt;
@@ -28,7 +29,7 @@ public class CraftPainting extends CraftHanging implements Painting {
         net.minecraft.core.Holder<net.minecraft.world.entity.decoration.PaintingVariant> oldArt = painting.getVariant();
         painting.setVariant(CraftArt.bukkitToMinecraftHolder(art));
         painting.setDirection(painting.getDirection());
-        if (!force && !getHandle().generation && !painting.survives()) {
+        if (!force && !((EthyleneEntity) getHandle()).getGeneration() && !painting.survives()) {
             // Revert painting since it doesn't fit
             painting.setVariant(oldArt);
             painting.setDirection(painting.getDirection());

@@ -3,6 +3,8 @@ package org.bukkit.craftbukkit.inventory;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Suppliers;
 import java.util.function.Supplier;
+
+import net.ethylenemc.interfaces.world.inventory.EthyleneAbstractContainerMenu;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.craftbukkit.CraftRegistry;
@@ -41,9 +43,9 @@ public class CraftMenuType<V extends InventoryView> implements MenuType.Typed<V>
         final net.minecraft.server.level.ServerPlayer serverPlayer = (net.minecraft.server.level.ServerPlayer) craftHuman.getHandle();
 
         final net.minecraft.world.inventory.AbstractContainerMenu container = typeData.get().menuBuilder().build(serverPlayer, this.handle);
-        container.setTitle(CraftChatMessage.fromString(title)[0]);
-        container.checkReachable = false;
-        return (V) container.getBukkitView();
+        ((EthyleneAbstractContainerMenu) container).setTitle(CraftChatMessage.fromString(title)[0]);
+        ((EthyleneAbstractContainerMenu) container).setCheckReachable(false);
+        return (V) ((EthyleneAbstractContainerMenu) container).getBukkitView();
     }
 
     @Override

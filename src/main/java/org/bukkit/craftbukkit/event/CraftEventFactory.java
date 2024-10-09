@@ -17,7 +17,10 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.inventory.EthyleneAbstractContainerMenu;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -40,11 +43,7 @@ import org.bukkit.craftbukkit.block.CraftBlockState;
 import org.bukkit.craftbukkit.block.CraftBlockStates;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
 import org.bukkit.craftbukkit.damage.CraftDamageSource;
-import org.bukkit.craftbukkit.entity.CraftEntity;
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.craftbukkit.entity.CraftRaider;
-import org.bukkit.craftbukkit.entity.CraftSpellcaster;
+import org.bukkit.craftbukkit.entity.*;
 import org.bukkit.craftbukkit.inventory.CraftInventoryCrafting;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.inventory.CraftItemType;
@@ -183,6 +182,7 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.view.AnvilView;
+import org.bukkit.inventory.view.MerchantView;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
@@ -303,7 +303,7 @@ public class CraftEventFactory {
      * Trade Index Change Event
      */
     public static TradeSelectEvent callTradeSelectEvent(net.minecraft.server.level.ServerPlayer player, int newIndex, net.minecraft.world.inventory.MerchantMenu merchant) {
-        TradeSelectEvent tradeSelectEvent = new TradeSelectEvent(merchant.getBukkitView(), newIndex);
+        TradeSelectEvent tradeSelectEvent = new TradeSelectEvent((MerchantView) ((EthyleneAbstractContainerMenu) merchant).getBukkitView(), newIndex);
         Bukkit.getPluginManager().callEvent(tradeSelectEvent);
         return tradeSelectEvent;
     }
@@ -1182,21 +1182,21 @@ public class CraftEventFactory {
 
         CraftServer server = ((EthyleneLevel) player.level()).getCraftServer();
         CraftPlayer craftPlayer = (CraftPlayer) ((EthyleneEntity) player).getBukkitEntity();
-        player.containerMenu.transferTo(container, craftPlayer);
+        ((EthyleneAbstractContainerMenu) player.containerMenu).transferTo(container, craftPlayer);
 
-        InventoryOpenEvent event = new InventoryOpenEvent(container.getBukkitView());
+        InventoryOpenEvent event = new InventoryOpenEvent(((EthyleneAbstractContainerMenu) container).getBukkitView());
         event.setCancelled(cancelled);
         server.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
-            container.transferTo(player.containerMenu, craftPlayer);
+            ((EthyleneAbstractContainerMenu) container).transferTo(player.containerMenu, craftPlayer);
             return null;
         }
 
         return container;
     }
 
-    public static net.minecraft.world.item.ItemStack callPreCraftEvent(net.minecraft.world.inventory.CraftingContainer matrix, net.minecraft.world.inventory.AbstractContainerMenu resultInventory, net.minecraft.world.item.ItemStack result, InventoryView lastCraftView, boolean isRepair) {
+    public static net.minecraft.world.item.ItemStack callPreCraftEvent(net.minecraft.world.inventory.CraftingContainer matrix, Container resultInventory, net.minecraft.world.item.ItemStack result, InventoryView lastCraftView, boolean isRepair) {
         CraftInventoryCrafting inventory = new CraftInventoryCrafting(matrix, resultInventory);
         inventory.setResult(CraftItemStack.asCraftMirror(result));
 
@@ -1357,9 +1357,9 @@ public class CraftEventFactory {
     }
 
     public static void handleInventoryCloseEvent(net.minecraft.world.entity.player.Player human) {
-        InventoryCloseEvent event = new InventoryCloseEvent(human.containerMenu.getBukkitView());
+        InventoryCloseEvent event = new InventoryCloseEvent(((EthyleneAbstractContainerMenu) human.containerMenu).getBukkitView());
         ((EthyleneLevel) human.level()).getCraftServer().getPluginManager().callEvent(event);
-        human.containerMenu.transferTo(human.inventoryMenu, ((EthyleneEntity) human).getBukkitEntity());
+        ((EthyleneAbstractContainerMenu) human.containerMenu).transferTo(human.inventoryMenu, (CraftHumanEntity) ((EthyleneEntity) human).getBukkitEntity());
     }
 
     public static net.minecraft.world.item.ItemStack handleEditBookEvent(net.minecraft.server.level.ServerPlayer player, int itemInHandIndex, net.minecraft.world.item.ItemStack itemInHand, net.minecraft.world.item.ItemStack newBookItem) {

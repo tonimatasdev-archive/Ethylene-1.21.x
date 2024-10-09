@@ -368,7 +368,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
         net.minecraft.world.entity.Entity entity = createEntity(location, clazz, true);
 
         if (!isNormalWorld()) {
-            entity.generation = true;
+            ((EthyleneEntity) entity).setGeneration(true);
         }
 
         return (T) ((EthyleneEntity) entity).getBukkitEntity();
@@ -426,7 +426,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
         }
 
         if (!isNormalWorld()) {
-            entity.generation = true;
+            ((EthyleneEntity) entity).setGeneration(true);
         }
 
         if (function != null) {

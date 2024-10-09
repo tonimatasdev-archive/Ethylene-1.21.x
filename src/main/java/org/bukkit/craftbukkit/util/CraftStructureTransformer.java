@@ -83,7 +83,7 @@ public class CraftStructureTransformer {
         if (region == null) {
             return true;
         }
-        entity.generation = true;
+        ((EthyleneEntity) entity).setGeneration(true);
         CraftEntity craftEntity = ((EthyleneEntity) entity).getBukkitEntity();
         int x = entity.getBlockX();
         int y = entity.getBlockY();

@@ -2,6 +2,7 @@ package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.entity.projectile.EthyleneFishingHook;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
@@ -25,121 +26,121 @@ public class CraftFishHook extends CraftProjectile implements FishHook {
 
     @Override
     public int getMinWaitTime() {
-        return getHandle().minWaitTime;
+        return ((EthyleneFishingHook) getHandle()).getMinWaitTime();
     }
 
     @Override
     public void setMinWaitTime(int minWaitTime) {
         Preconditions.checkArgument(minWaitTime >= 0 && minWaitTime <= this.getMaxWaitTime(), "The minimum wait time should be between %s and %s (the maximum wait time)", 0, this.getMaxWaitTime());
         net.minecraft.world.entity.projectile.FishingHook hook = getHandle();
-        hook.minWaitTime = minWaitTime;
+        ((EthyleneFishingHook) hook).setMinWaitTime(minWaitTime);
     }
 
     @Override
     public int getMaxWaitTime() {
-        return getHandle().maxWaitTime;
+        return ((EthyleneFishingHook) getHandle()).getMaxWaitTime();
     }
 
     @Override
     public void setMaxWaitTime(int maxWaitTime) {
         Preconditions.checkArgument(maxWaitTime >= 0 && maxWaitTime >= this.getMinWaitTime(), "The maximum wait time should be between %s and %s (the minimum wait time)", 0, this.getMinWaitTime());
         net.minecraft.world.entity.projectile.FishingHook hook = getHandle();
-        hook.maxWaitTime = maxWaitTime;
+        ((EthyleneFishingHook) hook).setMaxWaitTime(maxWaitTime);
     }
 
     @Override
     public void setWaitTime(int min, int max) {
         Preconditions.checkArgument(min >= 0 && max >= 0 && min <= max, "The minimum/maximum wait time should be higher than or equal to 0 and the minimum wait time");
-        getHandle().minWaitTime = min;
-        getHandle().maxWaitTime = max;
+        ((EthyleneFishingHook) getHandle()).setMinWaitTime(min);
+        ((EthyleneFishingHook) getHandle()).setMaxWaitTime(max);
     }
 
     @Override
     public int getMinLureTime() {
-        return getHandle().minLureTime;
+        return ((EthyleneFishingHook) getHandle()).getMinLureTime();
     }
 
     @Override
     public void setMinLureTime(int minLureTime) {
         Preconditions.checkArgument(minLureTime >= 0 && minLureTime <= this.getMaxLureTime(), "The minimum lure time (%s) should be between 0 and %s (the maximum wait time)", minLureTime, this.getMaxLureTime());
-        getHandle().minLureTime = minLureTime;
+        ((EthyleneFishingHook) getHandle()).setMinLureTime(minLureTime);
     }
 
     @Override
     public int getMaxLureTime() {
-        return getHandle().maxLureTime;
+        return ((EthyleneFishingHook) getHandle()).getMaxLureTime();
     }
 
     @Override
     public void setMaxLureTime(int maxLureTime) {
         Preconditions.checkArgument(maxLureTime >= 0 && maxLureTime >= this.getMinLureTime(), "The maximum lure time (%s) should be higher than or equal to 0 and %s (the minimum wait time)", maxLureTime, this.getMinLureTime());
-        getHandle().maxLureTime = maxLureTime;
+        ((EthyleneFishingHook) getHandle()).setMaxLureTime(maxLureTime);
     }
 
     @Override
     public void setLureTime(int min, int max) {
         Preconditions.checkArgument(min >= 0 && max >= 0 && min <= max, "The minimum/maximum lure time should be higher than or equal to 0 and the minimum wait time.");
-        getHandle().minLureTime = min;
-        getHandle().maxLureTime = max;
+        ((EthyleneFishingHook) getHandle()).setMinLureTime(min);
+        ((EthyleneFishingHook) getHandle()).setMaxLureTime(max);
     }
 
     @Override
     public float getMinLureAngle() {
-        return getHandle().minLureAngle;
+        return ((EthyleneFishingHook) getHandle()).getMinLureAngle();
     }
 
     @Override
     public void setMinLureAngle(float minLureAngle) {
         Preconditions.checkArgument(minLureAngle <= this.getMaxLureAngle(), "The minimum lure angle (%s) should be less than %s (the maximum lure angle)", minLureAngle, this.getMaxLureAngle());
-        getHandle().minLureAngle = minLureAngle;
+        ((EthyleneFishingHook) getHandle()).setMinLureAngle(minLureAngle);
     }
 
     @Override
     public float getMaxLureAngle() {
-        return getHandle().maxLureAngle;
+        return ((EthyleneFishingHook) getHandle()).getMaxLureAngle();
     }
 
     @Override
     public void setMaxLureAngle(float maxLureAngle) {
         Preconditions.checkArgument(maxLureAngle >= this.getMinLureAngle(), "The minimum lure angle (%s) should be less than %s (the maximum lure angle)", maxLureAngle, this.getMinLureAngle());
-        getHandle().maxLureAngle = maxLureAngle;
+        ((EthyleneFishingHook) getHandle()).setMaxLureAngle(maxLureAngle);
     }
 
     @Override
     public void setLureAngle(float min, float max) {
         Preconditions.checkArgument(min <= max, "The minimum lure (%s) angle should be less than the maximum lure angle (%s)", min, max);
-        getHandle().minLureAngle = min;
-        getHandle().maxLureAngle = max;
+        ((EthyleneFishingHook) getHandle()).setMinLureAngle(min);
+        ((EthyleneFishingHook) getHandle()).setMaxLureAngle(max);
     }
 
     @Override
     public boolean isSkyInfluenced() {
-        return getHandle().skyInfluenced;
+        return ((EthyleneFishingHook) getHandle()).getSkyInfluenced();
     }
 
     @Override
     public void setSkyInfluenced(boolean skyInfluenced) {
-        getHandle().skyInfluenced = skyInfluenced;
+        ((EthyleneFishingHook) getHandle()).setSkyInfluenced(skyInfluenced);
     }
 
     @Override
     public boolean isRainInfluenced() {
-        return getHandle().rainInfluenced;
+        return ((EthyleneFishingHook) getHandle()).getRainInfluenced();
     }
 
     @Override
     public void setRainInfluenced(boolean rainInfluenced) {
-        getHandle().rainInfluenced = rainInfluenced;
+        ((EthyleneFishingHook) getHandle()).setRainInfluenced(rainInfluenced);
     }
 
     @Override
     public boolean getApplyLure() {
-        return getHandle().applyLure;
+        return ((EthyleneFishingHook) getHandle()).getApplyLure();
     }
 
     @Override
     public void setApplyLure(boolean applyLure) {
-        getHandle().applyLure = applyLure;
+        ((EthyleneFishingHook) getHandle()).setApplyLure(applyLure);
     }
 
     @Override

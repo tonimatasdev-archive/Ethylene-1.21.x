@@ -66,7 +66,7 @@ public class CraftEntitySnapshot implements EntitySnapshot {
 
     public static CraftEntitySnapshot create(CraftEntity entity) {
         net.minecraft.nbt.CompoundTag tag = new net.minecraft.nbt.CompoundTag();
-        if (!entity.getHandle().saveAsPassenger(tag, false)) {
+        if (!((EthyleneEntity) entity.getHandle()).saveAsPassenger(tag, false)) {
             return null;
         }
 

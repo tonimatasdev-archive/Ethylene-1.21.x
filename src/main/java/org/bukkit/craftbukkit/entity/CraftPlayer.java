@@ -37,6 +37,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.inventory.EthyleneAbstractContainerMenu;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.BanEntry;
 import org.bukkit.BanList;
@@ -1881,7 +1882,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     @Override
     public boolean setWindowProperty(Property prop, int value) {
         net.minecraft.world.inventory.AbstractContainerMenu container = getHandle().containerMenu;
-        if (container.getBukkitView().getType() != prop.getType()) {
+        if (((EthyleneAbstractContainerMenu) container).getBukkitView().getType() != prop.getType()) {
             return false;
         }
         container.setData(prop.getId(), value);

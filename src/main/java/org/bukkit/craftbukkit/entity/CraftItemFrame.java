@@ -1,6 +1,8 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.network.syncher.EthyleneSynchedEntityData;
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.Rotation;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftServer;
@@ -22,7 +24,7 @@ public class CraftItemFrame extends CraftHanging implements ItemFrame {
         Preconditions.checkArgument(newDir != null, "%s is not a valid facing direction", face);
 
         getHandle().setDirection(newDir);
-        if (!force && !getHandle().generation && !hanging.survives()) {
+        if (!force && !((EthyleneEntity) getHandle()).getGeneration() && !hanging.survives()) {
             hanging.setDirection(oldDir);
             return false;
         }
@@ -37,11 +39,11 @@ public class CraftItemFrame extends CraftHanging implements ItemFrame {
         super.update();
 
         // mark dirty, so that the client gets updated with item and rotation
-        getHandle().getEntityData().markDirty(net.minecraft.world.entity.decoration.ItemFrame.DATA_ITEM);
-        getHandle().getEntityData().markDirty(net.minecraft.world.entity.decoration.ItemFrame.DATA_ROTATION);
+        ((EthyleneSynchedEntityData) getHandle().getEntityData()).markDirty(net.minecraft.world.entity.decoration.ItemFrame.DATA_ITEM);
+        ((EthyleneSynchedEntityData) getHandle().getEntityData()).markDirty(net.minecraft.world.entity.decoration.ItemFrame.DATA_ROTATION);
 
         // update redstone
-        if (!getHandle().generation) {
+        if (!((EthyleneEntity) getHandle()).getGeneration()) {
             getHandle().level().updateNeighbourForOutputSignal(getHandle().getPos(), net.minecraft.world.level.block.Blocks.AIR);
         }
     }
@@ -54,7 +56,7 @@ public class CraftItemFrame extends CraftHanging implements ItemFrame {
     @Override
     public void setItem(org.bukkit.inventory.ItemStack item, boolean playSound) {
         // only updated redstone and play sound when it is not in generation
-        getHandle().setItem(CraftItemStack.asNMSCopy(item), !getHandle().generation, !getHandle().generation && playSound);
+        getHandle().setItem(CraftItemStack.asNMSCopy(item), !((EthyleneEntity) getHandle()).getGeneration(), !((EthyleneEntity) getHandle()).getGeneration() && playSound);
     }
 
     @Override

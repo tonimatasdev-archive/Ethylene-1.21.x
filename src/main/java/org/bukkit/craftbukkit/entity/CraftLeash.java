@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.LeashHitch;
@@ -14,7 +15,7 @@ public class CraftLeash extends CraftBlockAttachedEntity implements LeashHitch {
     public boolean setFacingDirection(BlockFace face, boolean force) {
         Preconditions.checkArgument(face == BlockFace.SELF, "%s is not a valid facing direction", face);
 
-        return force || getHandle().generation || getHandle().survives();
+        return force || ((EthyleneEntity) getHandle()).getGeneration() || getHandle().survives();
     }
 
     @Override

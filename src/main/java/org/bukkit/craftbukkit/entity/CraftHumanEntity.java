@@ -10,6 +10,7 @@ import java.util.Set;
 
 import net.ethylenemc.interfaces.world.EthyleneContainer;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.inventory.EthyleneAbstractContainerMenu;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -102,7 +103,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         net.minecraft.world.item.ItemStack stack = CraftItemStack.asNMSCopy(item);
         getHandle().containerMenu.setCarried(stack);
         if (this instanceof CraftPlayer) {
-            getHandle().containerMenu.broadcastCarriedItem(); // Send set slot for cursor
+            ((EthyleneAbstractContainerMenu) getHandle().containerMenu).broadcastCarriedItem(); // Send set slot for cursor
         }
     }
 
@@ -257,7 +258,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
 
     @Override
     public InventoryView getOpenInventory() {
-        return getHandle().containerMenu.getBukkitView();
+        return ((EthyleneAbstractContainerMenu) getHandle().containerMenu).getBukkitView();
     }
 
     @Override
@@ -299,8 +300,8 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         if (getHandle().containerMenu == formerContainer) {
             return null;
         }
-        getHandle().containerMenu.checkReachable = false;
-        return getHandle().containerMenu.getBukkitView();
+        ((EthyleneAbstractContainerMenu) getHandle().containerMenu).setCheckReachable(false);
+        return ((EthyleneAbstractContainerMenu) getHandle().containerMenu).getBukkitView();
     }
 
     private static void openCustomInventory(Inventory inventory, net.minecraft.server.level.ServerPlayer player, net.minecraft.world.inventory.MenuType<?> windowType) {
@@ -311,7 +312,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         container = CraftEventFactory.callInventoryOpenEvent(player, container);
         if (container == null) return;
 
-        String title = container.getBukkitView().getTitle();
+        String title = ((EthyleneAbstractContainerMenu) container).getBukkitView().getTitle();
 
         player.connection.send(new net.minecraft.network.protocol.game.ClientboundOpenScreenPacket(container.containerId, windowType, CraftChatMessage.fromString(title)[0]));
         player.containerMenu = container;
@@ -331,9 +332,9 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         }
         getHandle().openMenu(net.minecraft.world.level.block.Blocks.CRAFTING_TABLE.defaultBlockState().getMenuProvider(getHandle().level(), CraftLocation.toBlockPosition(location)));
         if (force) {
-            getHandle().containerMenu.checkReachable = false;
+            ((EthyleneAbstractContainerMenu) getHandle().containerMenu).setCheckReachable(false);
         }
-        return getHandle().containerMenu.getBukkitView();
+        return ((EthyleneAbstractContainerMenu) getHandle().containerMenu).getBukkitView();
     }
 
     @Override
@@ -353,9 +354,9 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         getHandle().openMenu(net.minecraft.world.level.block.Blocks.ENCHANTING_TABLE.defaultBlockState().getMenuProvider(getHandle().level(), pos));
 
         if (force) {
-            getHandle().containerMenu.checkReachable = false;
+            ((EthyleneAbstractContainerMenu) getHandle().containerMenu).setCheckReachable(false);
         }
-        return getHandle().containerMenu.getBukkitView();
+        return ((EthyleneAbstractContainerMenu) getHandle().containerMenu).getBukkitView();
     }
 
     @Override
@@ -426,7 +427,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         mcMerchant.setTradingPlayer(this.getHandle());
         mcMerchant.openTradingScreen(this.getHandle(), name, level);
 
-        return this.getHandle().containerMenu.getBukkitView();
+        return ((EthyleneAbstractContainerMenu) this.getHandle().containerMenu).getBukkitView();
     }
 
     @Override
@@ -666,7 +667,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
 
         net.minecraft.world.entity.projectile.FireworkRocketEntity fireworks = new net.minecraft.world.entity.projectile.FireworkRocketEntity(getHandle().level(), CraftItemStack.asNMSCopy(fireworkItemStack), getHandle());
         boolean success = getHandle().level().addFreshEntity(fireworks, SpawnReason.CUSTOM);
-        return success ? (Firework) fireworks.getBukkitEntity() : null;
+        return success ? (Firework) ((EthyleneEntity) fireworks).getBukkitEntity() : null;
     }
 
     @Override

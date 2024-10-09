@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.block.CraftBlock;
@@ -40,7 +41,7 @@ public class CraftHanging extends CraftBlockAttachedEntity implements Hanging {
             default:
                 throw new IllegalArgumentException(String.format("%s is not a valid facing direction", face));
         }
-        if (!force && !getHandle().generation && !hanging.survives()) {
+        if (!force && !((EthyleneEntity) getHandle()).getGeneration() && !hanging.survives()) {
             // Revert since it doesn't fit
             hanging.setDirection(dir);
             return false;

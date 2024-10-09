@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.world.inventory.EthyleneAbstractContainerMenu;
 import org.bukkit.GameMode;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
@@ -23,7 +24,7 @@ public class CraftInventoryView<T extends net.minecraft.world.inventory.Abstract
         this.player = (CraftHumanEntity) player;
         this.viewing = (CraftInventory) viewing;
         this.container = container;
-        this.originalTitle = CraftChatMessage.fromComponent(container.getTitle());
+        this.originalTitle = CraftChatMessage.fromComponent(((EthyleneAbstractContainerMenu) container).getTitle());
         this.title = originalTitle;
     }
 

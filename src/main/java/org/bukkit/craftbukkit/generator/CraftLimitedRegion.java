@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
+import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import net.ethylenemc.interfaces.world.level.EthyleneWorldGenLevel;
 import org.bukkit.HeightMap;
@@ -79,7 +80,7 @@ public class CraftLimitedRegion extends CraftRegionAccessor implements LimitedRe
                 for (net.minecraft.nbt.CompoundTag compound : chunk.getEntities()) {
                     net.minecraft.world.entity.EntityType.loadEntityRecursive(compound, ((EthyleneWorldGenLevel) access).getMinecraftWorld(), (entity) -> {
                         if (region.contains(entity.getX(), entity.getY(), entity.getZ())) {
-                            entity.generation = true;
+                            ((EthyleneEntity) entity).setGeneration(true);
                             entities.add(entity);
                         } else {
                             outsideEntities.add(entity);

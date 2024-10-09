@@ -3,6 +3,7 @@ package org.bukkit.craftbukkit.entity;
 import com.google.common.base.Preconditions;
 import java.util.Random;
 
+import net.ethylenemc.interfaces.network.syncher.EthyleneSynchedEntityData;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.CraftServer;
@@ -56,7 +57,7 @@ public class CraftFirework extends CraftProjectile implements Firework {
         // Copied from net.minecraft.world.entity.projectile.FireworkRocketEntity constructor, update firework lifetime/power
         getHandle().lifetime = 10 * (1 + meta.getPower()) + random.nextInt(6) + random.nextInt(7);
 
-        getHandle().getEntityData().markDirty(net.minecraft.world.entity.projectile.FireworkRocketEntity.DATA_ID_FIREWORKS_ITEM);
+        ((EthyleneSynchedEntityData) getHandle().getEntityData()).markDirty(net.minecraft.world.entity.projectile.FireworkRocketEntity.DATA_ID_FIREWORKS_ITEM);
     }
 
     @Override

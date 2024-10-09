@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.inventory;
 
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.inventory.EthyleneAbstractContainerMenu;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -68,7 +69,6 @@ public class CraftContainer extends net.minecraft.world.inventory.AbstractContai
         }, player, id);
     }
 
-    @Override
     public InventoryView getBukkitView() {
         return view;
     }
