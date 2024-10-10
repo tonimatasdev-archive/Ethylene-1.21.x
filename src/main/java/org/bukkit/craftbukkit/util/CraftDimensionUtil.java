@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.util;
 
 
+import net.ethylenemc.interfaces.server.level.EthyleneServerLevel;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 
 public class CraftDimensionUtil {

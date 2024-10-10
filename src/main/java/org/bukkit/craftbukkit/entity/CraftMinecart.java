@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
+import net.ethylenemc.interfaces.world.entity.vehicle.EthyleneAbstractMinecart;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
@@ -25,44 +26,44 @@ public abstract class CraftMinecart extends CraftVehicle implements Minecart {
 
     @Override
     public double getMaxSpeed() {
-        return getHandle().maxSpeed;
+        return ((EthyleneAbstractMinecart) getHandle()).maxSpeed();
     }
 
     @Override
     public void setMaxSpeed(double speed) {
         if (speed >= 0D) {
-            getHandle().maxSpeed = speed;
+            ((EthyleneAbstractMinecart) getHandle()).maxSpeed(speed);
         }
     }
 
     @Override
     public boolean isSlowWhenEmpty() {
-        return getHandle().slowWhenEmpty;
+        return ((EthyleneAbstractMinecart) getHandle()).slowWhenEmpty();
     }
 
     @Override
     public void setSlowWhenEmpty(boolean slow) {
-        getHandle().slowWhenEmpty = slow;
+        ((EthyleneAbstractMinecart) getHandle()).slowWhenEmpty(slow);
     }
 
     @Override
     public Vector getFlyingVelocityMod() {
-        return getHandle().getFlyingVelocityMod();
+        return ((EthyleneAbstractMinecart) getHandle()).getFlyingVelocityMod();
     }
 
     @Override
     public void setFlyingVelocityMod(Vector flying) {
-        getHandle().setFlyingVelocityMod(flying);
+        ((EthyleneAbstractMinecart) getHandle()).setFlyingVelocityMod(flying);
     }
 
     @Override
     public Vector getDerailedVelocityMod() {
-        return getHandle().getDerailedVelocityMod();
+        return ((EthyleneAbstractMinecart) getHandle()).getDerailedVelocityMod();
     }
 
     @Override
     public void setDerailedVelocityMod(Vector derailed) {
-        getHandle().setDerailedVelocityMod(derailed);
+        ((EthyleneAbstractMinecart) getHandle()).setDerailedVelocityMod(derailed);
     }
 
     @Override

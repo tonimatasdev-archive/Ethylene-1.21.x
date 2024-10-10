@@ -2,6 +2,8 @@ package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
 import java.util.stream.Collectors;
+
+import net.ethylenemc.interfaces.world.entity.vehicle.EthyleneBoat;
 import org.bukkit.TreeSpecies;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Boat;
@@ -37,46 +39,46 @@ public class CraftBoat extends CraftVehicle implements Boat {
 
     @Override
     public double getMaxSpeed() {
-        return getHandle().maxSpeed;
+        return ((EthyleneBoat) getHandle()).maxSpeed();
     }
 
     @Override
     public void setMaxSpeed(double speed) {
         if (speed >= 0D) {
-            getHandle().maxSpeed = speed;
+            ((EthyleneBoat) getHandle()).maxSpeed(speed);
         }
     }
 
     @Override
     public double getOccupiedDeceleration() {
-        return getHandle().occupiedDeceleration;
+        return ((EthyleneBoat) getHandle()).occupiedDeceleration();
     }
 
     @Override
     public void setOccupiedDeceleration(double speed) {
         if (speed >= 0D) {
-            getHandle().occupiedDeceleration = speed;
+            ((EthyleneBoat) getHandle()).occupiedDeceleration(speed);
         }
     }
 
     @Override
     public double getUnoccupiedDeceleration() {
-        return getHandle().unoccupiedDeceleration;
+        return ((EthyleneBoat) getHandle()).unoccupiedDeceleration();
     }
 
     @Override
     public void setUnoccupiedDeceleration(double speed) {
-        getHandle().unoccupiedDeceleration = speed;
+        ((EthyleneBoat) getHandle()).unoccupiedDeceleration(speed);
     }
 
     @Override
     public boolean getWorkOnLand() {
-        return getHandle().landBoats;
+        return ((EthyleneBoat) getHandle()).landBoats();
     }
 
     @Override
     public void setWorkOnLand(boolean workOnLand) {
-        getHandle().landBoats = workOnLand;
+        ((EthyleneBoat) getHandle()).landBoats(workOnLand);
     }
 
     @Override

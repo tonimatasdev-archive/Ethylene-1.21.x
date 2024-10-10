@@ -16,8 +16,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
+import net.ethylenemc.interfaces.server.level.EthyleneServerPlayer;
 import net.ethylenemc.interfaces.world.damagesource.EthyleneDamageSource;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.entity.EthyleneLivingEntity;
 import net.ethylenemc.interfaces.world.inventory.EthyleneAbstractContainerMenu;
 import net.ethylenemc.interfaces.world.item.crafting.EthyleneRecipeHolder;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
@@ -821,7 +823,7 @@ public class CraftEventFactory {
         CraftWorld world = (CraftWorld) entity.getWorld();
         Bukkit.getServer().getPluginManager().callEvent(event);
 
-        victim.expToDrop = event.getDroppedExp();
+        ((EthyleneLivingEntity) victim).expToDrop(event.getDroppedExp());
 
         for (org.bukkit.inventory.ItemStack stack : event.getDrops()) {
             if (stack == null || stack.getType() == Material.AIR || stack.getAmount() == 0) continue;
@@ -837,14 +839,14 @@ public class CraftEventFactory {
         CraftDamageSource bukkitDamageSource = new CraftDamageSource(damageSource);
         PlayerDeathEvent event = new PlayerDeathEvent(entity, bukkitDamageSource, drops, victim.getExpReward(damageSource.getEntity()), 0, deathMessage);
         event.setKeepInventory(keepInventory);
-        event.setKeepLevel(victim.keepLevel); // SPIGOT-2222: pre-set keepLevel
+        event.setKeepLevel(((EthyleneServerPlayer) victim).keepLevel()); // SPIGOT-2222: pre-set keepLevel
         Bukkit.getServer().getPluginManager().callEvent(event);
 
-        victim.keepLevel = event.getKeepLevel();
-        victim.newLevel = event.getNewLevel();
-        victim.newTotalExp = event.getNewTotalExp();
-        victim.expToDrop = event.getDroppedExp();
-        victim.newExp = event.getNewExp();
+        ((EthyleneServerPlayer) victim).keepLevel(event.getKeepLevel());
+        ((EthyleneServerPlayer) victim).newLevel(event.getNewLevel());
+        ((EthyleneServerPlayer) victim).newTotalExp(event.getNewTotalExp());
+        ((EthyleneLivingEntity) victim).expToDrop(event.getDroppedExp());
+        ((EthyleneServerPlayer) victim).newExp(event.getNewExp());
 
         for (org.bukkit.inventory.ItemStack stack : event.getDrops()) {
             if (stack == null || stack.getType() == Material.AIR) continue;

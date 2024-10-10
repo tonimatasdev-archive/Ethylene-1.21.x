@@ -9,6 +9,7 @@ import java.util.logging.Level;
 
 import net.ethylenemc.EthyleneStatic;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
+import net.ethylenemc.interfaces.world.level.saveddata.maps.EthyleneMapItemSavedData;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -30,7 +31,7 @@ public final class CraftMapView implements MapView {
 
     @Override
     public int getId() {
-        return worldMap.id.id();
+        return ((EthyleneMapItemSavedData) worldMap).id().id();
     }
 
     @Override
@@ -57,8 +58,8 @@ public final class CraftMapView implements MapView {
             return ((EthyleneLevel) world).getWorld();
         }
 
-        if (worldMap.uniqueId != null) {
-            return Bukkit.getServer().getWorld(worldMap.uniqueId);
+        if (((EthyleneMapItemSavedData) worldMap).uniqueId() != null) {
+            return Bukkit.getServer().getWorld(((EthyleneMapItemSavedData) worldMap).uniqueId());
         }
         return null;
     }
@@ -66,7 +67,7 @@ public final class CraftMapView implements MapView {
     @Override
     public void setWorld(World world) {
         worldMap.dimension = ((CraftWorld) world).getHandle().dimension();
-        worldMap.uniqueId = world.getUID();
+        ((EthyleneMapItemSavedData) worldMap).uniqueId(world.getUID());
     }
 
     @Override

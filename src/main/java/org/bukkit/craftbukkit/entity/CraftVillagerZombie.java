@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.world.entity.EthyleneLivingEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.CraftServer;
@@ -63,7 +64,7 @@ public class CraftVillagerZombie extends CraftZombie implements ZombieVillager {
             getHandle().villagerConversionTime = -1;
             getHandle().getEntityData().set(net.minecraft.world.entity.monster.ZombieVillager.DATA_CONVERTING_ID, false);
             getHandle().conversionStarter = null;
-            getHandle().removeEffect(net.minecraft.world.effect.MobEffects.DAMAGE_BOOST, org.bukkit.event.entity.EntityPotionEffectEvent.Cause.CONVERSION);
+            ((EthyleneLivingEntity) getHandle()).removeEffect(net.minecraft.world.effect.MobEffects.DAMAGE_BOOST, org.bukkit.event.entity.EntityPotionEffectEvent.Cause.CONVERSION);
         } else {
             getHandle().startConverting(null, time);
         }

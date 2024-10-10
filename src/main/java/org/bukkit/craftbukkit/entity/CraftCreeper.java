@@ -2,10 +2,12 @@ package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.entity.monster.EthyleneCreeper;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.CreeperPowerEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class CraftCreeper extends CraftMonster implements Creeper {
 
@@ -24,7 +26,7 @@ public class CraftCreeper extends CraftMonster implements Creeper {
 
         // only call event when we are not in world generation
         if (((EthyleneEntity) getHandle()).getGeneration() || !callPowerEvent(cause)) {
-            getHandle().setPowered(powered);
+            ((EthyleneCreeper) getHandle()).setPowered(powered);
         }
     }
 
@@ -77,9 +79,9 @@ public class CraftCreeper extends CraftMonster implements Creeper {
     }
 
     @Override
-    public void ignite(Entity entity) {
+    public void ignite(@NotNull Entity entity) {
         Preconditions.checkNotNull(entity, "entity cannot be null");
-        getHandle().entityIgniter = ((CraftEntity) entity).getHandle();
+        ((EthyleneCreeper) getHandle()).entityIgniter(((CraftEntity) entity).getHandle());
         getHandle().ignite();
     }
 
@@ -90,7 +92,7 @@ public class CraftCreeper extends CraftMonster implements Creeper {
 
     @Override
     public Entity getIgniter() {
-        return (getHandle().entityIgniter != null) ? getHandle().entityIgniter.getBukkitEntity() : null;
+        return (((EthyleneCreeper) getHandle()).entityIgniter() != null) ? ((EthyleneEntity) ((EthyleneCreeper) getHandle()).entityIgniter()).getBukkitEntity() : null;
     }
 
     @Override

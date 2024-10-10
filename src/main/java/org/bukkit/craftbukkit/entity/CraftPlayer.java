@@ -36,7 +36,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
+import net.ethylenemc.interfaces.server.level.EthyleneServerPlayer;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.entity.EthyleneLivingEntity;
 import net.ethylenemc.interfaces.world.inventory.EthyleneAbstractContainerMenu;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.BanEntry;
@@ -231,7 +233,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public boolean isTransferred() {
-        return getHandle().transferCookieConnection.isTransferred();
+        return ((EthyleneServerPlayer) getHandle()).getTransferCookieConnection().isTransferred();
     }
 
     @Override
@@ -242,7 +244,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         net.minecraft.resources.ResourceLocation nms = CraftNamespacedKey.toMinecraft(key);
         requestedCookies.add(new CookieFuture(nms, future));
 
-        getHandle().transferCookieConnection.sendPacket(new net.minecraft.network.protocol.cookie.ClientboundCookieRequestPacket(nms));
+        ((EthyleneServerPlayer) getHandle()).getTransferCookieConnection().sendPacket(new net.minecraft.network.protocol.cookie.ClientboundCookieRequestPacket(nms));
 
         return future;
     }
@@ -252,17 +254,17 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         Preconditions.checkArgument(key != null, "Cookie key cannot be null");
         Preconditions.checkArgument(value != null, "Cookie value cannot be null");
         Preconditions.checkArgument(value.length <= 5120, "Cookie value too large, must be smaller than 5120 bytes");
-        Preconditions.checkState(getHandle().transferCookieConnection.getProtocol() == net.minecraft.network.ConnectionProtocol.CONFIGURATION || getHandle().transferCookieConnection.getProtocol() == net.minecraft.network.ConnectionProtocol.PLAY, "Can only store cookie in CONFIGURATION or PLAY protocol.");
+        Preconditions.checkState(((EthyleneServerPlayer) getHandle()).getTransferCookieConnection().getProtocol() == net.minecraft.network.ConnectionProtocol.CONFIGURATION || ((EthyleneServerPlayer) getHandle()).getTransferCookieConnection().getProtocol() == net.minecraft.network.ConnectionProtocol.PLAY, "Can only store cookie in CONFIGURATION or PLAY protocol.");
 
-        getHandle().transferCookieConnection.sendPacket(new net.minecraft.network.protocol.common.ClientboundStoreCookiePacket(CraftNamespacedKey.toMinecraft(key), value));
+        ((EthyleneServerPlayer) getHandle()).getTransferCookieConnection().sendPacket(new net.minecraft.network.protocol.common.ClientboundStoreCookiePacket(CraftNamespacedKey.toMinecraft(key), value));
     }
 
     @Override
     public void transfer(String host, int port) {
         Preconditions.checkArgument(host != null, "Host cannot be null");
-        Preconditions.checkState(getHandle().transferCookieConnection.getProtocol() == net.minecraft.network.ConnectionProtocol.CONFIGURATION || getHandle().transferCookieConnection.getProtocol() == net.minecraft.network.ConnectionProtocol.PLAY, "Can only transfer in CONFIGURATION or PLAY protocol.");
+        Preconditions.checkState(((EthyleneServerPlayer) getHandle()).getTransferCookieConnection().getProtocol() == net.minecraft.network.ConnectionProtocol.CONFIGURATION || ((EthyleneServerPlayer) getHandle()).getTransferCookieConnection().getProtocol() == net.minecraft.network.ConnectionProtocol.PLAY, "Can only transfer in CONFIGURATION or PLAY protocol.");
 
-        getHandle().transferCookieConnection.sendPacket(new net.minecraft.network.protocol.common.ClientboundTransferPacket(host, port));
+        ((EthyleneServerPlayer) getHandle()).getTransferCookieConnection().sendPacket(new net.minecraft.network.protocol.common.ClientboundTransferPacket(host, port));
     }
 
     @Override
@@ -320,17 +322,17 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public String getDisplayName() {
-        return getHandle().displayName;
+        return ((EthyleneServerPlayer) getHandle()).displayName();
     }
 
     @Override
     public void setDisplayName(final String name) {
-        getHandle().displayName = name == null ? getName() : name;
+        ((EthyleneServerPlayer) getHandle()).displayName(name == null ? getName() : name);
     }
 
     @Override
     public String getPlayerListName() {
-        return getHandle().listName == null ? getName() : CraftChatMessage.fromComponent(getHandle().listName);
+        return ((EthyleneServerPlayer) getHandle()).listName() == null ? getName() : CraftChatMessage.fromComponent(((EthyleneServerPlayer) getHandle()).listName());
     }
 
     @Override
@@ -338,7 +340,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         if (name == null) {
             name = getName();
         }
-        getHandle().listName = name.equals(getName()) ? null : CraftChatMessage.fromStringOrNull(name);
+        ((EthyleneServerPlayer) getHandle()).listName(name.equals(getName()) ? null : CraftChatMessage.fromStringOrNull(name));
         for (net.minecraft.server.level.ServerPlayer player : (List<net.minecraft.server.level.ServerPlayer>) server.getHandle().players) {
             if (((Player) ((EthyleneEntity) player).getBukkitEntity()).canSee(this)) {
                 player.connection.send(new net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket(net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME, getHandle()));
@@ -407,7 +409,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public void kickPlayer(String message) {
-        getHandle().transferCookieConnection.kickPlayer(CraftChatMessage.fromStringOrEmpty(message, true));
+        ((EthyleneServerPlayer) getHandle()).getTransferCookieConnection().kickPlayer(CraftChatMessage.fromStringOrEmpty(message, true));
     }
 
     @Override
@@ -422,7 +424,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public Location getCompassTarget() {
-        return getHandle().compassTarget;
+        return ((EthyleneServerPlayer) getHandle()).compassTarget();
     }
 
     @Override
@@ -1095,9 +1097,9 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     @Override
     public void setRespawnLocation(Location location, boolean override) {
         if (location == null) {
-            getHandle().setRespawnPosition(null, null, 0.0F, override, false, PlayerSpawnChangeEvent.Cause.PLUGIN);
+            ((EthyleneServerPlayer) getHandle()).setRespawnPosition(null, null, 0.0F, override, false, PlayerSpawnChangeEvent.Cause.PLUGIN);
         } else {
-            getHandle().setRespawnPosition(((CraftWorld) location.getWorld()).getHandle().dimension(), CraftLocation.toBlockPosition(location), location.getYaw(), override, false, PlayerSpawnChangeEvent.Cause.PLUGIN);
+            ((EthyleneServerPlayer) getHandle()).setRespawnPosition(((CraftWorld) location.getWorld()).getHandle().dimension(), CraftLocation.toBlockPosition(location), location.getYaw(), override, false, PlayerSpawnChangeEvent.Cause.PLUGIN);
         }
     }
 
@@ -1214,23 +1216,23 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public void setPlayerTime(long time, boolean relative) {
-        getHandle().timeOffset = time;
-        getHandle().relativeTime = relative;
+        ((EthyleneServerPlayer) getHandle()).timeOffset(time);
+        ((EthyleneServerPlayer) getHandle()).relativeTime(relative);
     }
 
     @Override
     public long getPlayerTimeOffset() {
-        return getHandle().timeOffset;
+        return ((EthyleneServerPlayer) getHandle()).timeOffset();
     }
 
     @Override
     public long getPlayerTime() {
-        return getHandle().getPlayerTime();
+        return ((EthyleneServerPlayer) getHandle()).getPlayerTime();
     }
 
     @Override
     public boolean isPlayerTimeRelative() {
-        return getHandle().relativeTime;
+        return ((EthyleneServerPlayer) getHandle()).relativeTime();
     }
 
     @Override
@@ -1240,12 +1242,12 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public void setPlayerWeather(WeatherType type) {
-        getHandle().setPlayerWeather(type, true);
+        ((EthyleneServerPlayer) getHandle()).setPlayerWeather(type, true);
     }
 
     @Override
     public WeatherType getPlayerWeather() {
-        return getHandle().getPlayerWeather();
+        return ((EthyleneServerPlayer) getHandle()).getPlayerWeather();
     }
 
     @Override
@@ -1260,7 +1262,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public void resetPlayerWeather() {
-        getHandle().resetPlayerWeather();
+        ((EthyleneServerPlayer) getHandle()).resetPlayerWeather();
     }
 
     @Override
@@ -1671,11 +1673,11 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
             if (data.contains("newExp")) {
                 net.minecraft.server.level.ServerPlayer handle = getHandle();
-                handle.newExp = data.getInt("newExp");
-                handle.newTotalExp = data.getInt("newTotalExp");
-                handle.newLevel = data.getInt("newLevel");
-                handle.expToDrop = data.getInt("expToDrop");
-                handle.keepLevel = data.getBoolean("keepLevel");
+                ((EthyleneServerPlayer) handle).newExp(data.getInt("newExp"));
+                ((EthyleneServerPlayer) handle).newTotalExp(data.getInt("newTotalExp"));
+                ((EthyleneServerPlayer) handle).newLevel(data.getInt("newLevel"));
+                ((EthyleneLivingEntity) handle).expToDrop(data.getInt("expToDrop"));
+                ((EthyleneServerPlayer) handle).keepLevel(data.getBoolean("keepLevel"));
             }
         }
     }
@@ -1687,11 +1689,11 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
         net.minecraft.nbt.CompoundTag data = nbttagcompound.getCompound("bukkit");
         net.minecraft.server.level.ServerPlayer handle = getHandle();
-        data.putInt("newExp", handle.newExp);
-        data.putInt("newTotalExp", handle.newTotalExp);
-        data.putInt("newLevel", handle.newLevel);
-        data.putInt("expToDrop", handle.expToDrop);
-        data.putBoolean("keepLevel", handle.keepLevel);
+        data.putInt("newExp", ((EthyleneServerPlayer) handle).newExp());
+        data.putInt("newTotalExp", ((EthyleneServerPlayer) handle).newTotalExp());
+        data.putInt("newLevel", ((EthyleneServerPlayer) handle).newLevel());
+        data.putInt("expToDrop", ((EthyleneLivingEntity) handle).expToDrop());
+        data.putBoolean("keepLevel", ((EthyleneServerPlayer) handle).keepLevel());
         data.putLong("firstPlayed", getFirstPlayed());
         data.putLong("lastPlayed", System.currentTimeMillis());
         data.putString("lastKnownName", handle.getScoreboardName());
@@ -2054,7 +2056,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         }
         getHandle().getEntityData().set(net.minecraft.world.entity.LivingEntity.DATA_HEALTH_ID, (float) getScaledHealth());
 
-        getHandle().maxHealthCache = getMaxHealth();
+        ((EthyleneServerPlayer) getHandle()).maxHealthCache(getMaxHealth());
     }
 
     @Override

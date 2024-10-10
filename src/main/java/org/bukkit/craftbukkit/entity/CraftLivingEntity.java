@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.entity.EthyleneLivingEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
 import net.minecraft.world.entity.projectile.windcharge.BreezeWindCharge;
@@ -373,7 +374,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public boolean addPotionEffect(PotionEffect effect, boolean force) {
-        getHandle().addEffect(new net.minecraft.world.effect.MobEffectInstance(CraftPotionEffectType.bukkitToMinecraftHolder(effect.getType()), effect.getDuration(), effect.getAmplifier(), effect.isAmbient(), effect.hasParticles()), EntityPotionEffectEvent.Cause.PLUGIN);
+        ((EthyleneLivingEntity) getHandle()).addEffect(new net.minecraft.world.effect.MobEffectInstance(CraftPotionEffectType.bukkitToMinecraftHolder(effect.getType()), effect.getDuration(), effect.getAmplifier(), effect.isAmbient(), effect.hasParticles()), EntityPotionEffectEvent.Cause.PLUGIN);
         return true;
     }
 
@@ -399,7 +400,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public void removePotionEffect(PotionEffectType type) {
-        getHandle().removeEffect(CraftPotionEffectType.bukkitToMinecraftHolder(type), EntityPotionEffectEvent.Cause.PLUGIN);
+        ((EthyleneLivingEntity) getHandle()).removeEffect(CraftPotionEffectType.bukkitToMinecraftHolder(type), EntityPotionEffectEvent.Cause.PLUGIN);
     }
 
     @Override
@@ -545,7 +546,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         if (getHandle() instanceof net.minecraft.world.entity.Mob) {
             ((net.minecraft.world.entity.Mob) getHandle()).setCanPickUpLoot(pickup);
         } else {
-            getHandle().bukkitPickUpLoot = pickup;
+            ((EthyleneLivingEntity) getHandle()).bukkitPickUpLoot(pickup);
         }
     }
 
@@ -554,7 +555,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         if (getHandle() instanceof net.minecraft.world.entity.Mob) {
             return ((net.minecraft.world.entity.Mob) getHandle()).canPickUpLoot();
         } else {
-            return getHandle().bukkitPickUpLoot;
+            return ((EthyleneLivingEntity) getHandle()).bukkitPickUpLoot();
         }
     }
 
@@ -652,7 +653,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public AttributeInstance getAttribute(Attribute attribute) {
-        return getHandle().craftAttributes.getAttribute(attribute);
+        return ((EthyleneLivingEntity) getHandle()).craftAttributes().getAttribute(attribute);
     }
 
     @Override
@@ -709,17 +710,17 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public void setCollidable(boolean collidable) {
-        getHandle().collides = collidable;
+        ((EthyleneLivingEntity) getHandle()).collides(collidable);
     }
 
     @Override
     public boolean isCollidable() {
-        return getHandle().collides;
+        return ((EthyleneLivingEntity) getHandle()).collides();
     }
 
     @Override
     public Set<UUID> getCollidableExemptions() {
-        return getHandle().collidableExemptions;
+        return ((EthyleneLivingEntity) getHandle()).collidableExemptions();
     }
 
     @Override

@@ -45,11 +45,14 @@ import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import jline.console.ConsoleReader;
 import net.ethylenemc.EthyleneStatic;
+import net.ethylenemc.interfaces.advancements.EthyleneAdvancementHolder;
+import net.ethylenemc.interfaces.server.level.EthyleneServerLevel;
 import net.ethylenemc.interfaces.world.EthyleneContainer;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.inventory.EthyleneAbstractContainerMenu;
 import net.ethylenemc.interfaces.world.item.crafting.EthyleneRecipeHolder;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
+import net.ethylenemc.interfaces.world.level.entity.EthylenePersistentEntitySectionManager;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -1211,9 +1214,9 @@ public final class CraftServer implements Server {
                 handle.save(null, true, true);
             }
 
-            handle.getChunkSource().close(save);
-            handle.entityManager.close(save); // SPIGOT-6722: close entityManager
-            handle.convertable.close();
+            ((EthylenePersistentEntitySectionManager) handle.getChunkSource()).close(save);
+            ((EthylenePersistentEntitySectionManager) handle.entityManager).close(save); // SPIGOT-6722: close entityManager
+            ((EthyleneServerLevel) handle).getConvertable().close();
         } catch (Exception ex) {
             getLogger().log(Level.SEVERE, null, ex);
         }
@@ -2302,7 +2305,7 @@ public final class CraftServer implements Server {
         Preconditions.checkArgument(key != null, "NamespacedKey key cannot be null");
 
         net.minecraft.advancements.AdvancementHolder advancement = console.getAdvancements().get(CraftNamespacedKey.toMinecraft(key));
-        return (advancement == null) ? null : advancement.toBukkit();
+        return (advancement == null) ? null : ((EthyleneAdvancementHolder) (Object) advancement).toBukkit();
     }
 
     @Override
@@ -2310,7 +2313,7 @@ public final class CraftServer implements Server {
         return Iterators.unmodifiableIterator(Iterators.transform(console.getAdvancements().getAllAdvancements().iterator(), new Function<net.minecraft.advancements.AdvancementHolder, org.bukkit.advancement.Advancement>() {
             @Override
             public org.bukkit.advancement.Advancement apply(net.minecraft.advancements.AdvancementHolder advancement) {
-                return advancement.toBukkit();
+                return ((EthyleneAdvancementHolder) (Object) advancement).toBukkit();
             }
         }));
     }

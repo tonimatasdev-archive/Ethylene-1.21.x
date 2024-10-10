@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.function.Function;
 
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.entity.raid.EthyleneRaid;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Location;
 import org.bukkit.Raid;
@@ -93,7 +94,7 @@ public final class CraftRaid implements Raid {
 
     @Override
     public List<Raider> getRaiders() {
-        return handle.getRaiders().stream().map(new Function<net.minecraft.world.entity.raid.Raider, Raider>() {
+        return ((EthyleneRaid) handle).getRaiders().stream().map(new Function<net.minecraft.world.entity.raid.Raider, Raider>() {
             @Override
             public Raider apply(net.minecraft.world.entity.raid.Raider entityRaider) {
                 return (Raider) ((EthyleneEntity) entityRaider).getBukkitEntity();

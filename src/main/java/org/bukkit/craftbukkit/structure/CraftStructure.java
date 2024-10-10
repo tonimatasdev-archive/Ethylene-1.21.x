@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.level.chunk.EthyleneChunkAccess;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.RegionAccessor;
@@ -148,7 +149,7 @@ public class CraftStructure implements Structure {
 
     @Override
     public PersistentDataContainer getPersistentDataContainer() {
-        return getHandle().persistentDataContainer;
+        return ((EthyleneChunkAccess) getHandle()).getPersistentDataContainer();
     }
 
     public net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate getHandle() {

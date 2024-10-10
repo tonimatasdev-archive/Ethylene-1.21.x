@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+import net.ethylenemc.EthyleneCaptures;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.Location;
@@ -92,7 +93,8 @@ public class CraftDragonBattle implements DragonBattle {
                 return !((CraftWorld) world).getHandle().equals(handle.level);
             });
 
-            return this.handle.respawnDragon(list.stream().map(enderCrystal -> ((CraftEnderCrystal) enderCrystal).getHandle()).collect(Collectors.toList()));
+            this.handle.respawnDragon(list.stream().map(enderCrystal -> ((CraftEnderCrystal) enderCrystal).getHandle()).collect(Collectors.toList()));
+            return EthyleneCaptures.respawnDragon.getAndSet(false); // Ethylene - Don't change the method return.
         }
         return false;
     }

@@ -10,8 +10,11 @@ import java.util.concurrent.locks.LockSupport;
 import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
 
+import net.ethylenemc.interfaces.server.level.EthyleneServerLevel;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
+import net.ethylenemc.interfaces.world.level.chunk.EthyleneChunkAccess;
+import net.ethylenemc.interfaces.world.level.entity.EthylenePersistentEntitySectionManager;
 import net.minecraft.server.level.ServerLevel;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
@@ -107,7 +110,7 @@ public class CraftChunk implements Chunk {
         long pair = net.minecraft.world.level.ChunkPos.asLong(x, z);
 
         if (entityManager.areEntitiesLoaded(pair)) {
-            return entityManager.getEntities(new net.minecraft.world.level.ChunkPos(x, z)).stream()
+            return ((EthylenePersistentEntitySectionManager) entityManager).getEntities(new net.minecraft.world.level.ChunkPos(x, z)).stream()
                     .map(entity -> ((EthyleneEntity) entity).getBukkitEntity())
                     .filter(Objects::nonNull).toArray(Entity[]::new);
         }
@@ -122,7 +125,7 @@ public class CraftChunk implements Chunk {
                 return true;
             }
 
-            if (!entityManager.isPending(pair)) {
+            if (!((EthylenePersistentEntitySectionManager) entityManager).isPending(pair)) {
                 // Our entities got unloaded, this should normally not happen.
                 entityManager.ensureChunkQueuedForLoad(pair); // Re-start entity loading
             }
@@ -145,7 +148,7 @@ public class CraftChunk implements Chunk {
             }
         }
 
-        return entityManager.getEntities(new net.minecraft.world.level.ChunkPos(x, z)).stream()
+        return ((EthylenePersistentEntitySectionManager) entityManager).getEntities(new net.minecraft.world.level.ChunkPos(x, z)).stream()
                 .map(entity -> ((EthyleneEntity) entity).getBukkitEntity())
                 .filter(Objects::nonNull).toArray(Entity[]::new);
     }
@@ -331,12 +334,12 @@ public class CraftChunk implements Chunk {
 
     @Override
     public PersistentDataContainer getPersistentDataContainer() {
-        return getHandle(net.minecraft.world.level.chunk.status.ChunkStatus.STRUCTURE_STARTS).persistentDataContainer;
+        return ((EthyleneChunkAccess) getHandle(net.minecraft.world.level.chunk.status.ChunkStatus.STRUCTURE_STARTS)).getPersistentDataContainer();
     }
 
     @Override
     public LoadLevel getLoadLevel() {
-        net.minecraft.world.level.chunk.LevelChunk chunk = worldServer.getChunkIfLoaded(getX(), getZ());
+        net.minecraft.world.level.chunk.LevelChunk chunk = ((EthyleneServerLevel) worldServer).getChunkIfLoaded(getX(), getZ());
         if (chunk == null) {
             return LoadLevel.UNLOADED;
         }

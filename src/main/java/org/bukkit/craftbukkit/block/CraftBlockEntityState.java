@@ -3,6 +3,7 @@ package org.bukkit.craftbukkit.block;
 import java.util.Set;
 
 import net.ethylenemc.EthyleneStatic;
+import net.ethylenemc.interfaces.world.level.chunk.EthyleneChunkAccess;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.TileState;
@@ -158,7 +159,7 @@ public class CraftBlockEntityState<T extends net.minecraft.world.level.block.ent
 
     @Override
     public PersistentDataContainer getPersistentDataContainer() {
-        return this.getSnapshot().persistentDataContainer;
+        return ((EthyleneChunkAccess) this.getSnapshot()).getPersistentDataContainer();
     }
 
     @Nullable

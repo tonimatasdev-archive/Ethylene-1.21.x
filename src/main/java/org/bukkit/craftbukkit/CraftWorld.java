@@ -26,6 +26,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import net.ethylenemc.EthyleneStatic;
+import net.ethylenemc.interfaces.server.level.EthyleneServerLevel;
+import net.ethylenemc.interfaces.server.level.EthyleneServerPlayer;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.chunk.EthyleneChunkAccess;
 import org.bukkit.BlockChangeDelegate;
@@ -660,7 +662,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
             CraftPlayer cp = (CraftPlayer) p;
             if (cp.getHandle().connection == null) continue;
 
-            cp.getHandle().connection.send(new net.minecraft.network.protocol.game.ClientboundSetTimePacket(cp.getHandle().level().getGameTime(), cp.getHandle().getPlayerTime(), cp.getHandle().level().getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_DAYLIGHT)));
+            cp.getHandle().connection.send(new net.minecraft.network.protocol.game.ClientboundSetTimePacket(cp.getHandle().level().getGameTime(), ((EthyleneServerPlayer) cp.getHandle()).getPlayerTime(), cp.getHandle().level().getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_DAYLIGHT)));
         }
     }
 
@@ -1334,7 +1336,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public File getWorldFolder() {
-        return world.convertable.getLevelPath(net.minecraft.world.level.storage.LevelResource.ROOT).toFile().getParentFile();
+        return ((EthyleneServerLevel) world).getConvertable().getLevelPath(net.minecraft.world.level.storage.LevelResource.ROOT).toFile().getParentFile();
     }
 
     @Override
