@@ -42,7 +42,6 @@ public abstract class DelegatedGeneratorAccess implements net.minecraft.world.le
         return handle.getLevel();
     }
 
-    @Override
     public void addFreshEntityWithPassengers(net.minecraft.world.entity.Entity arg0, CreatureSpawnEvent.SpawnReason arg1) {
         handle.addFreshEntityWithPassengers(arg0, arg1);
     }
@@ -539,7 +538,6 @@ public abstract class DelegatedGeneratorAccess implements net.minecraft.world.le
         return handle.clip(arg0);
     }
 
-    @Override
     public net.minecraft.world.phys.BlockHitResult clip(net.minecraft.world.level.ClipContext arg0, net.minecraft.core.BlockPos arg1) {
         return handle.clip(arg0, arg1);
     }
@@ -704,7 +702,6 @@ public abstract class DelegatedGeneratorAccess implements net.minecraft.world.le
         return handle.isFluidAtPosition(arg0, arg1);
     }
 
-    @Override
     public boolean addFreshEntity(net.minecraft.world.entity.Entity arg0, CreatureSpawnEvent.SpawnReason arg1) {
         return handle.addFreshEntity(arg0, arg1);
     }

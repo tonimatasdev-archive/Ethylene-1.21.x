@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.block;
 
+import net.ethylenemc.interfaces.world.level.block.entity.EthyleneContainerOpenersCounter;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Barrel;
@@ -33,7 +34,7 @@ public class CraftBarrel extends CraftLootable<net.minecraft.world.level.block.e
     @Override
     public void open() {
         requirePlaced();
-        if (!getTileEntity().openersCounter.opened) {
+        if (!((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).getOpened()) {
             net.minecraft.world.level.block.state.BlockState blockData = getTileEntity().getBlockState();
             boolean open = blockData.getValue(net.minecraft.world.level.block.BarrelBlock.OPEN);
 
@@ -44,20 +45,20 @@ public class CraftBarrel extends CraftLootable<net.minecraft.world.level.block.e
                 }
             }
         }
-        getTileEntity().openersCounter.opened = true;
+        ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).setOpened(true);
     }
 
     @Override
     public void close() {
         requirePlaced();
-        if (getTileEntity().openersCounter.opened) {
+        if (((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).getOpened()) {
             net.minecraft.world.level.block.state.BlockState blockData = getTileEntity().getBlockState();
             getTileEntity().updateBlockState(blockData, false);
             if (getWorldHandle() instanceof net.minecraft.world.level.Level) {
                 getTileEntity().playSound(blockData, net.minecraft.sounds.SoundEvents.BARREL_CLOSE);
             }
         }
-        getTileEntity().openersCounter.opened = false;
+        ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).setOpened(false);
     }
 
     @Override

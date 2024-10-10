@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
+import net.ethylenemc.interfaces.world.level.chunk.EthyleneChunkAccess;
 import net.minecraft.world.level.NoiseColumn;
 import org.bukkit.block.Biome;
 import org.bukkit.craftbukkit.CraftHeightMap;
@@ -54,7 +55,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
         @Override
         public void setBiome(int x, int y, int z, Biome bio) {
             Preconditions.checkArgument(bio != Biome.CUSTOM, "Cannot set the biome to %s", bio);
-            biome.setBiome(x >> 2, y >> 2, z >> 2, CraftBiome.bukkitToMinecraftHolder(bio));
+            ((EthyleneChunkAccess) biome).setBiome(x >> 2, y >> 2, z >> 2, CraftBiome.bukkitToMinecraftHolder(bio));
         }
     }
 
@@ -174,7 +175,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
             for (int biomeX = 0; biomeX < 4; biomeX++) {
                 for (int biomeY = 0; biomeY < 4; biomeY++) {
                     for (int biomeZ = 0; biomeZ < 4; biomeZ++) {
-                        section.setBiome(biomeX, biomeY, biomeZ, oldSection.getNoiseBiome(biomeX, biomeY, biomeZ));
+                        ((EthyleneChunkAccess) section).setBiome(biomeX, biomeY, biomeZ, oldSection.getNoiseBiome(biomeX, biomeY, biomeZ));
                     }
                 }
             }

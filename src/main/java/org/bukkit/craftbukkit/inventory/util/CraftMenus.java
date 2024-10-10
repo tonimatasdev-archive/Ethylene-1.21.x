@@ -1,6 +1,8 @@
 package org.bukkit.craftbukkit.inventory.util;
 
 import static org.bukkit.craftbukkit.inventory.util.CraftMenuBuilder.*;
+
+import net.ethylenemc.EthyleneCaptures;
 import org.bukkit.craftbukkit.inventory.CraftMenuType;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.MenuType;
@@ -20,7 +22,10 @@ public final class CraftMenus {
     public record MenuTypeData<V extends InventoryView>(Class<V> viewClass, CraftMenuBuilder menuBuilder) {
     }
 
-    private static final CraftMenuBuilder STANDARD = (player, menuType) -> menuType.create(player.nextContainerCounter(), player.getInventory());
+    private static final CraftMenuBuilder STANDARD = (player, menuType) -> {
+        player.nextContainerCounter();
+        return menuType.create(EthyleneCaptures.nextContainerCounter, player.getInventory()); // Ethylene - Method doesn't return an int
+    };
 
     public static <V extends InventoryView> MenuTypeData<V> getMenuTypeData(CraftMenuType<?> menuType) {
         // this isn't ideal as both dispenser and dropper are 3x3, InventoryType can't currently handle generic 3x3s with size 9
@@ -48,9 +53,10 @@ public final class CraftMenus {
         }
         if (menuType == MenuType.ENCHANTMENT) {
             return asType(new MenuTypeData<>(EnchantmentView.class, (player, type) -> {
+                player.nextContainerCounter();
                 return new net.minecraft.world.SimpleMenuProvider((syncId, inventory, human) -> {
                     return worldAccess(net.minecraft.world.inventory.EnchantmentMenu::new).build(player, type);
-                }, net.minecraft.network.chat.Component.empty()).createMenu(player.nextContainerCounter(), player.getInventory(), player);
+                }, net.minecraft.network.chat.Component.empty()).createMenu(EthyleneCaptures.nextContainerCounter, player.getInventory(), player); // Ethylene - Method doesn't return an int
             }));
         }
         if (menuType == MenuType.FURNACE) {

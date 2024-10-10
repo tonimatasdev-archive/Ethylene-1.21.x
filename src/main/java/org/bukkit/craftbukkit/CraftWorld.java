@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 import net.ethylenemc.EthyleneStatic;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.level.chunk.EthyleneChunkAccess;
 import org.bukkit.BlockChangeDelegate;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -802,7 +803,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
             net.minecraft.world.level.chunk.LevelChunk chunk = this.world.getChunkAt(pos);
 
             if (chunk != null) {
-                chunk.setBiome(x >> 2, y >> 2, z >> 2, bb);
+                ((EthyleneChunkAccess) chunk).setBiome(x >> 2, y >> 2, z >> 2, bb);
 
                 chunk.setUnsaved(true); // SPIGOT-2890
             }

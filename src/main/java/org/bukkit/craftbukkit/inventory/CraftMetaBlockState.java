@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import java.util.Map;
 import java.util.Set;
+
+import net.ethylenemc.interfaces.core.EthyleneDataComponentPatch$Builder;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
@@ -88,7 +90,7 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
             Set<net.minecraft.core.component.DataComponentType<?>> applied = blockEntityTag.applyComponents(map, tag);
             // Mark applied components as handled
             for (net.minecraft.core.component.DataComponentType<?> seen : applied) {
-                unhandledTags.clear(seen);
+                ((EthyleneDataComponentPatch$Builder) unhandledTags).clear(seen);
             }
             // Only set blockEntityTag if something was applied
             if (!applied.isEmpty()) {

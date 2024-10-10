@@ -3,6 +3,7 @@ package org.bukkit.craftbukkit.entity;
 import com.google.common.base.Preconditions;
 import net.ethylenemc.EthyleneCaptures;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.entity.animal.allay.EthyleneAllay;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.CraftServer;
@@ -38,7 +39,7 @@ public class CraftAllay extends CraftCreature implements org.bukkit.entity.Allay
 
     @Override
     public void setCanDuplicate(boolean canDuplicate) {
-        getHandle().setCanDuplicate(canDuplicate);
+        ((EthyleneAllay) getHandle()).setCanDuplicate(canDuplicate);
     }
 
     @Override
@@ -70,13 +71,13 @@ public class CraftAllay extends CraftCreature implements org.bukkit.entity.Allay
 
     @Override
     public void startDancing() {
-        getHandle().forceDancing = true;
+        ((EthyleneAllay) getHandle()).setForceDancing(true);
         getHandle().setDancing(true);
     }
 
     @Override
     public void stopDancing() {
-        getHandle().forceDancing = false;
+        ((EthyleneAllay) getHandle()).setForceDancing(false);
         getHandle().jukeboxPos = null;
         getHandle().setJukeboxPlaying(null, false);
     }

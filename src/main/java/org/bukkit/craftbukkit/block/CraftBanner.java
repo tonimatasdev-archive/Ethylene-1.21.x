@@ -3,6 +3,8 @@ package org.bukkit.craftbukkit.block;
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.ethylenemc.interfaces.world.level.block.entity.EthyleneBannerBlockEntity;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -97,7 +99,7 @@ public class CraftBanner extends CraftBlockEntityState<net.minecraft.world.level
         for (Pattern p : patterns) {
             newPatterns.add(new net.minecraft.world.level.block.entity.BannerPatternLayers.Layer(CraftPatternType.bukkitToMinecraftHolder(p.getPattern()), net.minecraft.world.item.DyeColor.byId(p.getColor().getWoolData())));
         }
-        banner.setPatterns(new net.minecraft.world.level.block.entity.BannerPatternLayers(newPatterns));
+        ((EthyleneBannerBlockEntity) banner).setPatterns(new net.minecraft.world.level.block.entity.BannerPatternLayers(newPatterns));
     }
 
     @Override

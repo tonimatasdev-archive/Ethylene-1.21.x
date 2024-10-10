@@ -6,11 +6,15 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.util.Unit;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.CraftRegistry;
 import org.bukkit.craftbukkit.CraftServer;
+
+import java.util.List;
 
 public class EthyleneStatic {
 
@@ -55,5 +59,11 @@ public class EthyleneStatic {
 
     private static double offsetForPaintingSize(int i) { // CraftBukkit - static
         return i % 2 == 0 ? 0.5D : 0.0D;
+    }
+
+    public static List<Player> getHumansInRange(Level world, BlockPos blockposition, int i) {
+        double d0 = (double) (i * 10 + 10);
+        AABB axisalignedbb = (new AABB(blockposition)).inflate(d0).expandTowards(0.0D, (double) world.getHeight(), 0.0D);
+        return world.getEntitiesOfClass(Player.class, axisalignedbb);
     }
 }

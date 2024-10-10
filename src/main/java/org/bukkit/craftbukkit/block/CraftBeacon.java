@@ -3,7 +3,9 @@ package org.bukkit.craftbukkit.block;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.ethylenemc.EthyleneStatic;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.level.block.entity.EthyleneBeaconBlockEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Beacon;
@@ -31,7 +33,7 @@ public class CraftBeacon extends CraftBlockEntityState<net.minecraft.world.level
         if (tileEntity instanceof net.minecraft.world.level.block.entity.BeaconBlockEntity) {
             net.minecraft.world.level.block.entity.BeaconBlockEntity beacon = (net.minecraft.world.level.block.entity.BeaconBlockEntity) tileEntity;
 
-            Collection<net.minecraft.world.entity.player.Player> nms = net.minecraft.world.level.block.entity.BeaconBlockEntity.getHumansInRange(beacon.getLevel(), beacon.getBlockPos(), beacon.levels);
+            Collection<net.minecraft.world.entity.player.Player> nms = EthyleneStatic.getHumansInRange(beacon.getLevel(), beacon.getBlockPos(), beacon.levels);
             Collection<LivingEntity> bukkit = new ArrayList<LivingEntity>(nms.size());
 
             for (net.minecraft.world.entity.player.Player human : nms) {
@@ -52,7 +54,7 @@ public class CraftBeacon extends CraftBlockEntityState<net.minecraft.world.level
 
     @Override
     public PotionEffect getPrimaryEffect() {
-        return this.getSnapshot().getPrimaryEffect();
+        return ((EthyleneBeaconBlockEntity) this.getSnapshot()).getPrimaryEffect();
     }
 
     @Override
@@ -62,7 +64,7 @@ public class CraftBeacon extends CraftBlockEntityState<net.minecraft.world.level
 
     @Override
     public PotionEffect getSecondaryEffect() {
-        return this.getSnapshot().getSecondaryEffect();
+        return ((EthyleneBeaconBlockEntity) this.getSnapshot()).getSecondaryEffect();
     }
 
     @Override

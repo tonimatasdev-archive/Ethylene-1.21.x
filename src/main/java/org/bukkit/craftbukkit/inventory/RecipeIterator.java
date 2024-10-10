@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import net.ethylenemc.EthyleneStatic;
+import net.ethylenemc.interfaces.world.item.crafting.EthyleneRecipeHolder;
 import org.bukkit.inventory.Recipe;
 
 public class RecipeIterator implements Iterator<Recipe> {
@@ -20,7 +21,7 @@ public class RecipeIterator implements Iterator<Recipe> {
 
     @Override
     public Recipe next() {
-        return recipes.next().getValue().toBukkitRecipe();
+        return ((EthyleneRecipeHolder) (Object) recipes.next().getValue()).toBukkitRecipe();
     }
 
     @Override

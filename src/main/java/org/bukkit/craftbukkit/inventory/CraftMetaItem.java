@@ -41,6 +41,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.ethylenemc.EthyleneStatic;
+import net.ethylenemc.interfaces.core.EthyleneDataComponentPatch$Builder;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -158,7 +159,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
         }
 
         <T> Applicator putIfAbsent(net.minecraft.core.component.TypedDataComponent<?> component) {
-            if (!builder.isSet(component.type())) {
+            if (!((EthyleneDataComponentPatch$Builder) builder).isSet(component.type())) {
                 builder.set(component);
             }
             return this;
@@ -286,7 +287,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
         }
         this.damage = meta.damage;
         this.maxDamage = meta.maxDamage;
-        this.unhandledTags.copy(meta.unhandledTags.build());
+        ((EthyleneDataComponentPatch$Builder) this.unhandledTags).copy(meta.unhandledTags.build());
         this.removedTags.addAll(meta.removedTags);
         this.persistentDataContainer.putAll(meta.persistentDataContainer.getRaw());
 
@@ -593,14 +594,14 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
             try {
                 net.minecraft.nbt.CompoundTag unhandledTag = net.minecraft.nbt.NbtIo.readCompressed(buf, net.minecraft.nbt.NbtAccounter.unlimitedHeap());
                 net.minecraft.core.component.DataComponentPatch unhandledPatch = net.minecraft.core.component.DataComponentPatch.CODEC.parse(EthyleneStatic.getDefaultRegistryAccess().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE), unhandledTag).result().get();
-                this.unhandledTags.copy(unhandledPatch);
+                ((EthyleneDataComponentPatch$Builder) this.unhandledTags).copy(unhandledPatch);
 
                 for (Entry<net.minecraft.core.component.DataComponentType<?>, Optional<?>> entry : unhandledPatch.entrySet()) {
                     // Move removed unhandled tags to dedicated removedTags
                     if (!entry.getValue().isPresent()) {
                         net.minecraft.core.component.DataComponentType<?> key = entry.getKey();
 
-                        this.unhandledTags.clear(key);
+                        ((EthyleneDataComponentPatch$Builder) this.unhandledTags).clear(key);
                         this.removedTags.add(key);
                     }
                 }
@@ -843,7 +844,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
         }
 
         for (net.minecraft.core.component.DataComponentType<?> removed : removedTags) {
-            if (!itemTag.builder.isSet(removed)) {
+            if (!((EthyleneDataComponentPatch$Builder) itemTag.builder).isSet(removed)) {
                 itemTag.builder.remove(removed);
             }
         }
@@ -1729,7 +1730,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
             }
         }
 
-        if (!unhandledTags.isEmpty()) {
+        if (!((EthyleneDataComponentPatch$Builder) unhandledTags).isEmpty()) {
             net.minecraft.nbt.Tag unhandled = net.minecraft.core.component.DataComponentPatch.CODEC.encodeStart(EthyleneStatic.getDefaultRegistryAccess().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE), unhandledTags.build()).getOrThrow(IllegalStateException::new);
             try {
                 ByteArrayOutputStream buf = new ByteArrayOutputStream();

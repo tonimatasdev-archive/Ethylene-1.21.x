@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.level.block.entity.EthyleneBeehiveBlockEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Beehive;
@@ -51,14 +52,14 @@ public class CraftBeehive extends CraftBlockEntityState<net.minecraft.world.leve
 
     @Override
     public int getMaxEntities() {
-        return getSnapshot().maxBees;
+        return ((EthyleneBeehiveBlockEntity) getSnapshot()).getMaxBees();
     }
 
     @Override
     public void setMaxEntities(int max) {
         Preconditions.checkArgument(max > 0, "Max bees must be more than 0");
 
-        getSnapshot().maxBees = max;
+        ((EthyleneBeehiveBlockEntity) getSnapshot()).setMaxBees(max);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class CraftBeehive extends CraftBlockEntityState<net.minecraft.world.leve
 
         if (isPlaced()) {
             net.minecraft.world.level.block.entity.BeehiveBlockEntity beehive = ((net.minecraft.world.level.block.entity.BeehiveBlockEntity) this.getTileEntityFromWorld());
-            for (net.minecraft.world.entity.Entity bee : beehive.releaseBees(this.getHandle(), net.minecraft.world.level.block.entity.BeehiveBlockEntity.BeeReleaseStatus.BEE_RELEASED, true)) {
+            for (net.minecraft.world.entity.Entity bee : ((EthyleneBeehiveBlockEntity) beehive).releaseBees(this.getHandle(), net.minecraft.world.level.block.entity.BeehiveBlockEntity.BeeReleaseStatus.BEE_RELEASED, true)) {
                 bees.add((Bee) ((EthyleneEntity) bee).getBukkitEntity());
             }
         }

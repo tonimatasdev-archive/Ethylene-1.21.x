@@ -11,6 +11,7 @@ import java.util.function.Consumer;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import net.ethylenemc.interfaces.world.level.EthyleneWorldGenLevel;
+import net.ethylenemc.interfaces.world.level.chunk.EthyleneChunkAccess;
 import org.bukkit.HeightMap;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -164,7 +165,7 @@ public class CraftLimitedRegion extends CraftRegionAccessor implements LimitedRe
     public void setBiome(int x, int y, int z, net.minecraft.core.Holder<net.minecraft.world.level.biome.Biome> biomeBase) {
         Preconditions.checkArgument(isInRegion(x, y, z), "Coordinates %s, %s, %s are not in the region", x, y, z);
         net.minecraft.world.level.chunk.ChunkAccess chunk = getHandle().getChunk(x >> 4, z >> 4, net.minecraft.world.level.chunk.status.ChunkStatus.EMPTY);
-        chunk.setBiome(x >> 2, y >> 2, z >> 2, biomeBase);
+        ((EthyleneChunkAccess) chunk).setBiome(x >> 2, y >> 2, z >> 2, biomeBase);
     }
 
     @Override

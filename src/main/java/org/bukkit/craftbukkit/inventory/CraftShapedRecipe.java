@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import net.ethylenemc.EthyleneStatic;
+import net.ethylenemc.interfaces.world.item.crafting.EthyleneRecipeManager;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -51,7 +52,7 @@ public class CraftShapedRecipe extends ShapedRecipe implements CraftRecipe {
         Map<Character, net.minecraft.world.item.crafting.Ingredient> data = Maps.transformValues(ingred, (bukkit) -> toNMS(bukkit, false));
 
         net.minecraft.world.item.crafting.ShapedRecipePattern pattern = net.minecraft.world.item.crafting.ShapedRecipePattern.of(data, shape);
-        EthyleneStatic.getServer().getRecipeManager().addRecipe(new net.minecraft.world.item.crafting.RecipeHolder<>(CraftNamespacedKey.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.ShapedRecipe(this.getGroup(), CraftRecipe.getCategory(this.getCategory()), pattern, CraftItemStack.asNMSCopy(this.getResult()))));
+        ((EthyleneRecipeManager) EthyleneStatic.getServer().getRecipeManager()).addRecipe(new net.minecraft.world.item.crafting.RecipeHolder<>(CraftNamespacedKey.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.ShapedRecipe(this.getGroup(), CraftRecipe.getCategory(this.getCategory()), pattern, CraftItemStack.asNMSCopy(this.getResult()))));
     }
 
     private static String[] replaceUndefinedIngredientsWithEmpty(String[] shape, Map<Character, org.bukkit.inventory.RecipeChoice> ingredients) {

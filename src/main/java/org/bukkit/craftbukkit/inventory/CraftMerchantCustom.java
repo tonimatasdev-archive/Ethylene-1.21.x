@@ -34,7 +34,6 @@ public class CraftMerchantCustom implements CraftMerchant {
             this.title = CraftChatMessage.fromString(title)[0];
         }
 
-        @Override
         public CraftMerchant getCraftMerchant() {
             return craftMerchant;
         }

@@ -2,6 +2,8 @@ package org.bukkit.craftbukkit.inventory.view;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import net.ethylenemc.interfaces.world.item.crafting.EthyleneRecipeHolder;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
@@ -25,7 +27,7 @@ public class CraftStonecutterView extends CraftInventoryView<net.minecraft.world
     public List<StonecuttingRecipe> getRecipes() {
         final List<StonecuttingRecipe> recipes = new ArrayList<>();
         for (final net.minecraft.world.item.crafting.RecipeHolder<net.minecraft.world.item.crafting.StonecutterRecipe> recipe : container.getRecipes()) {
-            recipes.add((StonecuttingRecipe) recipe.toBukkitRecipe());
+            recipes.add((StonecuttingRecipe) ((EthyleneRecipeHolder) (Object) recipe).toBukkitRecipe());
         }
         return recipes;
     }

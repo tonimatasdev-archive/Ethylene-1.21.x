@@ -48,6 +48,7 @@ import net.ethylenemc.EthyleneStatic;
 import net.ethylenemc.interfaces.world.EthyleneContainer;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.inventory.EthyleneAbstractContainerMenu;
+import net.ethylenemc.interfaces.world.item.crafting.EthyleneRecipeHolder;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
@@ -1340,7 +1341,7 @@ public final class CraftServer implements Server {
     public Recipe getRecipe(NamespacedKey recipeKey) {
         Preconditions.checkArgument(recipeKey != null, "NamespacedKey recipeKey cannot be null");
 
-        return getServer().getRecipeManager().byKey(CraftNamespacedKey.toMinecraft(recipeKey)).map(net.minecraft.world.item.crafting.RecipeHolder::toBukkitRecipe).orElse(null);
+        return getServer().getRecipeManager().byKey(CraftNamespacedKey.toMinecraft(recipeKey)).map(recipeHolder -> ((EthyleneRecipeHolder) (Object) recipeHolder).toBukkitRecipe()).orElse(null);
     }
 
     private net.minecraft.world.inventory.CraftingContainer createInventoryCrafting() {
@@ -1366,7 +1367,7 @@ public final class CraftServer implements Server {
 
     @Override
     public Recipe getCraftingRecipe(ItemStack[] craftingMatrix, World world) {
-        return getNMSRecipe(craftingMatrix, createInventoryCrafting(), (CraftWorld) world).map(net.minecraft.world.item.crafting.RecipeHolder::toBukkitRecipe).orElse(null);
+        return getNMSRecipe(craftingMatrix, createInventoryCrafting(), (CraftWorld) world).map(craftingRecipeRecipeHolder -> ((EthyleneRecipeHolder) (Object) craftingRecipeRecipeHolder).toBukkitRecipe()).orElse(null);
     }
 
     @Override

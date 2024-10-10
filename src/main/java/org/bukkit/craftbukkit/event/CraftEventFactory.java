@@ -16,8 +16,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
+import net.ethylenemc.interfaces.world.damagesource.EthyleneDamageSource;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.inventory.EthyleneAbstractContainerMenu;
+import net.ethylenemc.interfaces.world.item.crafting.EthyleneRecipeHolder;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -874,15 +876,15 @@ public class CraftEventFactory {
 
     private static EntityDamageEvent handleEntityDamageEvent(net.minecraft.world.entity.Entity entity, net.minecraft.world.damagesource.DamageSource source, Map<DamageModifier, Double> modifiers, Map<DamageModifier, Function<? super Double, Double>> modifierFunctions, boolean cancelled) {
         CraftDamageSource bukkitDamageSource = new CraftDamageSource(source);
-        net.minecraft.world.entity.Entity damager = (source.getDamager() != null) ? source.getDamager() : source.getEntity();
+        net.minecraft.world.entity.Entity damager = (((EthyleneDamageSource) source).getDamager() != null) ? ((EthyleneDamageSource) source).getDamager() : source.getEntity();
         if (source.is(net.minecraft.tags.DamageTypeTags.IS_EXPLOSION)) {
             if (damager == null) {
-                return callEntityDamageEvent(source.getDirectBlock(), source.getDirectBlockState(), entity, DamageCause.BLOCK_EXPLOSION, bukkitDamageSource, modifiers, modifierFunctions, cancelled);
+                return callEntityDamageEvent(((EthyleneDamageSource) source).getDirectBlock(), ((EthyleneDamageSource) source).getDirectBlockState(), entity, DamageCause.BLOCK_EXPLOSION, bukkitDamageSource, modifiers, modifierFunctions, cancelled);
             }
             DamageCause damageCause = (((EthyleneEntity) damager).getBukkitEntity() instanceof org.bukkit.entity.TNTPrimed) ? DamageCause.BLOCK_EXPLOSION : DamageCause.ENTITY_EXPLOSION;
             return callEntityDamageEvent(damager, entity, damageCause, bukkitDamageSource, modifiers, modifierFunctions, cancelled);
         } else if (damager != null || source.getDirectEntity() != null) {
-            DamageCause cause = (source.isSweep()) ? DamageCause.ENTITY_SWEEP_ATTACK : DamageCause.ENTITY_ATTACK;
+            DamageCause cause = (((EthyleneDamageSource) source).isSweep()) ? DamageCause.ENTITY_SWEEP_ATTACK : DamageCause.ENTITY_ATTACK;
 
             if (damager instanceof net.minecraft.world.entity.projectile.Projectile) {
                 if (((EthyleneEntity) damager).getBukkitEntity() instanceof ThrownPotion) {
@@ -908,10 +910,10 @@ public class CraftEventFactory {
 
             return callEntityDamageEvent(damager, entity, cause, bukkitDamageSource, modifiers, modifierFunctions, cancelled);
         } else if (source.is(net.minecraft.world.damagesource.DamageTypes.FELL_OUT_OF_WORLD)) {
-            return callEntityDamageEvent(source.getDirectBlock(), source.getDirectBlockState(), entity, DamageCause.VOID, bukkitDamageSource, modifiers, modifierFunctions, cancelled);
+            return callEntityDamageEvent(((EthyleneDamageSource) source).getDirectBlock(), ((EthyleneDamageSource) source).getDirectBlockState(), entity, DamageCause.VOID, bukkitDamageSource, modifiers, modifierFunctions, cancelled);
         } else if (source.is(net.minecraft.world.damagesource.DamageTypes.LAVA)) {
-            return callEntityDamageEvent(source.getDirectBlock(), source.getDirectBlockState(), entity, DamageCause.LAVA, bukkitDamageSource, modifiers, modifierFunctions, cancelled);
-        } else if (source.getDirectBlock() != null) {
+            return callEntityDamageEvent(((EthyleneDamageSource) source).getDirectBlock(), ((EthyleneDamageSource) source).getDirectBlockState(), entity, DamageCause.LAVA, bukkitDamageSource, modifiers, modifierFunctions, cancelled);
+        } else if (((EthyleneDamageSource) source).getDirectBlock() != null) {
             DamageCause cause;
             if (source.is(net.minecraft.world.damagesource.DamageTypes.CACTUS) || source.is(net.minecraft.world.damagesource.DamageTypes.SWEET_BERRY_BUSH) || source.is(net.minecraft.world.damagesource.DamageTypes.STALAGMITE) || source.is(net.minecraft.world.damagesource.DamageTypes.FALLING_STALACTITE) || source.is(net.minecraft.world.damagesource.DamageTypes.FALLING_ANVIL)) {
                 cause = DamageCause.CONTACT;
@@ -924,9 +926,9 @@ public class CraftEventFactory {
             } else if (source.is(net.minecraft.world.damagesource.DamageTypes.CAMPFIRE)) {
                 cause = DamageCause.CAMPFIRE;
             } else {
-                throw new IllegalStateException(String.format("Unhandled damage of %s by %s from %s [%s]", entity, source.getDirectBlock(), source.getMsgId(), source.typeHolder().getRegisteredName()));
+                throw new IllegalStateException(String.format("Unhandled damage of %s by %s from %s [%s]", entity, ((EthyleneDamageSource) source).getDirectBlock(), source.getMsgId(), source.typeHolder().getRegisteredName()));
             }
-            return callEntityDamageEvent(source.getDirectBlock(), source.getDirectBlockState(), entity, cause, bukkitDamageSource, modifiers, modifierFunctions, cancelled);
+            return callEntityDamageEvent(((EthyleneDamageSource) source).getDirectBlock(), ((EthyleneDamageSource) source).getDirectBlockState(), entity, cause, bukkitDamageSource, modifiers, modifierFunctions, cancelled);
         }
 
         DamageCause cause;
@@ -942,9 +944,9 @@ public class CraftEventFactory {
             cause = DamageCause.DROWNING;
         } else if (source.is(net.minecraft.world.damagesource.DamageTypes.ON_FIRE)) {
             cause = DamageCause.FIRE_TICK;
-        } else if (source.isMelting()) {
+        } else if (((EthyleneDamageSource) source).isMelting()) {
             cause = DamageCause.MELTING;
-        } else if (source.isPoison()) {
+        } else if (((EthyleneDamageSource) source).isPoison()) {
             cause = DamageCause.POISON;
         } else if (source.is(net.minecraft.world.damagesource.DamageTypes.MAGIC)) {
             cause = DamageCause.MAGIC;
@@ -1211,7 +1213,7 @@ public class CraftEventFactory {
     public static CrafterCraftEvent callCrafterCraftEvent(net.minecraft.core.BlockPos pos, net.minecraft.world.level.Level world, net.minecraft.world.inventory.CraftingContainer inventoryCrafting, net.minecraft.world.item.ItemStack result, net.minecraft.world.item.crafting.RecipeHolder<net.minecraft.world.item.crafting.CraftingRecipe> holder) {
         CraftBlock block = CraftBlock.at(world, pos);
         CraftItemStack itemStack = CraftItemStack.asCraftMirror(result);
-        CraftingRecipe craftingRecipe = (CraftingRecipe) holder.toBukkitRecipe();
+        CraftingRecipe craftingRecipe = (CraftingRecipe) ((EthyleneRecipeHolder) (Object) holder).toBukkitRecipe();
 
         CrafterCraftEvent crafterCraftEvent = new CrafterCraftEvent(block, craftingRecipe, itemStack);
         Bukkit.getPluginManager().callEvent(crafterCraftEvent);

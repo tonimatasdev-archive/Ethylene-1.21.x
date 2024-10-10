@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.ethylenemc.interfaces.world.EthyleneContainer;
+import net.ethylenemc.interfaces.world.inventory.EthyleneCraftingContainer;
+import net.ethylenemc.interfaces.world.item.crafting.EthyleneRecipeHolder;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -115,7 +117,7 @@ public class CraftInventoryCrafting extends CraftInventory implements CraftingIn
 
     @Override
     public Recipe getRecipe() {
-        net.minecraft.world.item.crafting.RecipeHolder<?> recipe = getMatrixInventory().getCurrentRecipe();
-        return recipe == null ? null : recipe.toBukkitRecipe();
+        net.minecraft.world.item.crafting.RecipeHolder<?> recipe = ((EthyleneCraftingContainer) getMatrixInventory()).getCurrentRecipe();
+        return recipe == null ? null : ((EthyleneRecipeHolder) (Object) recipe).toBukkitRecipe();
     }
 }

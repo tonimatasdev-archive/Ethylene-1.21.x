@@ -6,6 +6,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.NoSuchElementException;
+
+import net.ethylenemc.interfaces.core.EthyleneDataComponentPatch$Builder;
 import org.bukkit.block.Banner;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
@@ -79,7 +81,7 @@ public final class SerializableMeta implements ConfigurationSerializable {
             // Convert Shield CraftMetaBlockState to CraftMetaShield
             if (meta instanceof CraftMetaBlockState state && state.hasBlockState() && state.getBlockState() instanceof Banner) {
                 meta = new CraftMetaShield(meta);
-                meta.unhandledTags.clear(CraftMetaShield.BASE_COLOR.TYPE);
+                ((EthyleneDataComponentPatch$Builder) meta.unhandledTags).clear(CraftMetaShield.BASE_COLOR.TYPE);
             }
 
             return meta;

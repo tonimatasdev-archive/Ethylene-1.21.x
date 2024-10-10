@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.inventory.view;
 
+import net.ethylenemc.interfaces.world.inventory.EthyleneAnvilMenu;
 import org.bukkit.craftbukkit.inventory.CraftInventoryAnvil;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
@@ -31,7 +32,7 @@ public class CraftAnvilView extends CraftInventoryView<net.minecraft.world.inven
 
     @Override
     public int getMaximumRepairCost() {
-        return container.maximumRepairCost;
+        return ((EthyleneAnvilMenu) container).getMaximumRepairCost();
     }
 
     @Override
@@ -46,7 +47,7 @@ public class CraftAnvilView extends CraftInventoryView<net.minecraft.world.inven
 
     @Override
     public void setMaximumRepairCost(final int cost) {
-        container.maximumRepairCost = cost;
+        ((EthyleneAnvilMenu) container).setMaximumRepairCost(cost);
     }
 
     public void updateFromLegacy(CraftInventoryAnvil legacy) {

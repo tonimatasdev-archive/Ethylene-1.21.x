@@ -1,19 +1,23 @@
 package org.bukkit.craftbukkit.inventory.util;
 
 
+import net.ethylenemc.EthyleneCaptures;
+
 public interface CraftMenuBuilder {
 
     net.minecraft.world.inventory.AbstractContainerMenu build(net.minecraft.server.level.ServerPlayer player, net.minecraft.world.inventory.MenuType<?> type);
 
     static CraftMenuBuilder worldAccess(LocationBoundContainerBuilder builder) {
         return (net.minecraft.server.level.ServerPlayer player, net.minecraft.world.inventory.MenuType<?> type) -> {
-            return builder.build(player.nextContainerCounter(), player.getInventory(), net.minecraft.world.inventory.ContainerLevelAccess.create(player.level(), player.blockPosition()));
+            player.nextContainerCounter();
+            return builder.build(EthyleneCaptures.nextContainerCounter, player.getInventory(), net.minecraft.world.inventory.ContainerLevelAccess.create(player.level(), player.blockPosition())); // Ethylene - Method doesn't return an int
         };
     }
 
     static CraftMenuBuilder tileEntity(TileEntityObjectBuilder objectBuilder, net.minecraft.world.level.block.Block block) {
         return (net.minecraft.server.level.ServerPlayer player, net.minecraft.world.inventory.MenuType<?> type) -> {
-            return objectBuilder.build(player.blockPosition(), block.defaultBlockState()).createMenu(player.nextContainerCounter(), player.getInventory(), player);
+            player.nextContainerCounter();
+            return objectBuilder.build(player.blockPosition(), block.defaultBlockState()).createMenu(EthyleneCaptures.nextContainerCounter, player.getInventory(), player); // Ethylene - Method doesn't return an int
         };
     }
 

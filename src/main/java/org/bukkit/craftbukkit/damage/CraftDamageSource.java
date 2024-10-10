@@ -2,6 +2,7 @@ package org.bukkit.craftbukkit.damage;
 
 import java.util.Objects;
 
+import net.ethylenemc.interfaces.world.damagesource.EthyleneDamageSource;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -32,7 +33,7 @@ public class CraftDamageSource implements DamageSource {
     }
 
     public Block getDirectBlock() {
-        return this.getHandle().getDirectBlock();
+        return ((EthyleneDamageSource) this.getHandle()).getDirectBlock();
     }
 
     @Override
@@ -42,13 +43,13 @@ public class CraftDamageSource implements DamageSource {
 
     @Override
     public org.bukkit.entity.Entity getCausingEntity() {
-        net.minecraft.world.entity.Entity entity = this.getHandle().getCausingDamager();
+        net.minecraft.world.entity.Entity entity = ((EthyleneDamageSource) this.getHandle()).getCausingDamager();
         return (entity != null) ? ((EthyleneEntity) entity).getBukkitEntity() : null;
     }
 
     @Override
     public org.bukkit.entity.Entity getDirectEntity() {
-        net.minecraft.world.entity.Entity entity = this.getHandle().getDamager();
+        net.minecraft.world.entity.Entity entity = ((EthyleneDamageSource) this.getHandle()).getDamager();
         return (entity != null) ? ((EthyleneEntity) entity).getBukkitEntity() : null;
     }
 
@@ -66,7 +67,7 @@ public class CraftDamageSource implements DamageSource {
 
     @Override
     public boolean isIndirect() {
-        return this.getHandle().getCausingDamager() != this.getHandle().getDamager();
+        return ((EthyleneDamageSource) this.getHandle()).getCausingDamager() != ((EthyleneDamageSource) this.getHandle()).getDamager();
     }
 
     @Override
