@@ -3,6 +3,8 @@ package org.bukkit.craftbukkit.entity;
 import com.google.common.base.Preconditions;
 import net.ethylenemc.interfaces.network.syncher.EthyleneSynchedEntityData;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.entity.decoration.EthyleneItemFrame;
+import net.ethylenemc.interfaces.world.item.EthyleneItemStack;
 import org.bukkit.Rotation;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftServer;
@@ -56,7 +58,7 @@ public class CraftItemFrame extends CraftHanging implements ItemFrame {
     @Override
     public void setItem(org.bukkit.inventory.ItemStack item, boolean playSound) {
         // only updated redstone and play sound when it is not in generation
-        getHandle().setItem(CraftItemStack.asNMSCopy(item), !((EthyleneEntity) getHandle()).getGeneration(), !((EthyleneEntity) getHandle()).getGeneration() && playSound);
+        ((EthyleneItemFrame) getHandle()).setItem(CraftItemStack.asNMSCopy(item), !((EthyleneEntity) getHandle()).getGeneration(), !((EthyleneEntity) getHandle()).getGeneration() && playSound);
     }
 
     @Override

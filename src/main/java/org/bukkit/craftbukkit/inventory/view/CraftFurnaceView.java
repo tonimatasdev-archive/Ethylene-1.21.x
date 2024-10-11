@@ -2,12 +2,13 @@ package org.bukkit.craftbukkit.inventory.view;
 
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.view.FurnaceView;
 
-public class CraftFurnaceView extends CraftInventoryView<net.minecraft.world.inventory.AbstractFurnaceMenu> implements FurnaceView {
+public class CraftFurnaceView extends CraftInventoryView<net.minecraft.world.inventory.AbstractFurnaceMenu, FurnaceInventory> implements FurnaceView {
 
-    public CraftFurnaceView(final HumanEntity player, final Inventory viewing, final net.minecraft.world.inventory.AbstractFurnaceMenu container) {
+    public CraftFurnaceView(final HumanEntity player, final FurnaceInventory viewing, final net.minecraft.world.inventory.AbstractFurnaceMenu container) {
         super(player, viewing, container);
     }
 

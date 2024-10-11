@@ -3,6 +3,8 @@ package org.bukkit.craftbukkit.inventory;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
+
+import net.ethylenemc.interfaces.world.item.EthyleneItemStack;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.craftbukkit.enchantments.CraftEnchantment;
@@ -142,7 +144,7 @@ public final class CraftItemStack extends ItemStack {
         } else if (handle == null) {
             handle = new net.minecraft.world.item.ItemStack(CraftItemType.bukkitToMinecraft(type), 1);
         } else {
-            handle.setItem(CraftItemType.bukkitToMinecraft(type));
+            ((EthyleneItemStack) (Object) handle).setItem(CraftItemType.bukkitToMinecraft(type));
             if (hasItemMeta()) {
                 // This will create the appropriate item meta, which will contain all the data we intend to keep
                 setItemMeta(handle, getItemMeta(handle));
@@ -326,7 +328,7 @@ public final class CraftItemStack extends ItemStack {
             return false;
         }
         if (CraftItemFactory.instance().equals(itemMeta, null)) {
-            item.restorePatch(net.minecraft.core.component.DataComponentPatch.EMPTY);
+            ((EthyleneItemStack) (Object) item).restorePatch(net.minecraft.core.component.DataComponentPatch.EMPTY);
             return true;
         }
         if (!CraftItemFactory.instance().isApplicable(itemMeta, getType(item))) {
@@ -340,7 +342,7 @@ public final class CraftItemStack extends ItemStack {
             CraftMetaItem.Applicator tag = new CraftMetaItem.Applicator();
 
             ((CraftMetaItem) itemMeta).applyToItem(tag);
-            item.restorePatch(tag.build());
+            ((EthyleneItemStack) (Object) item).restorePatch(tag.build());
         }
         // SpigotCraft#463 this is required now by the Vanilla client, so mimic ItemStack constructor in ensuring it
         if (item.getItem() != null && item.getMaxDamage() > 0) {

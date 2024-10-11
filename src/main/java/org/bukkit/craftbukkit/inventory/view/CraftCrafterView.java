@@ -3,12 +3,13 @@ package org.bukkit.craftbukkit.inventory.view;
 import com.google.common.base.Preconditions;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.CrafterInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.view.CrafterView;
 
-public class CraftCrafterView extends CraftInventoryView<net.minecraft.world.inventory.CrafterMenu> implements CrafterView {
+public class CraftCrafterView extends CraftInventoryView<net.minecraft.world.inventory.CrafterMenu, CrafterInventory> implements CrafterView {
 
-    public CraftCrafterView(final HumanEntity player, final Inventory viewing, final net.minecraft.world.inventory.CrafterMenu container) {
+    public CraftCrafterView(final HumanEntity player, final CrafterInventory viewing, final net.minecraft.world.inventory.CrafterMenu container) {
         super(player, viewing, container);
     }
 

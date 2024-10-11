@@ -7,11 +7,12 @@ import org.bukkit.craftbukkit.block.banner.CraftPatternType;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.LoomInventory;
 import org.bukkit.inventory.view.LoomView;
 
-public class CraftLoomView extends CraftInventoryView<net.minecraft.world.inventory.LoomMenu> implements LoomView {
+public class CraftLoomView extends CraftInventoryView<net.minecraft.world.inventory.LoomMenu, LoomInventory> implements LoomView {
 
-    public CraftLoomView(final HumanEntity player, final Inventory viewing, final net.minecraft.world.inventory.LoomMenu container) {
+    public CraftLoomView(final HumanEntity player, final LoomInventory viewing, final net.minecraft.world.inventory.LoomMenu container) {
         super(player, viewing, container);
     }
 

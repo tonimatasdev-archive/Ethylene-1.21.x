@@ -29,6 +29,7 @@ import net.ethylenemc.EthyleneStatic;
 import net.ethylenemc.interfaces.server.level.EthyleneServerLevel;
 import net.ethylenemc.interfaces.server.level.EthyleneServerPlayer;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import net.ethylenemc.interfaces.world.level.chunk.EthyleneChunkAccess;
 import org.bukkit.BlockChangeDelegate;
 import org.bukkit.Bukkit;
@@ -508,7 +509,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         if (function != null) {
             function.accept(itemEntity);
         }
-        world.addFreshEntity(entity, SpawnReason.CUSTOM);
+        ((EthyleneServerLevel) world).addFreshEntity(entity, SpawnReason.CUSTOM);
         return itemEntity;
     }
 
@@ -574,7 +575,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         net.minecraft.world.entity.LightningBolt lightning = net.minecraft.world.entity.EntityType.LIGHTNING_BOLT.create(world);
         lightning.moveTo(loc.getX(), loc.getY(), loc.getZ());
         lightning.setVisualOnly(isVisual);
-        world.strikeLightning(lightning, LightningStrikeEvent.Cause.CUSTOM);
+        ((EthyleneServerLevel) world).strikeLightning(lightning, LightningStrikeEvent.Cause.CUSTOM);
         return (LightningStrike) ((EthyleneEntity) lightning).getBukkitEntity();
     }
 
@@ -585,24 +586,24 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public boolean generateTree(Location loc, TreeType type, BlockChangeDelegate delegate) {
-        world.captureTreeGeneration = true;
-        world.captureBlockStates = true;
+        ((EthyleneLevel) world).captureTreeGeneration(true);
+        ((EthyleneLevel) world).captureBlockStates(true);
         boolean grownTree = generateTree(loc, type);
-        world.captureBlockStates = false;
-        world.captureTreeGeneration = false;
+        ((EthyleneLevel) world).captureBlockStates(false);
+        ((EthyleneLevel) world).captureTreeGeneration(false);
         if (grownTree) { // Copy block data to delegate
-            for (BlockState blockstate : world.capturedBlockStates.values()) {
+            for (BlockState blockstate : ((EthyleneLevel) world).capturedBlockStates().values()) {
                 net.minecraft.core.BlockPos position = ((CraftBlockState) blockstate).getPosition();
                 net.minecraft.world.level.block.state.BlockState oldBlock = world.getBlockState(position);
                 int flag = ((CraftBlockState) blockstate).getFlag();
                 delegate.setBlockData(blockstate.getX(), blockstate.getY(), blockstate.getZ(), blockstate.getBlockData());
                 net.minecraft.world.level.block.state.BlockState newBlock = world.getBlockState(position);
-                world.notifyAndUpdatePhysics(position, null, oldBlock, newBlock, newBlock, flag, 512);
+                ((EthyleneLevel) world).notifyAndUpdatePhysics(position, null, oldBlock, newBlock, newBlock, flag, 512);
             }
-            world.capturedBlockStates.clear();
+            ((EthyleneLevel) world).capturedBlockStates().clear();
             return true;
         } else {
-            world.capturedBlockStates.clear();
+            ((EthyleneLevel) world).capturedBlockStates().clear();
             return false;
         }
     }
@@ -614,7 +615,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public UUID getUID() {
-        return world.uuid;
+        return ((EthyleneServerLevel) world).uuid();
     }
 
     @Override
@@ -847,12 +848,12 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public void addEntityToWorld(net.minecraft.world.entity.Entity entity, SpawnReason reason) {
-        getHandle().addFreshEntity(entity, reason);
+        ((EthyleneServerLevel) getHandle()).addFreshEntity(entity, reason);
     }
 
     @Override
     public void addEntityWithPassengers(net.minecraft.world.entity.Entity entity, SpawnReason reason) {
-        getHandle().tryAddFreshEntityWithPassengers(entity, reason);
+        ((EthyleneServerLevel) getHandle()).tryAddFreshEntityWithPassengers(entity, reason);
     }
 
     @Override
@@ -1303,7 +1304,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public boolean getKeepSpawnInMemory() {
-        return getGameRuleValue(GameRule.SPAWN_RADIUS) > 0;
+        return getGameRuleValue(GameRule.SPAWN_CHUNK_RADIUS) > 0;
     }
 
     @Override

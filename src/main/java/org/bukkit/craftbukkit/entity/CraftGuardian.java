@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.ethylenemc.interfaces.world.entity.monster.EthyleneGuardian;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Guardian;
 import org.bukkit.entity.LivingEntity;
@@ -63,7 +64,7 @@ public class CraftGuardian extends CraftMonster implements Guardian {
     public void setLaserTicks(int ticks) {
         Preconditions.checkArgument(ticks >= MINIMUM_ATTACK_TICKS, "ticks must be >= %s. Given %s", MINIMUM_ATTACK_TICKS, ticks);
 
-        net.minecraft.world.entity.monster.Guardian.GuardianAttackGoal goal = getHandle().guardianAttackGoal;
+        net.minecraft.world.entity.monster.Guardian.GuardianAttackGoal goal = ((EthyleneGuardian) getHandle()).guardianAttackGoal();
         if (goal != null) {
             goal.attackTime = ticks;
         }
@@ -71,7 +72,7 @@ public class CraftGuardian extends CraftMonster implements Guardian {
 
     @Override
     public int getLaserTicks() {
-        net.minecraft.world.entity.monster.Guardian.GuardianAttackGoal goal = getHandle().guardianAttackGoal;
+        net.minecraft.world.entity.monster.Guardian.GuardianAttackGoal goal = ((EthyleneGuardian) getHandle()).guardianAttackGoal();
         return (goal != null) ? goal.attackTime : MINIMUM_ATTACK_TICKS;
     }
 

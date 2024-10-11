@@ -2,6 +2,8 @@ package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.entity.EthyleneMob;
+import net.minecraft.world.entity.animal.AbstractGolem;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ShulkerBullet;
@@ -39,6 +41,8 @@ public class CraftShulkerBullet extends AbstractProjectile implements ShulkerBul
 
         getHandle().setTarget(target == null ? null : ((CraftEntity) target).getHandle());
     }
+
+    AbstractGolem
 
     @Override
     public String toString() {

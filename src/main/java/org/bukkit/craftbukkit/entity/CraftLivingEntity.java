@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.entity.EthyleneLivingEntity;
+import net.ethylenemc.interfaces.world.entity.EthyleneMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
 import net.minecraft.world.entity.projectile.windcharge.BreezeWindCharge;
@@ -532,7 +533,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     @Override
     public void setRemoveWhenFarAway(boolean remove) {
         if (getHandle() instanceof net.minecraft.world.entity.Mob) {
-            ((net.minecraft.world.entity.Mob) getHandle()).setPersistenceRequired(!remove);
+            ((EthyleneMob) ((net.minecraft.world.entity.Mob) getHandle())).setPersistenceRequired(!remove);
         }
     }
 

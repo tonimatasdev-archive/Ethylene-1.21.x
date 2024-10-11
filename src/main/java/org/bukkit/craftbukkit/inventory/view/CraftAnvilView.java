@@ -4,13 +4,14 @@ import net.ethylenemc.interfaces.world.inventory.EthyleneAnvilMenu;
 import org.bukkit.craftbukkit.inventory.CraftInventoryAnvil;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.view.AnvilView;
 import org.jetbrains.annotations.Nullable;
 
-public class CraftAnvilView extends CraftInventoryView<net.minecraft.world.inventory.AnvilMenu> implements AnvilView {
+public class CraftAnvilView extends CraftInventoryView<net.minecraft.world.inventory.AnvilMenu, AnvilInventory> implements AnvilView {
 
-    public CraftAnvilView(final HumanEntity player, final Inventory viewing, final net.minecraft.world.inventory.AnvilMenu container) {
+    public CraftAnvilView(final HumanEntity player, final AnvilInventory viewing, final net.minecraft.world.inventory.AnvilMenu container) {
         super(player, viewing, container);
     }
 

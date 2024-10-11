@@ -4,11 +4,12 @@ import com.google.common.base.Preconditions;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.LecternInventory;
 import org.bukkit.inventory.view.LecternView;
 
-public class CraftLecternView extends CraftInventoryView<net.minecraft.world.inventory.LecternMenu> implements LecternView {
+public class CraftLecternView extends CraftInventoryView<net.minecraft.world.inventory.LecternMenu, LecternInventory> implements LecternView {
 
-    public CraftLecternView(final HumanEntity player, final Inventory viewing, final net.minecraft.world.inventory.LecternMenu container) {
+    public CraftLecternView(final HumanEntity player, final LecternInventory viewing, final net.minecraft.world.inventory.LecternMenu container) {
         super(player, viewing, container);
     }
 

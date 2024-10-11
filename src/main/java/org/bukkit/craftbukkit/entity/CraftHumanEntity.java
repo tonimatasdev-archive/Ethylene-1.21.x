@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
+import net.ethylenemc.interfaces.server.level.EthyleneServerLevel;
 import net.ethylenemc.interfaces.world.EthyleneContainer;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.inventory.EthyleneAbstractContainerMenu;
@@ -666,7 +667,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         Preconditions.checkArgument(fireworkItemStack.getType() == Material.FIREWORK_ROCKET, "fireworkItemStack must be of type %s", Material.FIREWORK_ROCKET);
 
         net.minecraft.world.entity.projectile.FireworkRocketEntity fireworks = new net.minecraft.world.entity.projectile.FireworkRocketEntity(getHandle().level(), CraftItemStack.asNMSCopy(fireworkItemStack), getHandle());
-        boolean success = getHandle().level().addFreshEntity(fireworks, SpawnReason.CUSTOM);
+        boolean success = ((EthyleneServerLevel) getHandle().level()).addFreshEntity(fireworks, SpawnReason.CUSTOM);
         return success ? (Firework) ((EthyleneEntity) fireworks).getBukkitEntity() : null;
     }
 

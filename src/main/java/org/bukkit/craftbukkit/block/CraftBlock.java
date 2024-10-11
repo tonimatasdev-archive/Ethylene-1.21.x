@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.ethylenemc.EthyleneCaptures;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import net.ethylenemc.interfaces.world.level.EthyleneWorldGenLevel;
 import org.bukkit.Bukkit;
@@ -452,15 +453,15 @@ public class CraftBlock implements Block {
         net.minecraft.world.item.context.UseOnContext context = new net.minecraft.world.item.context.UseOnContext(world, null, net.minecraft.world.InteractionHand.MAIN_HAND, net.minecraft.world.item.Items.BONE_MEAL.getDefaultInstance(), new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.ZERO, direction, getPosition(), false));
 
         // SPIGOT-6895: Call StructureGrowEvent and BlockFertilizeEvent
-        world.captureTreeGeneration = true;
+        ((EthyleneLevel) world).captureTreeGeneration(true);
         net.minecraft.world.InteractionResult result = net.minecraft.world.item.BoneMealItem.applyBonemeal(context);
-        world.captureTreeGeneration = false;
+        ((EthyleneLevel) world).captureTreeGeneration(false);
 
-        if (world.capturedBlockStates.size() > 0) {
-            TreeType treeType = net.minecraft.world.level.block.SaplingBlock.treeType;
-            net.minecraft.world.level.block.SaplingBlock.treeType = null;
-            List<BlockState> blocks = new ArrayList<>(world.capturedBlockStates.values());
-            world.capturedBlockStates.clear();
+        if (((EthyleneLevel) world).capturedBlockStates().size() > 0) {
+            TreeType treeType = EthyleneCaptures.treeType;
+            EthyleneCaptures.treeType = null;
+            List<BlockState> blocks = new ArrayList<>(((EthyleneLevel) world).capturedBlockStates().values());
+            ((EthyleneLevel) world).capturedBlockStates().clear();
             StructureGrowEvent structureEvent = null;
 
             if (treeType != null) {
