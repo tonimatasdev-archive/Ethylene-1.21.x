@@ -56,8 +56,10 @@ import org.bukkit.potion.PotionType;
 
 @SuppressWarnings("deprecation")
 public final class CraftMagicNumbers implements UnsafeValues {
-    public static final UnsafeValues INSTANCE = new CraftMagicNumbers();
-
+    public static final CraftMagicNumbers INSTANCE = new CraftMagicNumbers();
+    
+    private final Commodore commodore = new Commodore();
+    
     private CraftMagicNumbers() {}
 
     public static net.minecraft.world.level.block.state.BlockState getBlock(MaterialData material) {
@@ -145,6 +147,10 @@ public final class CraftMagicNumbers implements UnsafeValues {
 
     public static byte toLegacyData(net.minecraft.world.level.block.state.BlockState data) {
         return CraftLegacy.toLegacyData(data);
+    }
+
+    public Commodore getCommodore() {
+        return this.commodore;
     }
 
     @Override
@@ -302,7 +308,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
     @Override
     public byte[] processClass(PluginDescriptionFile pdf, String path, byte[] clazz) {
         try {
-            clazz = Commodore.convert(clazz, pdf.getName(), ApiVersion.getOrCreateVersion(pdf.getAPIVersion()), ((CraftServer) Bukkit.getServer()).activeCompatibilities);
+            clazz = commodore.convert(clazz, pdf.getName(), ApiVersion.getOrCreateVersion(pdf.getAPIVersion()), ((CraftServer) Bukkit.getServer()).activeCompatibilities);
         } catch (Exception ex) {
             Bukkit.getLogger().log(Level.SEVERE, "Fatal error trying to convert " + pdf.getFullName() + ":" + path, ex);
         }

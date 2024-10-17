@@ -320,6 +320,7 @@ public final class CraftServer implements Server {
         minimumAPI = ApiVersion.getOrCreateVersion(configuration.getString("settings.minimum-api"));
         loadIcon();
         loadCompatibilities();
+        CraftMagicNumbers.INSTANCE.getCommodore().updateReroute(activeCompatibilities::contains);
 
         // Set map color cache
         if (configuration.getBoolean("settings.use-map-color-cache")) {
@@ -867,6 +868,7 @@ public final class CraftServer implements Server {
         console.autosavePeriod = configuration.getInt("ticks-per.autosave");
         loadIcon();
         loadCompatibilities();
+        CraftMagicNumbers.INSTANCE.getCommodore().updateReroute(activeCompatibilities::contains);
 
         try {
             playerList.getIpBans().load();

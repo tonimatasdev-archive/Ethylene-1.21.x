@@ -1,2 +1,2 @@
 # Ethylene
-CraftBukkit commit: f4d957fffd7cd1cc5a7ab632b4b48a16a2e0e248
+CraftBukkit commit: 0a7bd6c81a33cfaaa2f4d2456c6b237792f38fe6

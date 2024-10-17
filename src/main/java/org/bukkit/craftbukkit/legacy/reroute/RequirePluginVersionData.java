@@ -7,7 +7,7 @@ public record RequirePluginVersionData(ApiVersion minInclusive, ApiVersion maxIn
     public static RequirePluginVersionData create(RequirePluginVersion requirePluginVersion) {
         if (!requirePluginVersion.value().isBlank()) {
             if (!requirePluginVersion.minInclusive().isBlank() || !requirePluginVersion.maxInclusive().isBlank()) {
-                throw new RuntimeException("When setting value, min inclusive and max inclusive data is not allowed.");
+                throw new IllegalArgumentException("When setting value, min inclusive and max inclusive data is not allowed.");
             }
 
             return new RequirePluginVersionData(ApiVersion.getOrCreateVersion(requirePluginVersion.value()), ApiVersion.getOrCreateVersion(requirePluginVersion.value()));
@@ -23,6 +23,12 @@ public record RequirePluginVersionData(ApiVersion minInclusive, ApiVersion maxIn
             maxInclusive = ApiVersion.getOrCreateVersion(requirePluginVersion.maxInclusive());
         }
 
+        if (minInclusive != null && maxInclusive != null) {
+            if (minInclusive.isNewerThan(maxInclusive)) {
+                throw new IllegalArgumentException("Min inclusive cannot be newer than max inclusive.");
+            }
+        }
+        
         return new RequirePluginVersionData(minInclusive, maxInclusive);
     }
 
