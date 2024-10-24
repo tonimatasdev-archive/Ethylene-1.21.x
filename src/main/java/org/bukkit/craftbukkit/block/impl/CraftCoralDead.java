@@ -19,11 +19,11 @@ public final class CraftCoralDead extends org.bukkit.craftbukkit.block.data.Craf
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftCoralDead.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftCoralDead.WATERLOGGED, waterlogged);
     }
 }

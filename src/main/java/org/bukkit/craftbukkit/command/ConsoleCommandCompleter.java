@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import jline.console.completer.Completer;
-import net.ethylenemc.interfaces.server.EthyleneMinecraftServer;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.util.Waitable;
 import org.bukkit.event.server.TabCompleteEvent;
@@ -22,15 +21,15 @@ public class ConsoleCommandCompleter implements Completer {
         Waitable<List<String>> waitable = new Waitable<List<String>>() {
             @Override
             protected List<String> evaluate() {
-                List<String> offers = server.getCommandMap().tabComplete(server.getConsoleSender(), buffer);
+                List<String> offers = ConsoleCommandCompleter.this.server.getCommandMap().tabComplete(ConsoleCommandCompleter.this.server.getConsoleSender(), buffer);
 
-                TabCompleteEvent tabEvent = new TabCompleteEvent(server.getConsoleSender(), buffer, (offers == null) ? Collections.EMPTY_LIST : offers);
-                server.getPluginManager().callEvent(tabEvent);
+                TabCompleteEvent tabEvent = new TabCompleteEvent(ConsoleCommandCompleter.this.server.getConsoleSender(), buffer, (offers == null) ? Collections.EMPTY_LIST : offers);
+                ConsoleCommandCompleter.this.server.getPluginManager().callEvent(tabEvent);
 
                 return tabEvent.isCancelled() ? Collections.EMPTY_LIST : tabEvent.getCompletions();
             }
         };
-        ((EthyleneMinecraftServer) this.server.getServer()).getProcessQueue().add(waitable);
+        this.server.getServer().processQueue.add(waitable);
         try {
             List<String> offers = waitable.get();
             if (offers == null) {

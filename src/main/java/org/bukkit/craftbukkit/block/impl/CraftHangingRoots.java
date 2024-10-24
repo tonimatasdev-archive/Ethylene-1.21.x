@@ -19,11 +19,11 @@ public final class CraftHangingRoots extends org.bukkit.craftbukkit.block.data.C
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftHangingRoots.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftHangingRoots.WATERLOGGED, waterlogged);
     }
 }

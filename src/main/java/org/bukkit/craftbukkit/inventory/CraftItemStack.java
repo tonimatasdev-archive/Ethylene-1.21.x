@@ -2,9 +2,21 @@ package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
+import java.util.Collections;
 import java.util.Map;
-
-import net.ethylenemc.interfaces.world.item.EthyleneItemStack;
+import java.util.Optional;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponentPredicate;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.PatchedDataComponentMap;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.craftbukkit.enchantments.CraftEnchantment;
@@ -28,7 +40,7 @@ public final class CraftItemStack extends ItemStack {
             return net.minecraft.world.item.ItemStack.EMPTY;
         }
 
-        net.minecraft.world.item.Item item = CraftItemType.bukkitToMinecraft(original.getType());
+        Item item = CraftItemType.bukkitToMinecraft(original.getType());
 
         if (item == null) {
             return net.minecraft.world.item.ItemStack.EMPTY;
@@ -36,7 +48,7 @@ public final class CraftItemStack extends ItemStack {
 
         net.minecraft.world.item.ItemStack stack = new net.minecraft.world.item.ItemStack(item, original.getAmount());
         if (original.hasItemMeta()) {
-            setItemMeta(stack, original.getItemMeta());
+            CraftItemStack.setItemMeta(stack, original.getItemMeta());
         }
         return stack;
     }
@@ -55,8 +67,8 @@ public final class CraftItemStack extends ItemStack {
             return new ItemStack(Material.AIR);
         }
         ItemStack stack = new ItemStack(CraftItemType.minecraftToBukkit(original.getItem()), original.getCount());
-        if (hasItemMeta(original)) {
-            stack.setItemMeta(getItemMeta(original));
+        if (CraftItemStack.hasItemMeta(original)) {
+            stack.setItemMeta(CraftItemStack.getItemMeta(original));
         }
         return stack;
     }
@@ -73,12 +85,19 @@ public final class CraftItemStack extends ItemStack {
         return new CraftItemStack(original);
     }
 
-    public static CraftItemStack asNewCraftStack(net.minecraft.world.item.Item item) {
-        return asNewCraftStack(item, 1);
+    public static CraftItemStack asNewCraftStack(Item item) {
+        return CraftItemStack.asNewCraftStack(item, 1);
     }
 
-    public static CraftItemStack asNewCraftStack(net.minecraft.world.item.Item item, int amount) {
+    public static CraftItemStack asNewCraftStack(Item item, int amount) {
         return new CraftItemStack(CraftItemType.minecraftToBukkit(item), amount, (short) 0, null);
+    }
+
+    public static ItemPredicate asCriterionConditionItem(ItemStack original) {
+        net.minecraft.world.item.ItemStack nms = CraftItemStack.asNMSCopy(original);
+        DataComponentPredicate predicate = DataComponentPredicate.allOf(PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, nms.getComponentsPatch()));
+
+        return new ItemPredicate(Optional.of(HolderSet.direct(nms.getItemHolder())), MinMaxBounds.Ints.ANY, predicate, Collections.emptyMap());
     }
 
     net.minecraft.world.item.ItemStack handle;
@@ -96,10 +115,10 @@ public final class CraftItemStack extends ItemStack {
     }
 
     private CraftItemStack(Material type, int amount, short durability, ItemMeta itemMeta) {
-        setType(type);
-        setAmount(amount);
-        setDurability(durability);
-        setItemMeta(itemMeta);
+        this.setType(type);
+        this.setAmount(amount);
+        this.setDurability(durability);
+        this.setItemMeta(itemMeta);
     }
 
     /**
@@ -125,63 +144,63 @@ public final class CraftItemStack extends ItemStack {
 
     @Override
     public MaterialData getData() {
-        return handle != null ? CraftMagicNumbers.getMaterialData(handle.getItem()) : super.getData();
+        return this.handle != null ? CraftMagicNumbers.getMaterialData(this.handle.getItem()) : super.getData();
     }
 
     @Override
     public Material getType() {
-        return handle != null ? CraftItemType.minecraftToBukkit(handle.getItem()) : Material.AIR;
+        return this.handle != null ? CraftItemType.minecraftToBukkit(this.handle.getItem()) : Material.AIR;
     }
 
     @Override
     public void setType(Material type) {
-        if (getType() == type) {
+        if (this.getType() == type) {
             return;
         } else if (type == Material.AIR) {
-            handle = null;
+            this.handle = null;
         } else if (CraftItemType.bukkitToMinecraft(type) == null) { // :(
-            handle = null;
-        } else if (handle == null) {
-            handle = new net.minecraft.world.item.ItemStack(CraftItemType.bukkitToMinecraft(type), 1);
+            this.handle = null;
+        } else if (this.handle == null) {
+            this.handle = new net.minecraft.world.item.ItemStack(CraftItemType.bukkitToMinecraft(type), 1);
         } else {
-            ((EthyleneItemStack) (Object) handle).setItem(CraftItemType.bukkitToMinecraft(type));
-            if (hasItemMeta()) {
+            this.handle.setItem(CraftItemType.bukkitToMinecraft(type));
+            if (this.hasItemMeta()) {
                 // This will create the appropriate item meta, which will contain all the data we intend to keep
-                setItemMeta(handle, getItemMeta(handle));
+                CraftItemStack.setItemMeta(this.handle, CraftItemStack.getItemMeta(this.handle));
             }
         }
-        setData(null);
+        this.setData(null);
     }
 
     @Override
     public int getAmount() {
-        return handle != null ? handle.getCount() : 0;
+        return this.handle != null ? this.handle.getCount() : 0;
     }
 
     @Override
     public void setAmount(int amount) {
-        if (handle == null) {
+        if (this.handle == null) {
             return;
         }
 
-        handle.setCount(amount);
+        this.handle.setCount(amount);
         if (amount == 0) {
-            handle = null;
+            this.handle = null;
         }
     }
 
     @Override
     public void setDurability(final short durability) {
         // Ignore damage if item is null
-        if (handle != null) {
-            handle.setDamageValue(durability);
+        if (this.handle != null) {
+            this.handle.setDamageValue(durability);
         }
     }
 
     @Override
     public short getDurability() {
-        if (handle != null) {
-            return (short) handle.getDamageValue();
+        if (this.handle != null) {
+            return (short) this.handle.getDamageValue();
         } else {
             return -1;
         }
@@ -189,23 +208,23 @@ public final class CraftItemStack extends ItemStack {
 
     @Override
     public int getMaxStackSize() {
-        return (handle == null) ? Material.AIR.getMaxStackSize() : handle.getMaxStackSize();
+        return (this.handle == null) ? Material.AIR.getMaxStackSize() : this.handle.getMaxStackSize();
     }
 
     @Override
     public void addUnsafeEnchantment(Enchantment ench, int level) {
         Preconditions.checkArgument(ench != null, "Enchantment cannot be null");
 
-        if (!makeTag(handle)) {
+        if (!CraftItemStack.makeTag(this.handle)) {
             return;
         }
-        net.minecraft.world.item.enchantment.ItemEnchantments list = getEnchantmentList(handle);
+        ItemEnchantments list = CraftItemStack.getEnchantmentList(this.handle);
         if (list == null) {
-            list = net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY;
+            list = ItemEnchantments.EMPTY;
         }
-        net.minecraft.world.item.enchantment.ItemEnchantments.Mutable listCopy = new net.minecraft.world.item.enchantment.ItemEnchantments.Mutable(list);
+        ItemEnchantments.Mutable listCopy = new ItemEnchantments.Mutable(list);
         listCopy.set(CraftEnchantment.bukkitToMinecraftHolder(ench), level);
-        handle.set(net.minecraft.core.component.DataComponents.ENCHANTMENTS, listCopy.toImmutable());
+        this.handle.set(DataComponents.ENCHANTMENTS, listCopy.toImmutable());
     }
 
     static boolean makeTag(net.minecraft.world.item.ItemStack item) {
@@ -218,56 +237,56 @@ public final class CraftItemStack extends ItemStack {
 
     @Override
     public boolean containsEnchantment(Enchantment ench) {
-        return getEnchantmentLevel(ench) > 0;
+        return this.getEnchantmentLevel(ench) > 0;
     }
 
     @Override
     public int getEnchantmentLevel(Enchantment ench) {
         Preconditions.checkArgument(ench != null, "Enchantment cannot be null");
-        if (handle == null) {
+        if (this.handle == null) {
             return 0;
         }
-        return net.minecraft.world.item.enchantment.EnchantmentHelper.getItemEnchantmentLevel(CraftEnchantment.bukkitToMinecraftHolder(ench), handle);
+        return EnchantmentHelper.getItemEnchantmentLevel(CraftEnchantment.bukkitToMinecraftHolder(ench), this.handle);
     }
 
     @Override
     public int removeEnchantment(Enchantment ench) {
         Preconditions.checkArgument(ench != null, "Enchantment cannot be null");
 
-        net.minecraft.world.item.enchantment.ItemEnchantments list = getEnchantmentList(handle);
+        ItemEnchantments list = CraftItemStack.getEnchantmentList(this.handle);
         if (list == null) {
             return 0;
         }
-        int level = getEnchantmentLevel(ench);
+        int level = this.getEnchantmentLevel(ench);
         if (level <= 0) {
             return 0;
         }
         int size = list.size();
 
         if (size == 1) {
-            handle.remove(net.minecraft.core.component.DataComponents.ENCHANTMENTS);
+            this.handle.remove(DataComponents.ENCHANTMENTS);
             return level;
         }
 
-        net.minecraft.world.item.enchantment.ItemEnchantments.Mutable listCopy = new net.minecraft.world.item.enchantment.ItemEnchantments.Mutable(list);
+        ItemEnchantments.Mutable listCopy = new ItemEnchantments.Mutable(list);
         listCopy.set(CraftEnchantment.bukkitToMinecraftHolder(ench), -1); // Negative to remove
-        handle.set(net.minecraft.core.component.DataComponents.ENCHANTMENTS, listCopy.toImmutable());
+        this.handle.set(DataComponents.ENCHANTMENTS, listCopy.toImmutable());
 
         return level;
     }
 
     @Override
     public void removeEnchantments() {
-        handle.remove(net.minecraft.core.component.DataComponents.ENCHANTMENTS);
+        this.handle.remove(DataComponents.ENCHANTMENTS);
     }
 
     @Override
     public Map<Enchantment, Integer> getEnchantments() {
-        return getEnchantments(handle);
+        return CraftItemStack.getEnchantments(this.handle);
     }
 
     static Map<Enchantment, Integer> getEnchantments(net.minecraft.world.item.ItemStack item) {
-        net.minecraft.world.item.enchantment.ItemEnchantments list = (item != null && item.isEnchanted()) ? item.get(net.minecraft.core.component.DataComponents.ENCHANTMENTS) : null;
+        ItemEnchantments list = (item != null && item.isEnchanted()) ? item.get(DataComponents.ENCHANTMENTS) : null;
 
         if (list == null || list.size() == 0) {
             return ImmutableMap.of();
@@ -276,7 +295,7 @@ public final class CraftItemStack extends ItemStack {
         ImmutableMap.Builder<Enchantment, Integer> result = ImmutableMap.builder();
 
         list.entrySet().forEach((entry) -> {
-            net.minecraft.core.Holder<net.minecraft.world.item.enchantment.Enchantment> id = entry.getKey();
+            Holder<net.minecraft.world.item.enchantment.Enchantment> id = entry.getKey();
             int level = entry.getIntValue();
 
             Enchantment enchant = CraftEnchantment.minecraftHolderToBukkit(id);
@@ -288,8 +307,8 @@ public final class CraftItemStack extends ItemStack {
         return result.build();
     }
 
-    static net.minecraft.world.item.enchantment.ItemEnchantments getEnchantmentList(net.minecraft.world.item.ItemStack item) {
-        return (item != null && item.isEnchanted()) ? item.get(net.minecraft.core.component.DataComponents.ENCHANTMENTS) : null;
+    static ItemEnchantments getEnchantmentList(net.minecraft.world.item.ItemStack item) {
+        return (item != null && item.isEnchanted()) ? item.get(DataComponents.ENCHANTMENTS) : null;
     }
 
     @Override
@@ -303,12 +322,12 @@ public final class CraftItemStack extends ItemStack {
 
     @Override
     public ItemMeta getItemMeta() {
-        return getItemMeta(handle);
+        return CraftItemStack.getItemMeta(this.handle);
     }
 
     public static ItemMeta getItemMeta(net.minecraft.world.item.ItemStack item) {
-        if (!hasItemMeta(item)) {
-            return CraftItemFactory.instance().getItemMeta(getType(item));
+        if (!CraftItemStack.hasItemMeta(item)) {
+            return CraftItemFactory.instance().getItemMeta(CraftItemStack.getType(item));
         }
 
         return ((CraftItemType<?>) CraftItemType.minecraftToBukkitNew(item.getItem())).getItemMeta(item);
@@ -320,7 +339,7 @@ public final class CraftItemStack extends ItemStack {
 
     @Override
     public boolean setItemMeta(ItemMeta itemMeta) {
-        return setItemMeta(handle, itemMeta);
+        return CraftItemStack.setItemMeta(this.handle, itemMeta);
     }
 
     public static boolean setItemMeta(net.minecraft.world.item.ItemStack item, ItemMeta itemMeta) {
@@ -328,21 +347,21 @@ public final class CraftItemStack extends ItemStack {
             return false;
         }
         if (CraftItemFactory.instance().equals(itemMeta, null)) {
-            ((EthyleneItemStack) (Object) item).restorePatch(net.minecraft.core.component.DataComponentPatch.EMPTY);
+            item.restorePatch(DataComponentPatch.EMPTY);
             return true;
         }
-        if (!CraftItemFactory.instance().isApplicable(itemMeta, getType(item))) {
+        if (!CraftItemFactory.instance().isApplicable(itemMeta, CraftItemStack.getType(item))) {
             return false;
         }
 
-        itemMeta = CraftItemFactory.instance().asMetaFor(itemMeta, getType(item));
+        itemMeta = CraftItemFactory.instance().asMetaFor(itemMeta, CraftItemStack.getType(item));
         if (itemMeta == null) return true;
 
         if (!((CraftMetaItem) itemMeta).isEmpty()) {
             CraftMetaItem.Applicator tag = new CraftMetaItem.Applicator();
 
             ((CraftMetaItem) itemMeta).applyToItem(tag);
-            ((EthyleneItemStack) (Object) item).restorePatch(tag.build());
+            item.restorePatch(tag.build());
         }
         // SpigotCraft#463 this is required now by the Vanilla client, so mimic ItemStack constructor in ensuring it
         if (item.getItem() != null && item.getMaxDamage() > 0) {
@@ -365,22 +384,22 @@ public final class CraftItemStack extends ItemStack {
         }
 
         CraftItemStack that = (CraftItemStack) stack;
-        if (handle == that.handle) {
+        if (this.handle == that.handle) {
             return true;
         }
-        if (handle == null || that.handle == null) {
+        if (this.handle == null || that.handle == null) {
             return false;
         }
         Material comparisonType = CraftLegacy.fromLegacy(that.getType()); // This may be called from legacy item stacks, try to get the right material
-        if (!(comparisonType == getType() && getDurability() == that.getDurability())) {
+        if (!(comparisonType == this.getType() && this.getDurability() == that.getDurability())) {
             return false;
         }
-        return hasItemMeta() ? that.hasItemMeta() && handle.getComponents().equals(that.handle.getComponents()) : !that.hasItemMeta();
+        return this.hasItemMeta() ? that.hasItemMeta() && this.handle.getComponents().equals(that.handle.getComponents()) : !that.hasItemMeta();
     }
 
     @Override
     public boolean hasItemMeta() {
-        return hasItemMeta(handle) && !CraftItemFactory.instance().equals(getItemMeta(), null);
+        return CraftItemStack.hasItemMeta(this.handle) && !CraftItemFactory.instance().equals(this.getItemMeta(), null);
     }
 
     static boolean hasItemMeta(net.minecraft.world.item.ItemStack item) {

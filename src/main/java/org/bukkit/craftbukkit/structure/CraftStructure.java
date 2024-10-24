@@ -7,9 +7,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-
-import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
-import net.ethylenemc.interfaces.world.level.chunk.EthyleneChunkAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.levelgen.structure.templatesystem.BlockRotProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.RegionAccessor;
@@ -33,17 +42,17 @@ import org.bukkit.util.EntityTransformer;
 
 public class CraftStructure implements Structure {
 
-    private final net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate structure;
-    private final net.minecraft.core.RegistryAccess registry;
+    private final StructureTemplate structure;
+    private final RegistryAccess registry;
 
-    public CraftStructure(net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate structure, net.minecraft.core.RegistryAccess registry) {
+    public CraftStructure(StructureTemplate structure, RegistryAccess registry) {
         this.structure = structure;
         this.registry = registry;
     }
 
     @Override
     public void place(Location location, boolean includeEntities, StructureRotation structureRotation, Mirror mirror, int palette, float integrity, Random random) {
-        place(location, includeEntities, structureRotation, mirror, palette, integrity, random, Collections.emptyList(), Collections.emptyList());
+        this.place(location, includeEntities, structureRotation, mirror, palette, integrity, random, Collections.emptyList(), Collections.emptyList());
     }
 
     @Override
@@ -54,12 +63,12 @@ public class CraftStructure implements Structure {
         Preconditions.checkArgument(world != null, "The World of Location cannot be null");
 
         BlockVector blockVector = new BlockVector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-        place(world, blockVector, includeEntities, structureRotation, mirror, palette, integrity, random, blockTransformers, entityTransformers);
+        this.place(world, blockVector, includeEntities, structureRotation, mirror, palette, integrity, random, blockTransformers, entityTransformers);
     }
 
     @Override
     public void place(RegionAccessor regionAccessor, BlockVector location, boolean includeEntities, StructureRotation structureRotation, Mirror mirror, int palette, float integrity, Random random) {
-       place(regionAccessor, location, includeEntities, structureRotation, mirror, palette, integrity, random, Collections.emptyList(), Collections.emptyList());
+       this.place(regionAccessor, location, includeEntities, structureRotation, mirror, palette, integrity, random, Collections.emptyList(), Collections.emptyList());
     }
 
     @Override
@@ -72,23 +81,23 @@ public class CraftStructure implements Structure {
 
         Preconditions.checkArgument(integrity >= 0F && integrity <= 1F, "Integrity value (%S) must be between 0 and 1 inclusive", integrity);
 
-        net.minecraft.util.RandomSource randomSource = new RandomSourceWrapper(random);
-        net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings definedstructureinfo = new net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings()
+        RandomSource randomSource = new RandomSourceWrapper(random);
+        StructurePlaceSettings definedstructureinfo = new StructurePlaceSettings()
                 .setMirror(net.minecraft.world.level.block.Mirror.valueOf(mirror.name()))
-                .setRotation(net.minecraft.world.level.block.Rotation.valueOf(structureRotation.name()))
+                .setRotation(Rotation.valueOf(structureRotation.name()))
                 .setIgnoreEntities(!includeEntities)
-                .addProcessor(new net.minecraft.world.level.levelgen.structure.templatesystem.BlockRotProcessor(integrity))
+                .addProcessor(new BlockRotProcessor(integrity))
                 .setRandom(randomSource);
         definedstructureinfo.palette = palette;
 
-        net.minecraft.core.BlockPos blockPosition = CraftBlockVector.toBlockPosition(location);
-        net.minecraft.world.level.WorldGenLevel handle = ((CraftRegionAccessor) regionAccessor).getHandle();
+        BlockPos blockPosition = CraftBlockVector.toBlockPosition(location);
+        WorldGenLevel handle = ((CraftRegionAccessor) regionAccessor).getHandle();
 
         TransformerGeneratorAccess access = new TransformerGeneratorAccess();
         access.setHandle(handle);
-        access.setStructureTransformer(new CraftStructureTransformer(handle, new net.minecraft.world.level.ChunkPos(blockPosition), blockTransformers, entityTransformers));
+        access.setStructureTransformer(new CraftStructureTransformer(handle, new ChunkPos(blockPosition), blockTransformers, entityTransformers));
 
-        structure.placeInWorld(access, blockPosition, blockPosition, definedstructureinfo, randomSource, 2);
+        this.structure.placeInWorld(access, blockPosition, blockPosition, definedstructureinfo, randomSource, 2);
         access.getStructureTransformer().discard();
     }
 
@@ -101,7 +110,7 @@ public class CraftStructure implements Structure {
 
         Location origin = new Location(world, Math.min(corner1.getBlockX(), corner2.getBlockX()), Math.min(corner1.getBlockY(), corner2.getBlockY()), Math.min(corner1.getBlockZ(), corner2.getBlockZ()));
         BlockVector size = new BlockVector(Math.abs(corner1.getBlockX() - corner2.getBlockX()), Math.abs(corner1.getBlockY() - corner2.getBlockY()), Math.abs(corner1.getBlockZ() - corner2.getBlockZ()));
-        fill(origin, size, includeEntities);
+        this.fill(origin, size, includeEntities);
     }
 
     @Override
@@ -112,21 +121,21 @@ public class CraftStructure implements Structure {
         Preconditions.checkArgument(size != null, "BlockVector size cannot be null");
         Preconditions.checkArgument(size.getBlockX() >= 1 && size.getBlockY() >= 1 && size.getBlockZ() >= 1, "Size must be at least 1x1x1 but was %sx%sx%s", size.getBlockX(), size.getBlockY(), size.getBlockZ());
 
-        structure.fillFromWorld(((CraftWorld) world).getHandle(), CraftLocation.toBlockPosition(origin), CraftBlockVector.toBlockPosition(size), includeEntities, net.minecraft.world.level.block.Blocks.STRUCTURE_VOID);
+        this.structure.fillFromWorld(((CraftWorld) world).getHandle(), CraftLocation.toBlockPosition(origin), CraftBlockVector.toBlockPosition(size), includeEntities, Blocks.STRUCTURE_VOID);
     }
 
     @Override
     public BlockVector getSize() {
-        return CraftBlockVector.toBukkit(structure.getSize());
+        return CraftBlockVector.toBukkit(this.structure.getSize());
     }
 
     @Override
     public List<Entity> getEntities() {
         List<Entity> entities = new ArrayList<>();
-        for (net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureEntityInfo entity : structure.entityInfoList) {
-            net.minecraft.world.entity.EntityType.create(entity.nbt, ((CraftWorld) Bukkit.getServer().getWorlds().get(0)).getHandle()).ifPresent(dummyEntity -> {
+        for (StructureTemplate.StructureEntityInfo entity : this.structure.entityInfoList) {
+            EntityType.create(entity.nbt, ((CraftWorld) Bukkit.getServer().getWorlds().get(0)).getHandle(), EntitySpawnReason.STRUCTURE).ifPresent(dummyEntity -> {
                 dummyEntity.setPos(entity.pos.x, entity.pos.y, entity.pos.z);
-                entities.add(((EthyleneEntity) dummyEntity).getBukkitEntity());
+                entities.add(dummyEntity.getBukkitEntity());
             });
         }
         return Collections.unmodifiableList(entities);
@@ -134,25 +143,25 @@ public class CraftStructure implements Structure {
 
     @Override
     public int getEntityCount() {
-        return structure.entityInfoList.size();
+        return this.structure.entityInfoList.size();
     }
 
     @Override
     public List<Palette> getPalettes() {
-        return structure.palettes.stream().map((palette) -> new CraftPalette(palette, registry)).collect(Collectors.toList());
+        return this.structure.palettes.stream().map((palette) -> new CraftPalette(palette, this.registry)).collect(Collectors.toList());
     }
 
     @Override
     public int getPaletteCount() {
-        return structure.palettes.size();
+        return this.structure.palettes.size();
     }
 
     @Override
     public PersistentDataContainer getPersistentDataContainer() {
-        return ((EthyleneChunkAccess) getHandle()).getPersistentDataContainer();
+        return this.getHandle().persistentDataContainer;
     }
 
-    public net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate getHandle() {
-        return structure;
+    public StructureTemplate getHandle() {
+        return this.structure;
     }
 }

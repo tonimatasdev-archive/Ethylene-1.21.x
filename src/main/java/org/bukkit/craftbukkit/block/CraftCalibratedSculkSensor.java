@@ -1,12 +1,13 @@
 package org.bukkit.craftbukkit.block;
 
+import net.minecraft.world.level.block.entity.CalibratedSculkSensorBlockEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.CalibratedSculkSensor;
 
-public class CraftCalibratedSculkSensor extends CraftSculkSensor<net.minecraft.world.level.block.entity.CalibratedSculkSensorBlockEntity> implements CalibratedSculkSensor {
+public class CraftCalibratedSculkSensor extends CraftSculkSensor<CalibratedSculkSensorBlockEntity> implements CalibratedSculkSensor {
 
-    public CraftCalibratedSculkSensor(World world, net.minecraft.world.level.block.entity.CalibratedSculkSensorBlockEntity tileEntity) {
+    public CraftCalibratedSculkSensor(World world, CalibratedSculkSensorBlockEntity tileEntity) {
         super(world, tileEntity);
     }
 

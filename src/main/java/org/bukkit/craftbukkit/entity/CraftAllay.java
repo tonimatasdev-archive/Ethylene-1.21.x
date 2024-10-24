@@ -1,9 +1,8 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
-import net.ethylenemc.EthyleneCaptures;
-import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
-import net.ethylenemc.interfaces.world.entity.animal.allay.EthyleneAllay;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.animal.allay.Allay;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.CraftServer;
@@ -13,13 +12,13 @@ import org.bukkit.inventory.Inventory;
 
 public class CraftAllay extends CraftCreature implements org.bukkit.entity.Allay {
 
-    public CraftAllay(CraftServer server, net.minecraft.world.entity.animal.allay.Allay entity) {
+    public CraftAllay(CraftServer server, Allay entity) {
         super(server, entity);
     }
 
     @Override
-    public net.minecraft.world.entity.animal.allay.Allay getHandle() {
-        return (net.minecraft.world.entity.animal.allay.Allay) entity;
+    public Allay getHandle() {
+        return (Allay) this.entity;
     }
 
     @Override
@@ -29,70 +28,67 @@ public class CraftAllay extends CraftCreature implements org.bukkit.entity.Allay
 
     @Override
     public Inventory getInventory() {
-        return new CraftInventory(getHandle().getInventory());
+        return new CraftInventory(this.getHandle().getInventory());
     }
 
     @Override
     public boolean canDuplicate() {
-        return getHandle().canDuplicate();
+        return this.getHandle().canDuplicate();
     }
 
     @Override
     public void setCanDuplicate(boolean canDuplicate) {
-        ((EthyleneAllay) getHandle()).setCanDuplicate(canDuplicate);
+        this.getHandle().setCanDuplicate(canDuplicate);
     }
 
     @Override
     public long getDuplicationCooldown() {
-        return getHandle().duplicationCooldown;
+        return this.getHandle().duplicationCooldown;
     }
 
     @Override
     public void setDuplicationCooldown(long l) {
-        getHandle().duplicationCooldown = l;
+        this.getHandle().duplicationCooldown = l;
     }
 
     @Override
     public void resetDuplicationCooldown() {
-        getHandle().resetDuplicationCooldown();
+        this.getHandle().resetDuplicationCooldown();
     }
 
     @Override
     public boolean isDancing() {
-        return getHandle().isDancing();
+        return this.getHandle().isDancing();
     }
 
     @Override
     public void startDancing(Location location) {
         Preconditions.checkArgument(location != null, "Location cannot be null");
         Preconditions.checkArgument(location.getBlock().getType().equals(Material.JUKEBOX), "The Block in the Location need to be a JukeBox");
-        getHandle().setJukeboxPlaying(CraftLocation.toBlockPosition(location), true);
+        this.getHandle().setJukeboxPlaying(CraftLocation.toBlockPosition(location), true);
     }
 
     @Override
     public void startDancing() {
-        ((EthyleneAllay) getHandle()).setForceDancing(true);
-        getHandle().setDancing(true);
+        this.getHandle().forceDancing = true;
+        this.getHandle().setDancing(true);
     }
 
     @Override
     public void stopDancing() {
-        ((EthyleneAllay) getHandle()).setForceDancing(false);
-        getHandle().jukeboxPos = null;
-        getHandle().setJukeboxPlaying(null, false);
+        this.getHandle().forceDancing = false;
+        this.getHandle().jukeboxPos = null;
+        this.getHandle().setJukeboxPlaying(null, false);
     }
 
     @Override
     public org.bukkit.entity.Allay duplicateAllay() {
-        // Ethylene start - Allay#duplicateAllay is void method.
-        getHandle().duplicateAllay();
-        net.minecraft.world.entity.animal.allay.Allay nmsAllay = EthyleneCaptures.duplicateAllay.getAndSet(null);
-        return (nmsAllay != null) ? (org.bukkit.entity.Allay) ((EthyleneEntity) nmsAllay).getBukkitEntity() : null;
-        // Ethylene end
+        Allay nmsAllay = this.getHandle().duplicateAllay();
+        return (nmsAllay != null) ? (org.bukkit.entity.Allay) nmsAllay.getBukkitEntity() : null;
     }
 
     public Location getJukebox() {
-        net.minecraft.core.BlockPos nmsJukeboxPos = getHandle().jukeboxPos;
-        return (nmsJukeboxPos != null) ? CraftLocation.toBukkit(nmsJukeboxPos, getWorld()) : null;
+        BlockPos nmsJukeboxPos = this.getHandle().jukeboxPos;
+        return (nmsJukeboxPos != null) ? CraftLocation.toBukkit(nmsJukeboxPos, this.getWorld()) : null;
     }
 }

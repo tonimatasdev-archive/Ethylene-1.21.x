@@ -19,16 +19,16 @@ public final class CraftPotatoes extends org.bukkit.craftbukkit.block.data.Craft
 
     @Override
     public int getAge() {
-        return get(AGE);
+        return this.get(CraftPotatoes.AGE);
     }
 
     @Override
     public void setAge(int age) {
-        set(AGE, age);
+        this.set(CraftPotatoes.AGE, age);
     }
 
     @Override
     public int getMaximumAge() {
-        return getMax(AGE);
+        return getMax(CraftPotatoes.AGE);
     }
 }

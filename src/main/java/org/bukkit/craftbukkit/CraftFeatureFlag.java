@@ -2,6 +2,9 @@ package org.bukkit.craftbukkit;
 
 import java.util.HashSet;
 import java.util.Set;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.flag.FeatureFlags;
 import org.bukkit.FeatureFlag;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
@@ -12,7 +15,7 @@ public class CraftFeatureFlag implements FeatureFlag {
     private final NamespacedKey namespacedKey;
     private final net.minecraft.world.flag.FeatureFlag featureFlag;
 
-    public CraftFeatureFlag(net.minecraft.resources.ResourceLocation minecraftKey, net.minecraft.world.flag.FeatureFlag featureFlag) {
+    public CraftFeatureFlag(ResourceLocation minecraftKey, net.minecraft.world.flag.FeatureFlag featureFlag) {
         this.namespacedKey = CraftNamespacedKey.fromMinecraft(minecraftKey);
         this.featureFlag = featureFlag;
     }
@@ -32,9 +35,9 @@ public class CraftFeatureFlag implements FeatureFlag {
         return "CraftFeatureFlag{key=" + this.getKey() + ",keyUniverse=" + this.getHandle().universe.toString() + "}";
     }
 
-    public static Set<CraftFeatureFlag> getFromNMS(net.minecraft.world.flag.FeatureFlagSet featureFlagSet) {
+    public static Set<CraftFeatureFlag> getFromNMS(FeatureFlagSet featureFlagSet) {
         Set<CraftFeatureFlag> set = new HashSet<>();
-        net.minecraft.world.flag.FeatureFlags.REGISTRY.names.forEach((minecraftkey, featureflag) -> {
+        FeatureFlags.REGISTRY.names.forEach((minecraftkey, featureflag) -> {
             if (featureFlagSet.contains(featureflag)) {
                 set.add(new CraftFeatureFlag(minecraftkey, featureflag));
             }
@@ -43,6 +46,6 @@ public class CraftFeatureFlag implements FeatureFlag {
     }
 
     public static CraftFeatureFlag getFromNMS(NamespacedKey namespacedKey) {
-        return net.minecraft.world.flag.FeatureFlags.REGISTRY.names.entrySet().stream().filter(entry -> CraftNamespacedKey.fromMinecraft(entry.getKey()).equals(namespacedKey)).findFirst().map(entry -> new CraftFeatureFlag(entry.getKey(), entry.getValue())).orElse(null);
+        return FeatureFlags.REGISTRY.names.entrySet().stream().filter(entry -> CraftNamespacedKey.fromMinecraft(entry.getKey()).equals(namespacedKey)).findFirst().map(entry -> new CraftFeatureFlag(entry.getKey(), entry.getValue())).orElse(null);
     }
 }

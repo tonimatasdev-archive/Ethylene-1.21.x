@@ -1,15 +1,18 @@
 package org.bukkit.craftbukkit.block;
 
-import net.ethylenemc.interfaces.world.level.block.entity.EthyleneContainerOpenersCounter;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.BarrelBlock;
+import net.minecraft.world.level.block.entity.BarrelBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Barrel;
 import org.bukkit.craftbukkit.inventory.CraftInventory;
 import org.bukkit.inventory.Inventory;
 
-public class CraftBarrel extends CraftLootable<net.minecraft.world.level.block.entity.BarrelBlockEntity> implements Barrel {
+public class CraftBarrel extends CraftLootable<BarrelBlockEntity> implements Barrel {
 
-    public CraftBarrel(World world, net.minecraft.world.level.block.entity.BarrelBlockEntity tileEntity) {
+    public CraftBarrel(World world, BarrelBlockEntity tileEntity) {
         super(world, tileEntity);
     }
 
@@ -33,32 +36,32 @@ public class CraftBarrel extends CraftLootable<net.minecraft.world.level.block.e
 
     @Override
     public void open() {
-        requirePlaced();
-        if (!((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).getOpened()) {
-            net.minecraft.world.level.block.state.BlockState blockData = getTileEntity().getBlockState();
-            boolean open = blockData.getValue(net.minecraft.world.level.block.BarrelBlock.OPEN);
+        this.requirePlaced();
+        if (!this.getTileEntity().openersCounter.opened) {
+            BlockState blockData = this.getTileEntity().getBlockState();
+            boolean open = blockData.getValue(BarrelBlock.OPEN);
 
             if (!open) {
-                getTileEntity().updateBlockState(blockData, true);
-                if (getWorldHandle() instanceof net.minecraft.world.level.Level) {
-                    getTileEntity().playSound(blockData, net.minecraft.sounds.SoundEvents.BARREL_OPEN);
+                this.getTileEntity().updateBlockState(blockData, true);
+                if (this.getWorldHandle() instanceof net.minecraft.world.level.Level) {
+                    this.getTileEntity().playSound(blockData, SoundEvents.BARREL_OPEN);
                 }
             }
         }
-        ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).setOpened(true);
+        this.getTileEntity().openersCounter.opened = true;
     }
 
     @Override
     public void close() {
-        requirePlaced();
-        if (((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).getOpened()) {
-            net.minecraft.world.level.block.state.BlockState blockData = getTileEntity().getBlockState();
-            getTileEntity().updateBlockState(blockData, false);
-            if (getWorldHandle() instanceof net.minecraft.world.level.Level) {
-                getTileEntity().playSound(blockData, net.minecraft.sounds.SoundEvents.BARREL_CLOSE);
+        this.requirePlaced();
+        if (this.getTileEntity().openersCounter.opened) {
+            BlockState blockData = this.getTileEntity().getBlockState();
+            this.getTileEntity().updateBlockState(blockData, false);
+            if (this.getWorldHandle() instanceof net.minecraft.world.level.Level) {
+                this.getTileEntity().playSound(blockData, SoundEvents.BARREL_CLOSE);
             }
         }
-        ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).setOpened(false);
+        this.getTileEntity().openersCounter.opened = false;
     }
 
     @Override

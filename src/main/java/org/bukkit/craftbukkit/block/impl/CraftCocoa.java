@@ -19,17 +19,17 @@ public final class CraftCocoa extends org.bukkit.craftbukkit.block.data.CraftBlo
 
     @Override
     public int getAge() {
-        return get(AGE);
+        return this.get(CraftCocoa.AGE);
     }
 
     @Override
     public void setAge(int age) {
-        set(AGE, age);
+        this.set(CraftCocoa.AGE, age);
     }
 
     @Override
     public int getMaximumAge() {
-        return getMax(AGE);
+        return getMax(CraftCocoa.AGE);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftDirectional
@@ -38,16 +38,16 @@ public final class CraftCocoa extends org.bukkit.craftbukkit.block.data.CraftBlo
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftCocoa.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftCocoa.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftCocoa.FACING, org.bukkit.block.BlockFace.class);
     }
 }

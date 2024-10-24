@@ -19,12 +19,12 @@ public final class CraftLantern extends org.bukkit.craftbukkit.block.data.CraftB
 
     @Override
     public boolean isHanging() {
-        return get(HANGING);
+        return this.get(CraftLantern.HANGING);
     }
 
     @Override
     public void setHanging(boolean hanging) {
-        set(HANGING, hanging);
+        this.set(CraftLantern.HANGING, hanging);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftWaterlogged
@@ -33,11 +33,11 @@ public final class CraftLantern extends org.bukkit.craftbukkit.block.data.CraftB
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftLantern.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftLantern.WATERLOGGED, waterlogged);
     }
 }

@@ -19,22 +19,22 @@ public final class CraftSeaPickle extends org.bukkit.craftbukkit.block.data.Craf
 
     @Override
     public int getPickles() {
-        return get(PICKLES);
+        return this.get(CraftSeaPickle.PICKLES);
     }
 
     @Override
     public void setPickles(int pickles) {
-        set(PICKLES, pickles);
+        this.set(CraftSeaPickle.PICKLES, pickles);
     }
 
     @Override
     public int getMinimumPickles() {
-        return getMin(PICKLES);
+        return getMin(CraftSeaPickle.PICKLES);
     }
 
     @Override
     public int getMaximumPickles() {
-        return getMax(PICKLES);
+        return getMax(CraftSeaPickle.PICKLES);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftWaterlogged
@@ -43,11 +43,11 @@ public final class CraftSeaPickle extends org.bukkit.craftbukkit.block.data.Craf
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftSeaPickle.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftSeaPickle.WATERLOGGED, waterlogged);
     }
 }

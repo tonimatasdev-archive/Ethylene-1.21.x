@@ -19,11 +19,11 @@ public final class CraftSculkCatalyst extends org.bukkit.craftbukkit.block.data.
 
     @Override
     public boolean isBloom() {
-        return get(BLOOM);
+        return this.get(CraftSculkCatalyst.BLOOM);
     }
 
     @Override
     public void setBloom(boolean bloom) {
-        set(BLOOM, bloom);
+        this.set(CraftSculkCatalyst.BLOOM, bloom);
     }
 }

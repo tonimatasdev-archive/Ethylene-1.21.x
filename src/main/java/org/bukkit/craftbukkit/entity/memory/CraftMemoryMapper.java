@@ -1,8 +1,8 @@
 package org.bukkit.craftbukkit.entity.memory;
 
 import java.util.UUID;
-
-import net.ethylenemc.interfaces.world.level.EthyleneLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftServer;
@@ -13,8 +13,8 @@ public final class CraftMemoryMapper {
     private CraftMemoryMapper() {}
 
     public static Object fromNms(Object object) {
-        if (object instanceof net.minecraft.core.GlobalPos) {
-            return fromNms((net.minecraft.core.GlobalPos) object);
+        if (object instanceof GlobalPos) {
+            return CraftMemoryMapper.fromNms((GlobalPos) object);
         } else if (object instanceof Long) {
             return (Long) object;
         } else if (object instanceof UUID) {
@@ -32,7 +32,7 @@ public final class CraftMemoryMapper {
         if (object == null) {
             return null;
         } else if (object instanceof Location) {
-            return toNms((Location) object);
+            return CraftMemoryMapper.toNms((Location) object);
         } else if (object instanceof Long) {
             return (Long) object;
         } else if (object instanceof UUID) {
@@ -46,11 +46,11 @@ public final class CraftMemoryMapper {
         throw new UnsupportedOperationException("Do not know how to map " + object);
     }
 
-    public static Location fromNms(net.minecraft.core.GlobalPos globalPos) {
-        return new org.bukkit.Location(((EthyleneLevel) ((CraftServer) Bukkit.getServer()).getServer().getLevel(globalPos.dimension())).getWorld(), globalPos.pos().getX(), globalPos.pos().getY(), globalPos.pos().getZ());
+    public static Location fromNms(GlobalPos globalPos) {
+        return new org.bukkit.Location(((CraftServer) Bukkit.getServer()).getServer().getLevel(globalPos.dimension()).getWorld(), globalPos.pos().getX(), globalPos.pos().getY(), globalPos.pos().getZ());
     }
 
-    public static net.minecraft.core.GlobalPos toNms(Location location) {
-        return net.minecraft.core.GlobalPos.of(((CraftWorld) location.getWorld()).getHandle().dimension(), net.minecraft.core.BlockPos.containing(location.getX(), location.getY(), location.getZ()));
+    public static GlobalPos toNms(Location location) {
+        return GlobalPos.of(((CraftWorld) location.getWorld()).getHandle().dimension(), BlockPos.containing(location.getX(), location.getY(), location.getZ()));
     }
 }

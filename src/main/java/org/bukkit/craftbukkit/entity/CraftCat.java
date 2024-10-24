@@ -2,6 +2,9 @@ package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
 import java.util.Locale;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.animal.CatVariant;
 import org.bukkit.DyeColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -28,51 +31,51 @@ public class CraftCat extends CraftTameableAnimal implements Cat {
 
     @Override
     public Type getCatType() {
-        return CraftType.minecraftHolderToBukkit(getHandle().getVariant());
+        return CraftType.minecraftHolderToBukkit(this.getHandle().getVariant());
     }
 
     @Override
     public void setCatType(Type type) {
         Preconditions.checkArgument(type != null, "Cannot have null Type");
 
-        getHandle().setVariant(CraftType.bukkitToMinecraftHolder(type));
+        this.getHandle().setVariant(CraftType.bukkitToMinecraftHolder(type));
     }
 
     @Override
     public DyeColor getCollarColor() {
-        return DyeColor.getByWoolData((byte) getHandle().getCollarColor().getId());
+        return DyeColor.getByWoolData((byte) this.getHandle().getCollarColor().getId());
     }
 
     @Override
     public void setCollarColor(DyeColor color) {
-        getHandle().setCollarColor(net.minecraft.world.item.DyeColor.byId(color.getWoolData()));
+        this.getHandle().setCollarColor(net.minecraft.world.item.DyeColor.byId(color.getWoolData()));
     }
 
-    public static class CraftType implements Type, Handleable<net.minecraft.world.entity.animal.CatVariant> {
+    public static class CraftType implements Type, Handleable<CatVariant> {
         private static int count = 0;
 
-        public static Type minecraftToBukkit(net.minecraft.world.entity.animal.CatVariant minecraft) {
-            return CraftRegistry.minecraftToBukkit(minecraft, net.minecraft.core.registries.Registries.CAT_VARIANT, Registry.CAT_VARIANT);
+        public static Type minecraftToBukkit(CatVariant minecraft) {
+            return CraftRegistry.minecraftToBukkit(minecraft, Registries.CAT_VARIANT, Registry.CAT_VARIANT);
         }
 
-        public static Type minecraftHolderToBukkit(net.minecraft.core.Holder<net.minecraft.world.entity.animal.CatVariant> minecraft) {
-            return minecraftToBukkit(minecraft.value());
+        public static Type minecraftHolderToBukkit(Holder<CatVariant> minecraft) {
+            return CraftType.minecraftToBukkit(minecraft.value());
         }
 
-        public static net.minecraft.world.entity.animal.CatVariant bukkitToMinecraft(Type bukkit) {
+        public static CatVariant bukkitToMinecraft(Type bukkit) {
             return CraftRegistry.bukkitToMinecraft(bukkit);
         }
 
-        public static net.minecraft.core.Holder<net.minecraft.world.entity.animal.CatVariant> bukkitToMinecraftHolder(Type bukkit) {
-            return CraftRegistry.bukkitToMinecraftHolder(bukkit, net.minecraft.core.registries.Registries.CAT_VARIANT);
+        public static Holder<CatVariant> bukkitToMinecraftHolder(Type bukkit) {
+            return CraftRegistry.bukkitToMinecraftHolder(bukkit, Registries.CAT_VARIANT);
         }
 
         private final NamespacedKey key;
-        private final net.minecraft.world.entity.animal.CatVariant catVariant;
+        private final CatVariant catVariant;
         private final String name;
         private final int ordinal;
 
-        public CraftType(NamespacedKey key, net.minecraft.world.entity.animal.CatVariant catVariant) {
+        public CraftType(NamespacedKey key, CatVariant catVariant) {
             this.key = key;
             this.catVariant = catVariant;
             // For backwards compatibility, minecraft values will still return the uppercase name without the namespace,
@@ -84,38 +87,38 @@ public class CraftCat extends CraftTameableAnimal implements Cat {
             } else {
                 this.name = key.toString();
             }
-            this.ordinal = count++;
+            this.ordinal = CraftType.count++;
         }
 
         @Override
-        public net.minecraft.world.entity.animal.CatVariant getHandle() {
-            return catVariant;
+        public CatVariant getHandle() {
+            return this.catVariant;
         }
 
         @Override
         public NamespacedKey getKey() {
-            return key;
+            return this.key;
         }
 
         @Override
         public int compareTo(Type variant) {
-            return ordinal - variant.ordinal();
+            return this.ordinal - variant.ordinal();
         }
 
         @Override
         public String name() {
-            return name;
+            return this.name;
         }
 
         @Override
         public int ordinal() {
-            return ordinal;
+            return this.ordinal;
         }
 
         @Override
         public String toString() {
             // For backwards compatibility
-            return name();
+            return this.name();
         }
 
         @Override
@@ -128,12 +131,12 @@ public class CraftCat extends CraftTameableAnimal implements Cat {
                 return false;
             }
 
-            return getKey().equals(((CraftType) other).getKey());
+            return this.getKey().equals(((CraftType) other).getKey());
         }
 
         @Override
         public int hashCode() {
-            return getKey().hashCode();
+            return this.getKey().hashCode();
         }
     }
 }

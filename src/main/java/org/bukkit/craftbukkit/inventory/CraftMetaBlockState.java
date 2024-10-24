@@ -6,8 +6,17 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import java.util.Map;
 import java.util.Set;
-
-import net.ethylenemc.interfaces.core.EthyleneDataComponentPatch$Builder;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.PatchedDataComponentMap;
+import net.minecraft.core.component.TypedDataComponent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
@@ -42,12 +51,12 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
     );
 
     @ItemMetaKey.Specific(ItemMetaKey.Specific.To.NBT)
-    static final ItemMetaKeyType<net.minecraft.world.item.component.CustomData> BLOCK_ENTITY_TAG = new ItemMetaKeyType<>(net.minecraft.core.component.DataComponents.BLOCK_ENTITY_DATA, "BlockEntityTag");
+    static final ItemMetaKeyType<CustomData> BLOCK_ENTITY_TAG = new ItemMetaKeyType<>(DataComponents.BLOCK_ENTITY_DATA, "BlockEntityTag");
 
     final Material material;
     private CraftBlockEntityState<?> blockEntityTag;
     private BlockVector position;
-    private net.minecraft.nbt.CompoundTag internalTag;
+    private CompoundTag internalTag;
 
     CraftMetaBlockState(CraftMetaItem meta, Material material) {
         super(meta);
@@ -55,7 +64,7 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
 
         if (!(meta instanceof CraftMetaBlockState)
                 || ((CraftMetaBlockState) meta).material != material) {
-            blockEntityTag = null;
+            this.blockEntityTag = null;
             return;
         }
 
@@ -64,33 +73,33 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
         this.position = te.position;
     }
 
-    CraftMetaBlockState(net.minecraft.core.component.DataComponentPatch tag, Material material) {
+    CraftMetaBlockState(DataComponentPatch tag, Material material) {
         super(tag);
         this.material = material;
 
-        getOrEmpty(tag, BLOCK_ENTITY_TAG).ifPresent((blockTag) -> {
-            net.minecraft.nbt.CompoundTag nbt = blockTag.copyTag();
+        getOrEmpty(tag, CraftMetaBlockState.BLOCK_ENTITY_TAG).ifPresent((blockTag) -> {
+            CompoundTag nbt = blockTag.copyTag();
 
-            blockEntityTag = getBlockState(material, nbt);
+            this.blockEntityTag = CraftMetaBlockState.getBlockState(material, nbt);
             if (nbt.contains("x", CraftMagicNumbers.NBT.TAG_ANY_NUMBER) && nbt.contains("y", CraftMagicNumbers.NBT.TAG_ANY_NUMBER) && nbt.contains("z", CraftMagicNumbers.NBT.TAG_ANY_NUMBER)) {
-                position = new BlockVector(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
+                this.position = new BlockVector(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
             }
         });
 
         if (!tag.isEmpty()) {
             CraftBlockEntityState<?> blockEntityTag = this.blockEntityTag;
             if (blockEntityTag == null) {
-                blockEntityTag = getBlockState(material, null);
+                blockEntityTag = CraftMetaBlockState.getBlockState(material, null);
             }
 
             // Convert to map
-            net.minecraft.core.component.PatchedDataComponentMap map = new net.minecraft.core.component.PatchedDataComponentMap(net.minecraft.core.component.DataComponentMap.EMPTY);
+            PatchedDataComponentMap map = new PatchedDataComponentMap(DataComponentMap.EMPTY);
             map.applyPatch(tag);
             // Apply
-            Set<net.minecraft.core.component.DataComponentType<?>> applied = blockEntityTag.applyComponents(map, tag);
+            Set<DataComponentType<?>> applied = blockEntityTag.applyComponents(map, tag);
             // Mark applied components as handled
-            for (net.minecraft.core.component.DataComponentType<?> seen : applied) {
-                ((EthyleneDataComponentPatch$Builder) unhandledTags).clear(seen);
+            for (DataComponentType<?> seen : applied) {
+                this.unhandledTags.clear(seen);
             }
             // Only set blockEntityTag if something was applied
             if (!applied.isEmpty()) {
@@ -104,71 +113,71 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
         String matName = SerializableMeta.getString(map, "blockMaterial", true);
         Material m = Material.getMaterial(matName);
         if (m != null) {
-            material = m;
+            this.material = m;
         } else {
-            material = Material.AIR;
+            this.material = Material.AIR;
         }
-        if (internalTag != null) {
-            blockEntityTag = getBlockState(material, internalTag);
-            internalTag = null;
+        if (this.internalTag != null) {
+            this.blockEntityTag = CraftMetaBlockState.getBlockState(this.material, this.internalTag);
+            this.internalTag = null;
         }
-        position = SerializableMeta.getObject(BlockVector.class, map, "blockPosition", true);
+        this.position = SerializableMeta.getObject(BlockVector.class, map, "blockPosition", true);
     }
 
     @Override
     void applyToItem(CraftMetaItem.Applicator tag) {
         super.applyToItem(tag);
 
-        net.minecraft.nbt.CompoundTag nbt = null;
-        if (blockEntityTag != null) {
-            nbt = blockEntityTag.getItemNBT();
+        CompoundTag nbt = null;
+        if (this.blockEntityTag != null) {
+            nbt = this.blockEntityTag.getItemNBT();
 
-            for (net.minecraft.core.component.TypedDataComponent<?> component : blockEntityTag.collectComponents()) {
+            for (TypedDataComponent<?> component : this.blockEntityTag.collectComponents()) {
                 tag.putIfAbsent(component);
             }
         }
 
-        if (position != null) {
+        if (this.position != null) {
             if (nbt == null) {
-                nbt = new net.minecraft.nbt.CompoundTag();
+                nbt = new CompoundTag();
             }
 
-            nbt.putInt("x", position.getBlockX());
-            nbt.putInt("y", position.getBlockY());
-            nbt.putInt("z", position.getBlockZ());
+            nbt.putInt("x", this.position.getBlockX());
+            nbt.putInt("y", this.position.getBlockY());
+            nbt.putInt("z", this.position.getBlockZ());
         }
 
         if (nbt != null && !nbt.isEmpty()) {
-            CraftBlockEntityState<?> tile = (blockEntityTag != null) ? blockEntityTag : getBlockState(material, null);
+            CraftBlockEntityState<?> tile = (this.blockEntityTag != null) ? this.blockEntityTag : CraftMetaBlockState.getBlockState(this.material, null);
             // See ItemBlock#setBlockEntityData
             tile.addEntityType(nbt);
 
-            tag.put(BLOCK_ENTITY_TAG, net.minecraft.world.item.component.CustomData.of(nbt));
+            tag.put(CraftMetaBlockState.BLOCK_ENTITY_TAG, CustomData.of(nbt));
         }
     }
 
     @Override
-    void deserializeInternal(net.minecraft.nbt.CompoundTag tag, Object context) {
+    void deserializeInternal(CompoundTag tag, Object context) {
         super.deserializeInternal(tag, context);
 
-        if (tag.contains(BLOCK_ENTITY_TAG.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND)) {
-            internalTag = tag.getCompound(BLOCK_ENTITY_TAG.NBT);
+        if (tag.contains(CraftMetaBlockState.BLOCK_ENTITY_TAG.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND)) {
+            this.internalTag = tag.getCompound(CraftMetaBlockState.BLOCK_ENTITY_TAG.NBT);
         }
     }
 
     @Override
-    void serializeInternal(final Map<String, net.minecraft.nbt.Tag> internalTags) {
-        if (blockEntityTag != null) {
-            internalTags.put(BLOCK_ENTITY_TAG.NBT, blockEntityTag.getSnapshotNBT());
+    void serializeInternal(final Map<String, Tag> internalTags) {
+        if (this.blockEntityTag != null) {
+            internalTags.put(CraftMetaBlockState.BLOCK_ENTITY_TAG.NBT, this.blockEntityTag.getSnapshotNBT());
         }
     }
 
     @Override
     ImmutableMap.Builder<String, Object> serialize(ImmutableMap.Builder<String, Object> builder) {
         super.serialize(builder);
-        builder.put("blockMaterial", material.name());
-        if (position != null) {
-            builder.put("blockPosition", position);
+        builder.put("blockMaterial", this.material.name());
+        if (this.position != null) {
+            builder.put("blockPosition", this.position);
         }
         return builder;
     }
@@ -177,10 +186,10 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
     int applyHash() {
         final int original;
         int hash = original = super.applyHash();
-        if (blockEntityTag != null) {
+        if (this.blockEntityTag != null) {
             hash = 61 * hash + this.blockEntityTag.hashCode();
         }
-        if (position != null) {
+        if (this.position != null) {
             hash = 61 * hash + this.position.hashCode();
         }
         return original != hash ? CraftMetaBlockState.class.hashCode() ^ hash : hash;
@@ -200,54 +209,54 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
     }
 
     boolean isBlockStateEmpty() {
-        return !(blockEntityTag != null || position != null);
+        return !(this.blockEntityTag != null || this.position != null);
     }
 
     @Override
     boolean notUncommon(CraftMetaItem meta) {
-        return super.notUncommon(meta) && (meta instanceof CraftMetaBlockState || isBlockStateEmpty());
+        return super.notUncommon(meta) && (meta instanceof CraftMetaBlockState || this.isBlockStateEmpty());
     }
 
     @Override
     boolean isEmpty() {
-        return super.isEmpty() && isBlockStateEmpty();
+        return super.isEmpty() && this.isBlockStateEmpty();
     }
 
     @Override
     public CraftMetaBlockState clone() {
         CraftMetaBlockState meta = (CraftMetaBlockState) super.clone();
-        if (blockEntityTag != null) {
-            meta.blockEntityTag = blockEntityTag.copy();
+        if (this.blockEntityTag != null) {
+            meta.blockEntityTag = this.blockEntityTag.copy();
         }
-        if (position != null) {
-            meta.position = position.clone();
+        if (this.position != null) {
+            meta.position = this.position.clone();
         }
         return meta;
     }
 
     @Override
     public boolean hasBlockState() {
-        return blockEntityTag != null;
+        return this.blockEntityTag != null;
     }
 
     @Override
     public BlockState getBlockState() {
-        return (blockEntityTag != null) ? blockEntityTag.copy() : getBlockState(material, null);
+        return (this.blockEntityTag != null) ? this.blockEntityTag.copy() : CraftMetaBlockState.getBlockState(this.material, null);
     }
 
-    private static CraftBlockEntityState<?> getBlockState(Material material, net.minecraft.nbt.CompoundTag blockEntityTag) {
-        net.minecraft.core.BlockPos pos = net.minecraft.core.BlockPos.ZERO;
-        Material stateMaterial = (material != Material.SHIELD) ? material : shieldToBannerHack(blockEntityTag); // Only actually used for jigsaws
+    private static CraftBlockEntityState<?> getBlockState(Material material, CompoundTag blockEntityTag) {
+        BlockPos pos = BlockPos.ZERO;
+        Material stateMaterial = (material != Material.SHIELD) ? material : CraftMetaBlockState.shieldToBannerHack(blockEntityTag); // Only actually used for jigsaws
         if (blockEntityTag != null) {
             if (material == Material.SHIELD) {
                 blockEntityTag.putString("id", "minecraft:banner");
             } else if (material == Material.BEE_NEST || material == Material.BEEHIVE) {
                 blockEntityTag.putString("id", "minecraft:beehive");
-            } else if (SHULKER_BOX_MATERIALS.contains(material)) {
+            } else if (CraftMetaBlockState.SHULKER_BOX_MATERIALS.contains(material)) {
                 blockEntityTag.putString("id", "minecraft:shulker_box");
             }
 
-            pos = net.minecraft.world.level.block.entity.BlockEntity.getPosFromTag(blockEntityTag);
+            pos = BlockEntity.getPosFromTag(blockEntityTag);
         }
 
         // This is expected to always return a CraftBlockEntityState for the passed material:
@@ -258,17 +267,17 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
     public void setBlockState(BlockState blockState) {
         Preconditions.checkArgument(blockState != null, "blockState must not be null");
 
-        Material stateMaterial = (material != Material.SHIELD) ? material : shieldToBannerHack(null);
+        Material stateMaterial = (this.material != Material.SHIELD) ? this.material : CraftMetaBlockState.shieldToBannerHack(null);
         Class<?> blockStateType = CraftBlockStates.getBlockStateType(stateMaterial);
-        Preconditions.checkArgument(blockStateType == blockState.getClass() && blockState instanceof CraftBlockEntityState, "Invalid blockState for %s", material);
+        Preconditions.checkArgument(blockStateType == blockState.getClass() && blockState instanceof CraftBlockEntityState, "Invalid blockState for %s", this.material);
 
         this.blockEntityTag = (CraftBlockEntityState<?>) blockState;
     }
 
-    private static Material shieldToBannerHack(net.minecraft.nbt.CompoundTag tag) {
+    private static Material shieldToBannerHack(CompoundTag tag) {
         if (tag != null) {
             if (tag.contains("components", CraftMagicNumbers.NBT.TAG_COMPOUND)) {
-                net.minecraft.nbt.CompoundTag components = tag.getCompound("components");
+                CompoundTag components = tag.getCompound("components");
                 if (components.contains("minecraft:base_color", CraftMagicNumbers.NBT.TAG_STRING)) {
                     DyeColor color = DyeColor.getByWoolData((byte) net.minecraft.world.item.DyeColor.byName(components.getString("minecraft:base_color"), net.minecraft.world.item.DyeColor.WHITE).getId());
 

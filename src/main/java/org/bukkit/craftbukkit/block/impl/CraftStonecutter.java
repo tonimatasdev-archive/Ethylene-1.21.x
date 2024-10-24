@@ -19,16 +19,16 @@ public final class CraftStonecutter extends org.bukkit.craftbukkit.block.data.Cr
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftStonecutter.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftStonecutter.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftStonecutter.FACING, org.bukkit.block.BlockFace.class);
     }
 }

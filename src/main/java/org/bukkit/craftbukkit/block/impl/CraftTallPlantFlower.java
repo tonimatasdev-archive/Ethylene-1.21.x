@@ -19,11 +19,11 @@ public final class CraftTallPlantFlower extends org.bukkit.craftbukkit.block.dat
 
     @Override
     public org.bukkit.block.data.Bisected.Half getHalf() {
-        return get(HALF, org.bukkit.block.data.Bisected.Half.class);
+        return this.get(CraftTallPlantFlower.HALF, org.bukkit.block.data.Bisected.Half.class);
     }
 
     @Override
     public void setHalf(org.bukkit.block.data.Bisected.Half half) {
-        set(HALF, half);
+        this.set(CraftTallPlantFlower.HALF, half);
     }
 }

@@ -19,16 +19,16 @@ public final class CraftFluids extends org.bukkit.craftbukkit.block.data.CraftBl
 
     @Override
     public int getLevel() {
-        return get(LEVEL);
+        return this.get(CraftFluids.LEVEL);
     }
 
     @Override
     public void setLevel(int level) {
-        set(LEVEL, level);
+        this.set(CraftFluids.LEVEL, level);
     }
 
     @Override
     public int getMaximumLevel() {
-        return getMax(LEVEL);
+        return getMax(CraftFluids.LEVEL);
     }
 }

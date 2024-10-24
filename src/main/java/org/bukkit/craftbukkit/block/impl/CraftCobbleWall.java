@@ -22,22 +22,22 @@ public final class CraftCobbleWall extends org.bukkit.craftbukkit.block.data.Cra
 
     @Override
     public boolean isUp() {
-        return get(UP);
+        return this.get(CraftCobbleWall.UP);
     }
 
     @Override
     public void setUp(boolean up) {
-        set(UP, up);
+        this.set(CraftCobbleWall.UP, up);
     }
 
     @Override
     public org.bukkit.block.data.type.Wall.Height getHeight(org.bukkit.block.BlockFace face) {
-        return get(HEIGHTS[face.ordinal()], org.bukkit.block.data.type.Wall.Height.class);
+        return this.get(CraftCobbleWall.HEIGHTS[face.ordinal()], org.bukkit.block.data.type.Wall.Height.class);
     }
 
     @Override
     public void setHeight(org.bukkit.block.BlockFace face, org.bukkit.block.data.type.Wall.Height height) {
-        set(HEIGHTS[face.ordinal()], height);
+        this.set(CraftCobbleWall.HEIGHTS[face.ordinal()], height);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftWaterlogged
@@ -46,11 +46,11 @@ public final class CraftCobbleWall extends org.bukkit.craftbukkit.block.data.Cra
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftCobbleWall.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftCobbleWall.WATERLOGGED, waterlogged);
     }
 }

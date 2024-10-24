@@ -11,17 +11,17 @@ public class CraftOcelot extends CraftAnimals implements Ocelot {
 
     @Override
     public net.minecraft.world.entity.animal.Ocelot getHandle() {
-        return (net.minecraft.world.entity.animal.Ocelot) entity;
+        return (net.minecraft.world.entity.animal.Ocelot) this.entity;
     }
 
     @Override
     public boolean isTrusting() {
-        return getHandle().isTrusting();
+        return this.getHandle().isTrusting();
     }
 
     @Override
     public void setTrusting(boolean trust) {
-        getHandle().setTrusting(trust);
+        this.getHandle().setTrusting(trust);
     }
 
     @Override

@@ -19,12 +19,12 @@ public final class CraftSculkSensor extends org.bukkit.craftbukkit.block.data.Cr
 
     @Override
     public org.bukkit.block.data.type.SculkSensor.Phase getPhase() {
-        return get(PHASE, org.bukkit.block.data.type.SculkSensor.Phase.class);
+        return this.get(CraftSculkSensor.PHASE, org.bukkit.block.data.type.SculkSensor.Phase.class);
     }
 
     @Override
     public void setPhase(org.bukkit.block.data.type.SculkSensor.Phase phase) {
-        set(PHASE, phase);
+        this.set(CraftSculkSensor.PHASE, phase);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftAnaloguePowerable
@@ -33,17 +33,17 @@ public final class CraftSculkSensor extends org.bukkit.craftbukkit.block.data.Cr
 
     @Override
     public int getPower() {
-        return get(POWER);
+        return this.get(CraftSculkSensor.POWER);
     }
 
     @Override
     public void setPower(int power) {
-        set(POWER, power);
+        this.set(CraftSculkSensor.POWER, power);
     }
 
     @Override
     public int getMaximumPower() {
-        return getMax(POWER);
+        return getMax(CraftSculkSensor.POWER);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftWaterlogged
@@ -52,11 +52,11 @@ public final class CraftSculkSensor extends org.bukkit.craftbukkit.block.data.Cr
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftSculkSensor.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftSculkSensor.WATERLOGGED, waterlogged);
     }
 }

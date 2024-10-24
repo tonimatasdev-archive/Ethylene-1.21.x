@@ -9,6 +9,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import net.minecraft.commands.arguments.blocks.BlockStateParser;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.EmptyBlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.StateHolder;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,6 +35,7 @@ import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.structure.Mirror;
 import org.bukkit.block.structure.StructureRotation;
+import org.bukkit.craftbukkit.CraftRegistry;
 import org.bukkit.craftbukkit.CraftSoundGroup;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.block.CraftBlock;
@@ -36,7 +51,7 @@ import org.jetbrains.annotations.NotNull;
 public class CraftBlockData implements BlockData {
 
     private net.minecraft.world.level.block.state.BlockState state;
-    private Map<net.minecraft.world.level.block.state.properties.Property<?>, Comparable<?>> parsedStates;
+    private Map<Property<?>, Comparable<?>> parsedStates;
 
     protected CraftBlockData() {
         throw new AssertionError("Template Constructor");
@@ -48,27 +63,27 @@ public class CraftBlockData implements BlockData {
 
     @Override
     public Material getMaterial() {
-        return CraftBlockType.minecraftToBukkit(state.getBlock());
+        return CraftBlockType.minecraftToBukkit(this.state.getBlock());
     }
 
     public net.minecraft.world.level.block.state.BlockState getState() {
-        return state;
+        return this.state;
     }
 
     /**
-     * Get a given net.minecraft.world.level.block.state.properties.EnumProperty's value as its Bukkit counterpart.
+     * Get a given BlockStateEnum's value as its Bukkit counterpart.
      *
      * @param nms the NMS state to convert
      * @param bukkit the Bukkit class
      * @param <B> the type
      * @return the matching Bukkit type
      */
-    protected <B extends Enum<B>> B get(net.minecraft.world.level.block.state.properties.EnumProperty<?> nms, Class<B> bukkit) {
-        return toBukkit(state.getValue(nms), bukkit);
+    protected <B extends Enum<B>> B get(EnumProperty<?> nms, Class<B> bukkit) {
+        return CraftBlockData.toBukkit(this.state.getValue(nms), bukkit);
     }
 
     /**
-     * Convert all values from the given net.minecraft.world.level.block.state.properties.EnumProperty to their appropriate
+     * Convert all values from the given BlockStateEnum to their appropriate
      * Bukkit counterpart.
      *
      * @param nms the NMS state to get values from
@@ -77,27 +92,27 @@ public class CraftBlockData implements BlockData {
      * @return an immutable Set of values in their appropriate Bukkit type
      */
     @SuppressWarnings("unchecked")
-    protected <B extends Enum<B>> Set<B> getValues(net.minecraft.world.level.block.state.properties.EnumProperty<?> nms, Class<B> bukkit) {
+    protected <B extends Enum<B>> Set<B> getValues(EnumProperty<?> nms, Class<B> bukkit) {
         ImmutableSet.Builder<B> values = ImmutableSet.builder();
 
         for (Enum<?> e : nms.getPossibleValues()) {
-            values.add(toBukkit(e, bukkit));
+            values.add(CraftBlockData.toBukkit(e, bukkit));
         }
 
         return values.build();
     }
 
     /**
-     * Set a given {@link net.minecraft.world.level.block.state.properties.EnumProperty} with the matching enum from Bukkit.
+     * Set a given {@link EnumProperty} with the matching enum from Bukkit.
      *
-     * @param nms the NMS net.minecraft.world.level.block.state.properties.EnumProperty to set
+     * @param nms the NMS BlockStateEnum to set
      * @param bukkit the matching Bukkit Enum
      * @param <B> the Bukkit type
      * @param <N> the NMS type
      */
-    protected <B extends Enum<B>, N extends Enum<N> & net.minecraft.util.StringRepresentable> void set(net.minecraft.world.level.block.state.properties.EnumProperty<N> nms, Enum<B> bukkit) {
+    protected <B extends Enum<B>, N extends Enum<N> & StringRepresentable> void set(EnumProperty<N> nms, Enum<B> bukkit) {
         this.parsedStates = null;
-        this.state = this.state.setValue(nms, toNMS(bukkit, nms.getValueClass()));
+        this.state = this.state.setValue(nms, CraftBlockData.toNMS(bukkit, nms.getValueClass()));
     }
 
     @Override
@@ -109,7 +124,7 @@ public class CraftBlockData implements BlockData {
         CraftBlockData clone = (CraftBlockData) this.clone();
         clone.parsedStates = null;
 
-        for (net.minecraft.world.level.block.state.properties.Property parsed : craft.parsedStates.keySet()) {
+        for (Property parsed : craft.parsedStates.keySet()) {
             clone.state = clone.state.setValue(parsed, craft.state.getValue(parsed));
         }
 
@@ -144,17 +159,17 @@ public class CraftBlockData implements BlockData {
     private static final Map<Class<? extends Enum<?>>, Enum<?>[]> ENUM_VALUES = new HashMap<>();
 
     /**
-     * Convert an NMS Enum (usually a net.minecraft.world.level.block.state.properties.EnumProperty) to its appropriate Bukkit
+     * Convert an NMS Enum (usually a BlockStateEnum) to its appropriate Bukkit
      * enum from the given class.
      *
      * @throws IllegalStateException if the Enum could not be converted
      */
     @SuppressWarnings("unchecked")
     private static <B extends Enum<B>> B toBukkit(Enum<?> nms, Class<B> bukkit) {
-        if (nms instanceof net.minecraft.core.Direction) {
-            return (B) CraftBlock.notchToBlockFace((net.minecraft.core.Direction) nms);
+        if (nms instanceof Direction) {
+            return (B) CraftBlock.notchToBlockFace((Direction) nms);
         }
-        return (B) ENUM_VALUES.computeIfAbsent(bukkit, Class::getEnumConstants)[nms.ordinal()];
+        return (B) CraftBlockData.ENUM_VALUES.computeIfAbsent(bukkit, Class::getEnumConstants)[nms.ordinal()];
     }
 
     /**
@@ -166,11 +181,11 @@ public class CraftBlockData implements BlockData {
      * @throws IllegalStateException if the Enum could not be converted
      */
     @SuppressWarnings("unchecked")
-    private static <N extends Enum<N> & net.minecraft.util.StringRepresentable> N toNMS(Enum<?> bukkit, Class<N> nms) {
+    private static <N extends Enum<N> & StringRepresentable> N toNMS(Enum<?> bukkit, Class<N> nms) {
         if (bukkit instanceof BlockFace) {
             return (N) CraftBlock.blockFaceToNotch((BlockFace) bukkit);
         }
-        return (N) ENUM_VALUES.computeIfAbsent(nms, Class::getEnumConstants)[bukkit.ordinal()];
+        return (N) CraftBlockData.ENUM_VALUES.computeIfAbsent(nms, Class::getEnumConstants)[bukkit.ordinal()];
     }
 
     /**
@@ -180,7 +195,7 @@ public class CraftBlockData implements BlockData {
      * @param <T> the type
      * @return the current value of the given state
      */
-    protected <T extends Comparable<T>> T get(net.minecraft.world.level.block.state.properties.Property<T> ibs) {
+    protected <T extends Comparable<T>> T get(Property<T> ibs) {
         // Straight integer or boolean getter
         return this.state.getValue(ibs);
     }
@@ -193,7 +208,7 @@ public class CraftBlockData implements BlockData {
      * @param <T> the state's type
      * @param <V> the value's type. Must match the state's type.
      */
-    public <T extends Comparable<T>, V extends T> void set(net.minecraft.world.level.block.state.properties.Property<T> ibs, V v) {
+    public <T extends Comparable<T>, V extends T> void set(Property<T> ibs, V v) {
         // Straight integer or boolean setter
         this.parsedStates = null;
         this.state = this.state.setValue(ibs, v);
@@ -201,12 +216,12 @@ public class CraftBlockData implements BlockData {
 
     @Override
     public String getAsString() {
-        return toString(state.getValues());
+        return this.toString(this.state.getValues());
     }
 
     @Override
     public String getAsString(boolean hideUnspecified) {
-        return (hideUnspecified && parsedStates != null) ? toString(parsedStates) : getAsString();
+        return (hideUnspecified && this.parsedStates != null) ? this.toString(this.parsedStates) : this.getAsString();
     }
 
     @Override
@@ -220,16 +235,16 @@ public class CraftBlockData implements BlockData {
 
     @Override
     public String toString() {
-        return "CraftBlockData{" + getAsString() + "}";
+        return "CraftBlockData{" + this.getAsString() + "}";
     }
 
     // Mimicked from BlockDataAbstract#toString()
-    public String toString(Map<net.minecraft.world.level.block.state.properties.Property<?>, Comparable<?>> states) {
-        StringBuilder stateString = new StringBuilder(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString());
+    public String toString(Map<Property<?>, Comparable<?>> states) {
+        StringBuilder stateString = new StringBuilder(BuiltInRegistries.BLOCK.getKey(this.state.getBlock()).toString());
 
         if (!states.isEmpty()) {
             stateString.append('[');
-            stateString.append(states.entrySet().stream().map(net.minecraft.world.level.block.state.StateHolder.PROPERTY_ENTRY_TO_STRING_FUNCTION).collect(Collectors.joining(",")));
+            stateString.append(states.entrySet().stream().map(StateHolder.PROPERTY_ENTRY_TO_STRING_FUNCTION).collect(Collectors.joining(",")));
             stateString.append(']');
         }
 
@@ -239,8 +254,8 @@ public class CraftBlockData implements BlockData {
     public Map<String, String> toStates() {
         Map<String, String> compound = new HashMap<>();
 
-        for (Map.Entry<net.minecraft.world.level.block.state.properties.Property<?>, Comparable<?>> entry : state.getValues().entrySet()) {
-            net.minecraft.world.level.block.state.properties.Property iblockstate = (net.minecraft.world.level.block.state.properties.Property) entry.getKey();
+        for (Map.Entry<Property<?>, Comparable<?>> entry : this.state.getValues().entrySet()) {
+            Property iblockstate = (Property) entry.getKey();
 
             compound.put(iblockstate.getName(), iblockstate.getName(entry.getValue()));
         }
@@ -250,48 +265,48 @@ public class CraftBlockData implements BlockData {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof CraftBlockData && state.equals(((CraftBlockData) obj).state);
+        return obj instanceof CraftBlockData && this.state.equals(((CraftBlockData) obj).state);
     }
 
     @Override
     public int hashCode() {
-        return state.hashCode();
+        return this.state.hashCode();
     }
 
-    protected static net.minecraft.world.level.block.state.properties.BooleanProperty getBoolean(String name) {
+    protected static BooleanProperty getBoolean(String name) {
         throw new AssertionError("Template Method");
     }
 
-    protected static net.minecraft.world.level.block.state.properties.BooleanProperty getBoolean(String name, boolean optional) {
+    protected static BooleanProperty getBoolean(String name, boolean optional) {
         throw new AssertionError("Template Method");
     }
 
-    protected static net.minecraft.world.level.block.state.properties.EnumProperty<?> getEnum(String name) {
+    protected static EnumProperty<?> getEnum(String name) {
         throw new AssertionError("Template Method");
     }
 
-    protected static net.minecraft.world.level.block.state.properties.IntegerProperty getInteger(String name) {
+    protected static IntegerProperty getInteger(String name) {
         throw new AssertionError("Template Method");
     }
 
-    protected static net.minecraft.world.level.block.state.properties.BooleanProperty getBoolean(Class<? extends net.minecraft.world.level.block.Block> block, String name) {
-        return (net.minecraft.world.level.block.state.properties.BooleanProperty) getState(block, name, false);
+    protected static BooleanProperty getBoolean(Class<? extends Block> block, String name) {
+        return (BooleanProperty) CraftBlockData.getState(block, name, false);
     }
 
-    protected static net.minecraft.world.level.block.state.properties.BooleanProperty getBoolean(Class<? extends net.minecraft.world.level.block.Block> block, String name, boolean optional) {
-        return (net.minecraft.world.level.block.state.properties.BooleanProperty) getState(block, name, optional);
+    protected static BooleanProperty getBoolean(Class<? extends Block> block, String name, boolean optional) {
+        return (BooleanProperty) CraftBlockData.getState(block, name, optional);
     }
 
-    protected static net.minecraft.world.level.block.state.properties.EnumProperty<?> getEnum(Class<? extends net.minecraft.world.level.block.Block> block, String name) {
-        return (net.minecraft.world.level.block.state.properties.EnumProperty<?>) getState(block, name, false);
+    protected static EnumProperty<?> getEnum(Class<? extends Block> block, String name) {
+        return (EnumProperty<?>) CraftBlockData.getState(block, name, false);
     }
 
-    protected static net.minecraft.world.level.block.state.properties.IntegerProperty getInteger(Class<? extends net.minecraft.world.level.block.Block> block, String name) {
-        return (net.minecraft.world.level.block.state.properties.IntegerProperty) getState(block, name, false);
+    protected static IntegerProperty getInteger(Class<? extends Block> block, String name) {
+        return (IntegerProperty) CraftBlockData.getState(block, name, false);
     }
 
     /**
-     * Get a specified {@link net.minecraft.world.level.block.state.properties.Property} from a given block's class with a
+     * Get a specified {@link Property} from a given block's class with a
      * given name
      *
      * @param block the class to retrieve the state from
@@ -301,15 +316,15 @@ public class CraftBlockData implements BlockData {
      * @throws IllegalStateException if the state is null and {@code optional}
      * is false.
      */
-    private static net.minecraft.world.level.block.state.properties.Property<?> getState(Class<? extends net.minecraft.world.level.block.Block> block, String name, boolean optional) {
-        net.minecraft.world.level.block.state.properties.Property<?> state = null;
+    private static Property<?> getState(Class<? extends Block> block, String name, boolean optional) {
+        Property<?> state = null;
 
-        for (net.minecraft.world.level.block.Block instance : net.minecraft.core.registries.BuiltInRegistries.BLOCK) {
+        for (Block instance : BuiltInRegistries.BLOCK) {
             if (instance.getClass() == block) {
                 if (state == null) {
                     state = instance.getStateDefinition().getProperty(name);
                 } else {
-                    net.minecraft.world.level.block.state.properties.Property<?> newState = instance.getStateDefinition().getProperty(name);
+                    Property<?> newState = instance.getStateDefinition().getProperty(name);
 
                     Preconditions.checkState(state == newState, "State mistmatch %s,%s", state, newState);
                 }
@@ -322,27 +337,27 @@ public class CraftBlockData implements BlockData {
     }
 
     /**
-     * Get the minimum value allowed by the net.minecraft.world.level.block.state.properties.IntegerProperty.
+     * Get the minimum value allowed by the BlockStateInteger.
      *
      * @param state the state to check
      * @return the minimum value allowed
      */
-    protected static int getMin(net.minecraft.world.level.block.state.properties.IntegerProperty state) {
+    protected static int getMin(IntegerProperty state) {
         return state.min;
     }
 
     /**
-     * Get the maximum value allowed by the net.minecraft.world.level.block.state.properties.IntegerProperty.
+     * Get the maximum value allowed by the BlockStateInteger.
      *
      * @param state the state to check
      * @return the maximum value allowed
      */
-    protected static int getMax(net.minecraft.world.level.block.state.properties.IntegerProperty state) {
+    protected static int getMax(IntegerProperty state) {
         return state.max;
     }
 
     //
-    private static final Map<Class<? extends net.minecraft.world.level.block.Block>, Function<net.minecraft.world.level.block.state.BlockState, CraftBlockData>> MAP = new HashMap<>();
+    private static final Map<Class<? extends Block>, Function<net.minecraft.world.level.block.state.BlockState, CraftBlockData>> MAP = new HashMap<>();
 
     static {
         //<editor-fold desc="CraftBlockData Registration" defaultstate="collapsed">
@@ -482,9 +497,10 @@ public class CraftBlockData implements BlockData {
         register(net.minecraft.world.level.block.ChiseledBookShelfBlock.class, org.bukkit.craftbukkit.block.impl.CraftChiseledBookShelf::new);
         register(net.minecraft.world.level.block.CopperBulbBlock.class, org.bukkit.craftbukkit.block.impl.CraftCopperBulb::new);
         register(net.minecraft.world.level.block.CrafterBlock.class, org.bukkit.craftbukkit.block.impl.CraftCrafter::new);
+        register(net.minecraft.world.level.block.CreakingHeartBlock.class, org.bukkit.craftbukkit.block.impl.CraftCreakingHeart::new);
         register(net.minecraft.world.level.block.DecoratedPotBlock.class, org.bukkit.craftbukkit.block.impl.CraftDecoratedPot::new);
-        register(net.minecraft.world.level.block.EquipableCarvedPumpkinBlock.class, org.bukkit.craftbukkit.block.impl.CraftEquipableCarvedPumpkin::new);
         register(net.minecraft.world.level.block.GlowLichenBlock.class, org.bukkit.craftbukkit.block.impl.CraftGlowLichen::new);
+        register(net.minecraft.world.level.block.HangingMossBlock.class, org.bukkit.craftbukkit.block.impl.CraftHangingMoss::new);
         register(net.minecraft.world.level.block.HangingRootsBlock.class, org.bukkit.craftbukkit.block.impl.CraftHangingRoots::new);
         register(net.minecraft.world.level.block.HeavyCoreBlock.class, org.bukkit.craftbukkit.block.impl.CraftHeavyCore::new);
         register(net.minecraft.world.level.block.InfestedRotatedPillarBlock.class, org.bukkit.craftbukkit.block.impl.CraftInfestedRotatedPillar::new);
@@ -494,6 +510,7 @@ public class CraftBlockData implements BlockData {
         register(net.minecraft.world.level.block.MangroveLeavesBlock.class, org.bukkit.craftbukkit.block.impl.CraftMangroveLeaves::new);
         register(net.minecraft.world.level.block.MangrovePropaguleBlock.class, org.bukkit.craftbukkit.block.impl.CraftMangrovePropagule::new);
         register(net.minecraft.world.level.block.MangroveRootsBlock.class, org.bukkit.craftbukkit.block.impl.CraftMangroveRoots::new);
+        register(net.minecraft.world.level.block.MossyCarpetBlock.class, org.bukkit.craftbukkit.block.impl.CraftMossyCarpet::new);
         register(net.minecraft.world.level.block.PiglinWallSkullBlock.class, org.bukkit.craftbukkit.block.impl.CraftPiglinWallSkull::new);
         register(net.minecraft.world.level.block.PinkPetalsBlock.class, org.bukkit.craftbukkit.block.impl.CraftPinkPetals::new);
         register(net.minecraft.world.level.block.PitcherCropBlock.class, org.bukkit.craftbukkit.block.impl.CraftPitcherCrop::new);
@@ -522,25 +539,25 @@ public class CraftBlockData implements BlockData {
         //</editor-fold>
     }
 
-    private static void register(Class<? extends net.minecraft.world.level.block.Block> nms, Function<net.minecraft.world.level.block.state.BlockState, CraftBlockData> bukkit) {
-        Preconditions.checkState(MAP.put(nms, bukkit) == null, "Duplicate mapping %s->%s", nms, bukkit);
+    private static void register(Class<? extends Block> nms, Function<net.minecraft.world.level.block.state.BlockState, CraftBlockData> bukkit) {
+        Preconditions.checkState(CraftBlockData.MAP.put(nms, bukkit) == null, "Duplicate mapping %s->%s", nms, bukkit);
     }
 
     public static CraftBlockData newData(BlockType blockType, String data) {
         net.minecraft.world.level.block.state.BlockState blockData;
-        net.minecraft.world.level.block.Block block = blockType == null ? null : ((CraftBlockType<?>) blockType).getHandle();
-        Map<net.minecraft.world.level.block.state.properties.Property<?>, Comparable<?>> parsed = null;
+        Block block = blockType == null ? null : ((CraftBlockType<?>) blockType).getHandle();
+        Map<Property<?>, Comparable<?>> parsed = null;
 
         // Data provided, use it
         if (data != null) {
             try {
                 // Material provided, force that material in
                 if (block != null) {
-                    data = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(block) + data;
+                    data = BuiltInRegistries.BLOCK.getKey(block) + data;
                 }
 
                 StringReader reader = new StringReader(data);
-                net.minecraft.commands.arguments.blocks.BlockStateParser.BlockResult arg = net.minecraft.commands.arguments.blocks.BlockStateParser.parseForBlock(net.minecraft.core.registries.BuiltInRegistries.BLOCK.asLookup(), reader, false);
+                BlockStateParser.BlockResult arg = BlockStateParser.parseForBlock(CraftRegistry.getMinecraftRegistry(Registries.BLOCK), reader, false);
                 Preconditions.checkArgument(!reader.canRead(), "Spurious trailing data: " + data);
 
                 blockData = arg.blockState();
@@ -552,33 +569,33 @@ public class CraftBlockData implements BlockData {
             blockData = block.defaultBlockState();
         }
 
-        CraftBlockData craft = fromData(blockData);
+        CraftBlockData craft = CraftBlockData.fromData(blockData);
         craft.parsedStates = parsed;
         return craft;
     }
 
     public static CraftBlockData fromData(net.minecraft.world.level.block.state.BlockState data) {
-        return MAP.getOrDefault(data.getBlock().getClass(), CraftBlockData::new).apply(data);
+        return CraftBlockData.MAP.getOrDefault(data.getBlock().getClass(), CraftBlockData::new).apply(data);
     }
 
     @Override
     public SoundGroup getSoundGroup() {
-        return CraftSoundGroup.getSoundGroup(state.getSoundType());
+        return CraftSoundGroup.getSoundGroup(this.state.getSoundType());
     }
 
     @Override
     public int getLightEmission() {
-        return state.getLightEmission();
+        return this.state.getLightEmission();
     }
 
     @Override
     public boolean isOccluding() {
-        return state.canOcclude();
+        return this.state.canOcclude();
     }
 
     @Override
     public boolean requiresCorrectToolForDrops() {
-        return state.requiresCorrectToolForDrops();
+        return this.state.requiresCorrectToolForDrops();
     }
 
     @Override
@@ -586,7 +603,7 @@ public class CraftBlockData implements BlockData {
         Preconditions.checkArgument(tool != null, "tool must not be null");
 
         net.minecraft.world.item.ItemStack nms = CraftItemStack.asNMSCopy(tool);
-        return isPreferredTool(state, nms);
+        return CraftBlockData.isPreferredTool(this.state, nms);
     }
 
     public static boolean isPreferredTool(net.minecraft.world.level.block.state.BlockState iblockdata, net.minecraft.world.item.ItemStack nmsItem) {
@@ -595,7 +612,7 @@ public class CraftBlockData implements BlockData {
 
     @Override
     public PistonMoveReaction getPistonMoveReaction() {
-        return PistonMoveReaction.getById(state.getPistonPushReaction().ordinal());
+        return PistonMoveReaction.getById(this.state.getPistonPushReaction().ordinal());
     }
 
     @Override
@@ -603,7 +620,7 @@ public class CraftBlockData implements BlockData {
         Preconditions.checkArgument(block != null, "block must not be null");
 
         CraftBlock craftBlock = (CraftBlock) block;
-        return state.canSurvive(craftBlock.getCraftWorld().getHandle(), craftBlock.getPosition());
+        return this.state.canSurvive(craftBlock.getCraftWorld().getHandle(), craftBlock.getPosition());
     }
 
     @Override
@@ -613,8 +630,8 @@ public class CraftBlockData implements BlockData {
         CraftWorld world = (CraftWorld) location.getWorld();
         Preconditions.checkArgument(world != null, "location must not have a null world");
 
-        net.minecraft.core.BlockPos position = CraftLocation.toBlockPosition(location);
-        return state.canSurvive(world.getHandle(), position);
+        BlockPos position = CraftLocation.toBlockPosition(location);
+        return this.state.canSurvive(world.getHandle(), position);
     }
 
     @Override
@@ -622,43 +639,43 @@ public class CraftBlockData implements BlockData {
         Preconditions.checkArgument(face != null, "face must not be null");
         Preconditions.checkArgument(support != null, "support must not be null");
 
-        return state.isFaceSturdy(net.minecraft.world.level.EmptyBlockGetter.INSTANCE, net.minecraft.core.BlockPos.ZERO, CraftBlock.blockFaceToNotch(face), CraftBlockSupport.toNMS(support));
+        return this.state.isFaceSturdy(EmptyBlockGetter.INSTANCE, BlockPos.ZERO, CraftBlock.blockFaceToNotch(face), CraftBlockSupport.toNMS(support));
     }
 
     @Override
     public Color getMapColor() {
-        return Color.fromRGB(state.getMapColor(null, null).col);
+        return Color.fromRGB(this.state.getMapColor(null, null).col);
     }
 
     @Override
     public Material getPlacementMaterial() {
-        return CraftItemType.minecraftToBukkit(state.getBlock().asItem());
+        return CraftItemType.minecraftToBukkit(this.state.getBlock().asItem());
     }
 
     @Override
     public void rotate(StructureRotation rotation) {
-        this.state = state.rotate(net.minecraft.world.level.block.Rotation.valueOf(rotation.name()));
+        this.state = this.state.rotate(Rotation.valueOf(rotation.name()));
     }
 
     @Override
     public void mirror(Mirror mirror) {
-        this.state = state.mirror(net.minecraft.world.level.block.Mirror.valueOf(mirror.name()));
+        this.state = this.state.mirror(net.minecraft.world.level.block.Mirror.valueOf(mirror.name()));
     }
 
     @Override
     public void copyTo(BlockData blockData) {
         CraftBlockData other = (CraftBlockData) blockData;
         net.minecraft.world.level.block.state.BlockState nms = other.state;
-        for (net.minecraft.world.level.block.state.properties.Property<?> property : state.getBlock().getStateDefinition().getProperties()) {
+        for (Property<?> property : this.state.getBlock().getStateDefinition().getProperties()) {
             if (nms.hasProperty(property)) {
-                nms = copyProperty(state, nms, property);
+                nms = this.copyProperty(this.state, nms, property);
             }
         }
 
         other.state = nms;
     }
 
-    private <T extends Comparable<T>> net.minecraft.world.level.block.state.BlockState copyProperty(net.minecraft.world.level.block.state.BlockState source, net.minecraft.world.level.block.state.BlockState target, net.minecraft.world.level.block.state.properties.Property<T> property) {
+    private <T extends Comparable<T>> net.minecraft.world.level.block.state.BlockState copyProperty(net.minecraft.world.level.block.state.BlockState source, net.minecraft.world.level.block.state.BlockState target, Property<T> property) {
         return target.setValue(property, source.getValue(property));
     }
 

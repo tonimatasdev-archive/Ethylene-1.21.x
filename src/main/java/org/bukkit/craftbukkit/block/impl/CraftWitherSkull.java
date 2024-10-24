@@ -19,12 +19,12 @@ public final class CraftWitherSkull extends org.bukkit.craftbukkit.block.data.Cr
 
     @Override
     public boolean isPowered() {
-        return get(POWERED);
+        return this.get(CraftWitherSkull.POWERED);
     }
 
     @Override
     public void setPowered(boolean powered) {
-        set(POWERED, powered);
+        this.set(CraftWitherSkull.POWERED, powered);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftRotatable
@@ -33,7 +33,7 @@ public final class CraftWitherSkull extends org.bukkit.craftbukkit.block.data.Cr
 
     @Override
     public org.bukkit.block.BlockFace getRotation() {
-        int data = get(ROTATION);
+        int data = this.get(CraftWitherSkull.ROTATION);
         switch (data) {
             case 0x0:
                 return org.bukkit.block.BlockFace.SOUTH;
@@ -127,6 +127,6 @@ public final class CraftWitherSkull extends org.bukkit.craftbukkit.block.data.Cr
             default:
                 throw new IllegalArgumentException("Illegal rotation " + rotation);
         }
-        set(ROTATION, val);
+        this.set(CraftWitherSkull.ROTATION, val);
     }
 }

@@ -7,5 +7,5 @@ import org.objectweb.asm.Type;
 public record RerouteMethodData(String methodKey, Type sourceDesc, Type sourceOwner, String sourceName,
                                 boolean staticReroute, Type targetType, String targetOwner, String targetName,
                                 List<RerouteArgument> arguments, RerouteReturn rerouteReturn, boolean isInBukkit,
-                                RequirePluginVersionData requiredPluginVersion) {
+                                @Nullable RequirePluginVersionData requiredPluginVersion) {
 }

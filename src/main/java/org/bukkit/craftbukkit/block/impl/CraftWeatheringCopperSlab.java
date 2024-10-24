@@ -19,12 +19,12 @@ public final class CraftWeatheringCopperSlab extends org.bukkit.craftbukkit.bloc
 
     @Override
     public org.bukkit.block.data.type.Slab.Type getType() {
-        return get(TYPE, org.bukkit.block.data.type.Slab.Type.class);
+        return this.get(CraftWeatheringCopperSlab.TYPE, org.bukkit.block.data.type.Slab.Type.class);
     }
 
     @Override
     public void setType(org.bukkit.block.data.type.Slab.Type type) {
-        set(TYPE, type);
+        this.set(CraftWeatheringCopperSlab.TYPE, type);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftWaterlogged
@@ -33,11 +33,11 @@ public final class CraftWeatheringCopperSlab extends org.bukkit.craftbukkit.bloc
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftWeatheringCopperSlab.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftWeatheringCopperSlab.WATERLOGGED, waterlogged);
     }
 }

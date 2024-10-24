@@ -19,12 +19,12 @@ public final class CraftChestTrapped extends org.bukkit.craftbukkit.block.data.C
 
     @Override
     public org.bukkit.block.data.type.Chest.Type getType() {
-        return get(TYPE, org.bukkit.block.data.type.Chest.Type.class);
+        return this.get(CraftChestTrapped.TYPE, org.bukkit.block.data.type.Chest.Type.class);
     }
 
     @Override
     public void setType(org.bukkit.block.data.type.Chest.Type type) {
-        set(TYPE, type);
+        this.set(CraftChestTrapped.TYPE, type);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftDirectional
@@ -33,17 +33,17 @@ public final class CraftChestTrapped extends org.bukkit.craftbukkit.block.data.C
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftChestTrapped.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftChestTrapped.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftChestTrapped.FACING, org.bukkit.block.BlockFace.class);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftWaterlogged
@@ -52,11 +52,11 @@ public final class CraftChestTrapped extends org.bukkit.craftbukkit.block.data.C
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftChestTrapped.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftChestTrapped.WATERLOGGED, waterlogged);
     }
 }

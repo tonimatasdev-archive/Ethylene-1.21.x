@@ -1,6 +1,9 @@
 package org.bukkit.craftbukkit.block;
 
-import net.ethylenemc.interfaces.world.level.block.entity.EthyleneContainerOpenersCounter;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -8,9 +11,9 @@ import org.bukkit.block.ShulkerBox;
 import org.bukkit.craftbukkit.inventory.CraftInventory;
 import org.bukkit.inventory.Inventory;
 
-public class CraftShulkerBox extends CraftLootable<net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity> implements ShulkerBox {
+public class CraftShulkerBox extends CraftLootable<ShulkerBoxBlockEntity> implements ShulkerBox {
 
-    public CraftShulkerBox(World world, net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity tileEntity) {
+    public CraftShulkerBox(World world, ShulkerBoxBlockEntity tileEntity) {
         super(world, tileEntity);
     }
 
@@ -34,31 +37,31 @@ public class CraftShulkerBox extends CraftLootable<net.minecraft.world.level.blo
 
     @Override
     public DyeColor getColor() {
-        net.minecraft.world.item.DyeColor color = ((net.minecraft.world.level.block.ShulkerBoxBlock) CraftBlockType.bukkitToMinecraft(this.getType())).color;
+        net.minecraft.world.item.DyeColor color = ((ShulkerBoxBlock) CraftBlockType.bukkitToMinecraft(this.getType())).color;
 
         return (color == null) ? null : DyeColor.getByWoolData((byte) color.getId());
     }
 
     @Override
     public void open() {
-        requirePlaced();
-        if (!((EthyleneContainerOpenersCounter) getTileEntity()).getOpened() && getWorldHandle() instanceof net.minecraft.world.level.Level) {
-            net.minecraft.world.level.Level world = getTileEntity().getLevel();
-            world.blockEvent(getPosition(), getTileEntity().getBlockState().getBlock(), 1, 1);
-            world.playSound(null, getPosition(), net.minecraft.sounds.SoundEvents.SHULKER_BOX_OPEN, net.minecraft.sounds.SoundSource.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
+        this.requirePlaced();
+        if (!this.getTileEntity().opened && this.getWorldHandle() instanceof net.minecraft.world.level.Level) {
+            net.minecraft.world.level.Level world = this.getTileEntity().getLevel();
+            world.blockEvent(this.getPosition(), this.getTileEntity().getBlockState().getBlock(), 1, 1);
+            world.playSound(null, this.getPosition(), SoundEvents.SHULKER_BOX_OPEN, SoundSource.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
         }
-        ((EthyleneContainerOpenersCounter) getTileEntity()).setOpened(true);
+        this.getTileEntity().opened = true;
     }
 
     @Override
     public void close() {
-        requirePlaced();
-        if (((EthyleneContainerOpenersCounter) getTileEntity()).getOpened() && getWorldHandle() instanceof net.minecraft.world.level.Level) {
-            net.minecraft.world.level.Level world = getTileEntity().getLevel();
-            world.blockEvent(getPosition(), getTileEntity().getBlockState().getBlock(), 1, 0);
-            world.playSound(null, getPosition(), net.minecraft.sounds.SoundEvents.SHULKER_BOX_OPEN, net.minecraft.sounds.SoundSource.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
+        this.requirePlaced();
+        if (this.getTileEntity().opened && this.getWorldHandle() instanceof net.minecraft.world.level.Level) {
+            net.minecraft.world.level.Level world = this.getTileEntity().getLevel();
+            world.blockEvent(this.getPosition(), this.getTileEntity().getBlockState().getBlock(), 1, 0);
+            world.playSound(null, this.getPosition(), SoundEvents.SHULKER_BOX_OPEN, SoundSource.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
         }
-        ((EthyleneContainerOpenersCounter) getTileEntity()).setOpened(false);
+        this.getTileEntity().opened = false;
     }
 
     @Override

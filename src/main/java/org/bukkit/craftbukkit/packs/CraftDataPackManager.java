@@ -4,8 +4,8 @@ import com.google.common.base.Preconditions;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import net.minecraft.world.level.storage.WorldData;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackRepository;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -21,13 +21,13 @@ import org.bukkit.packs.DataPackManager;
 
 public class CraftDataPackManager implements DataPackManager {
 
-    private final net.minecraft.server.packs.repository.PackRepository handle;
+    private final PackRepository handle;
 
-    public CraftDataPackManager(net.minecraft.server.packs.repository.PackRepository resourcePackRepository) {
+    public CraftDataPackManager(PackRepository resourcePackRepository) {
         this.handle = resourcePackRepository;
     }
 
-    public net.minecraft.server.packs.repository.PackRepository getHandle() {
+    public PackRepository getHandle() {
         return this.handle;
     }
 
@@ -36,7 +36,7 @@ public class CraftDataPackManager implements DataPackManager {
         // Based in the command for datapacks need reload for get the updated list of datapacks
         this.getHandle().reload();
 
-        Collection<net.minecraft.server.packs.repository.Pack> availablePacks = this.getHandle().getAvailablePacks();
+        Collection<Pack> availablePacks = this.getHandle().getAvailablePacks();
         return availablePacks.stream().map(CraftDataPack::new).collect(Collectors.toUnmodifiableList());
     }
 
@@ -52,8 +52,8 @@ public class CraftDataPackManager implements DataPackManager {
         Preconditions.checkArgument(world != null, "world cannot be null");
 
         CraftWorld craftWorld = ((CraftWorld) world);
-        return ((WorldData) craftWorld.getHandle().serverLevelData).getDataConfiguration().dataPacks().getEnabled().stream().map(packName -> {
-            net.minecraft.server.packs.repository.Pack resourcePackLoader = this.getHandle().getPack(packName);
+        return craftWorld.getHandle().serverLevelData.getDataConfiguration().dataPacks().getEnabled().stream().map(packName -> {
+            Pack resourcePackLoader = this.getHandle().getPack(packName);
             if (resourcePackLoader != null) {
                 return new CraftDataPack(resourcePackLoader);
             }
@@ -66,8 +66,8 @@ public class CraftDataPackManager implements DataPackManager {
         Preconditions.checkArgument(world != null, "world cannot be null");
 
         CraftWorld craftWorld = ((CraftWorld) world);
-        return ((WorldData) craftWorld.getHandle().serverLevelData).getDataConfiguration().dataPacks().getDisabled().stream().map(packName -> {
-            net.minecraft.server.packs.repository.Pack resourcePackLoader = this.getHandle().getPack(packName);
+        return craftWorld.getHandle().serverLevelData.getDataConfiguration().dataPacks().getDisabled().stream().map(packName -> {
+            Pack resourcePackLoader = this.getHandle().getPack(packName);
             if (resourcePackLoader != null) {
                 return new CraftDataPack(resourcePackLoader);
             }

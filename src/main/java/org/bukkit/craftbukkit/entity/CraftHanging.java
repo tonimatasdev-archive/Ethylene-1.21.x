@@ -1,47 +1,48 @@
 package org.bukkit.craftbukkit.entity;
 
-import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.decoration.HangingEntity;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.entity.Hanging;
 
 public class CraftHanging extends CraftBlockAttachedEntity implements Hanging {
-    public CraftHanging(CraftServer server, net.minecraft.world.entity.decoration.HangingEntity entity) {
+    public CraftHanging(CraftServer server, HangingEntity entity) {
         super(server, entity);
     }
 
     @Override
     public BlockFace getAttachedFace() {
-        return getFacing().getOppositeFace();
+        return this.getFacing().getOppositeFace();
     }
 
     @Override
     public void setFacingDirection(BlockFace face) {
-        setFacingDirection(face, false);
+        this.setFacingDirection(face, false);
     }
 
     @Override
     public boolean setFacingDirection(BlockFace face, boolean force) {
-        net.minecraft.world.entity.decoration.HangingEntity hanging = getHandle();
-        net.minecraft.core.Direction dir = hanging.getDirection();
+        HangingEntity hanging = this.getHandle();
+        Direction dir = hanging.getDirection();
         switch (face) {
             case SOUTH:
-                getHandle().setDirection(net.minecraft.core.Direction.SOUTH);
+                this.getHandle().setDirection(Direction.SOUTH);
                 break;
             case WEST:
-                getHandle().setDirection(net.minecraft.core.Direction.WEST);
+                this.getHandle().setDirection(Direction.WEST);
                 break;
             case NORTH:
-                getHandle().setDirection(net.minecraft.core.Direction.NORTH);
+                this.getHandle().setDirection(Direction.NORTH);
                 break;
             case EAST:
-                getHandle().setDirection(net.minecraft.core.Direction.EAST);
+                this.getHandle().setDirection(Direction.EAST);
                 break;
             default:
                 throw new IllegalArgumentException(String.format("%s is not a valid facing direction", face));
         }
-        if (!force && !((EthyleneEntity) getHandle()).getGeneration() && !hanging.survives()) {
+        if (!force && !this.getHandle().generation && !hanging.survives()) {
             // Revert since it doesn't fit
             hanging.setDirection(dir);
             return false;
@@ -51,14 +52,14 @@ public class CraftHanging extends CraftBlockAttachedEntity implements Hanging {
 
     @Override
     public BlockFace getFacing() {
-        net.minecraft.core.Direction direction = this.getHandle().getDirection();
+        Direction direction = this.getHandle().getDirection();
         if (direction == null) return BlockFace.SELF;
         return CraftBlock.notchToBlockFace(direction);
     }
 
     @Override
-    public net.minecraft.world.entity.decoration.HangingEntity getHandle() {
-        return (net.minecraft.world.entity.decoration.HangingEntity) entity;
+    public HangingEntity getHandle() {
+        return (HangingEntity) this.entity;
     }
 
     @Override

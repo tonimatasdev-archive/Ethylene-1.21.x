@@ -1,13 +1,13 @@
 package org.bukkit.craftbukkit.inventory;
 
-import net.ethylenemc.interfaces.world.EthyleneContainer;
+import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import org.bukkit.block.ChiseledBookshelf;
 import org.bukkit.inventory.ChiseledBookshelfInventory;
 import org.bukkit.inventory.ItemStack;
 
 public class CraftInventoryChiseledBookshelf extends CraftInventory implements ChiseledBookshelfInventory {
 
-    public CraftInventoryChiseledBookshelf(net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity inventory) {
+    public CraftInventoryChiseledBookshelf(ChiseledBookShelfBlockEntity inventory) {
         super(inventory);
 
     }
@@ -25,6 +25,6 @@ public class CraftInventoryChiseledBookshelf extends CraftInventory implements C
 
     @Override
     public ChiseledBookshelf getHolder() {
-        return (ChiseledBookshelf) ((EthyleneContainer) inventory).getOwner();
+        return (ChiseledBookshelf) this.inventory.getOwner();
     }
 }

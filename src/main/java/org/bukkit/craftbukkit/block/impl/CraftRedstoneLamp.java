@@ -19,11 +19,11 @@ public final class CraftRedstoneLamp extends org.bukkit.craftbukkit.block.data.C
 
     @Override
     public boolean isLit() {
-        return get(LIT);
+        return this.get(CraftRedstoneLamp.LIT);
     }
 
     @Override
     public void setLit(boolean lit) {
-        set(LIT, lit);
+        this.set(CraftRedstoneLamp.LIT, lit);
     }
 }

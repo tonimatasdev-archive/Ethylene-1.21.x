@@ -2,34 +2,37 @@ package org.bukkit.craftbukkit.block.banner;
 
 import com.google.common.base.Preconditions;
 import java.util.Locale;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.block.entity.BannerPattern;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.craftbukkit.CraftRegistry;
 import org.bukkit.craftbukkit.util.Handleable;
 
-public class CraftPatternType implements PatternType, Handleable<net.minecraft.world.level.block.entity.BannerPattern> {
+public class CraftPatternType implements PatternType, Handleable<BannerPattern> {
 
     private static int count = 0;
 
-    public static PatternType minecraftToBukkit(net.minecraft.world.level.block.entity.BannerPattern minecraft) {
-        return CraftRegistry.minecraftToBukkit(minecraft, net.minecraft.core.registries.Registries.BANNER_PATTERN, Registry.BANNER_PATTERN);
+    public static PatternType minecraftToBukkit(BannerPattern minecraft) {
+        return CraftRegistry.minecraftToBukkit(minecraft, Registries.BANNER_PATTERN, Registry.BANNER_PATTERN);
     }
 
-    public static PatternType minecraftHolderToBukkit(net.minecraft.core.Holder<net.minecraft.world.level.block.entity.BannerPattern> minecraft) {
-        return minecraftToBukkit(minecraft.value());
+    public static PatternType minecraftHolderToBukkit(Holder<BannerPattern> minecraft) {
+        return CraftPatternType.minecraftToBukkit(minecraft.value());
     }
 
-    public static net.minecraft.world.level.block.entity.BannerPattern bukkitToMinecraft(PatternType bukkit) {
+    public static BannerPattern bukkitToMinecraft(PatternType bukkit) {
         return CraftRegistry.bukkitToMinecraft(bukkit);
     }
 
-    public static net.minecraft.core.Holder<net.minecraft.world.level.block.entity.BannerPattern> bukkitToMinecraftHolder(PatternType bukkit) {
+    public static Holder<BannerPattern> bukkitToMinecraftHolder(PatternType bukkit) {
         Preconditions.checkArgument(bukkit != null);
 
-        net.minecraft.core.Registry<net.minecraft.world.level.block.entity.BannerPattern> registry = CraftRegistry.getMinecraftRegistry(net.minecraft.core.registries.Registries.BANNER_PATTERN);
+        net.minecraft.core.Registry<BannerPattern> registry = CraftRegistry.getMinecraftRegistry(Registries.BANNER_PATTERN);
 
-        if (registry.wrapAsHolder(bukkitToMinecraft(bukkit)) instanceof net.minecraft.core.Holder.Reference<net.minecraft.world.level.block.entity.BannerPattern> holder) {
+        if (registry.wrapAsHolder(CraftPatternType.bukkitToMinecraft(bukkit)) instanceof Holder.Reference<BannerPattern> holder) {
             return holder;
         }
 
@@ -38,11 +41,11 @@ public class CraftPatternType implements PatternType, Handleable<net.minecraft.w
     }
 
     private final NamespacedKey key;
-    private final net.minecraft.world.level.block.entity.BannerPattern bannerPatternType;
+    private final BannerPattern bannerPatternType;
     private final String name;
     private final int ordinal;
 
-    public CraftPatternType(NamespacedKey key, net.minecraft.world.level.block.entity.BannerPattern bannerPatternType) {
+    public CraftPatternType(NamespacedKey key, BannerPattern bannerPatternType) {
         this.key = key;
         this.bannerPatternType = bannerPatternType;
         // For backwards compatibility, minecraft values will stile return the uppercase name without the namespace,
@@ -54,38 +57,38 @@ public class CraftPatternType implements PatternType, Handleable<net.minecraft.w
         } else {
             this.name = key.toString();
         }
-        this.ordinal = count++;
+        this.ordinal = CraftPatternType.count++;
     }
 
     @Override
-    public net.minecraft.world.level.block.entity.BannerPattern getHandle() {
-        return bannerPatternType;
+    public BannerPattern getHandle() {
+        return this.bannerPatternType;
     }
 
     @Override
     public NamespacedKey getKey() {
-        return key;
+        return this.key;
     }
 
     @Override
     public int compareTo(PatternType patternType) {
-        return ordinal - patternType.ordinal();
+        return this.ordinal - patternType.ordinal();
     }
 
     @Override
     public String name() {
-        return name;
+        return this.name;
     }
 
     @Override
     public int ordinal() {
-        return ordinal;
+        return this.ordinal;
     }
 
     @Override
     public String toString() {
         // For backwards compatibility
-        return name();
+        return this.name();
     }
 
     @Override
@@ -98,12 +101,12 @@ public class CraftPatternType implements PatternType, Handleable<net.minecraft.w
             return false;
         }
 
-        return getKey().equals(((PatternType) other).getKey());
+        return this.getKey().equals(((PatternType) other).getKey());
     }
 
     @Override
     public int hashCode() {
-        return getKey().hashCode();
+        return this.getKey().hashCode();
     }
 
     @Override

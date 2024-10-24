@@ -19,11 +19,11 @@ public final class CraftRedstoneTorch extends org.bukkit.craftbukkit.block.data.
 
     @Override
     public boolean isLit() {
-        return get(LIT);
+        return this.get(CraftRedstoneTorch.LIT);
     }
 
     @Override
     public void setLit(boolean lit) {
-        set(LIT, lit);
+        this.set(CraftRedstoneTorch.LIT, lit);
     }
 }

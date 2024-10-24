@@ -9,6 +9,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.FireworkExplosion;
+import net.minecraft.world.item.component.Fireworks;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Type;
@@ -20,10 +24,10 @@ import org.bukkit.inventory.meta.FireworkMeta;
 @DelegateDeserialization(SerializableMeta.class)
 class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
     /*
-       "net.minecraft.world.item.component.Fireworks", "Explosion", "Explosions", "Flight", "Type", "Trail", "Flicker", "Colors", "FadeColors";
+       "Fireworks", "Explosion", "Explosions", "Flight", "Type", "Trail", "Flicker", "Colors", "FadeColors";
 
-        net.minecraft.world.item.component.Fireworks
-        - Compound: net.minecraft.world.item.component.Fireworks
+        Fireworks
+        - Compound: Fireworks
         -- Byte: Flight
         -- List: Explosions
         --- Compound: Explosion
@@ -35,7 +39,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
      */
 
     @Specific(To.NBT)
-    static final ItemMetaKeyType<net.minecraft.world.item.component.Fireworks> FIREWORKS = new ItemMetaKeyType<>(net.minecraft.core.component.DataComponents.FIREWORKS, "net.minecraft.world.item.component.Fireworks");
+    static final ItemMetaKeyType<Fireworks> FIREWORKS = new ItemMetaKeyType<>(DataComponents.FIREWORKS, "Fireworks");
     static final ItemMetaKey FLIGHT = new ItemMetaKey("power");
     static final ItemMetaKey EXPLOSIONS = new ItemMetaKey("firework-effects");
 
@@ -56,18 +60,18 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
         }
     }
 
-    CraftMetaFirework(net.minecraft.core.component.DataComponentPatch tag) {
+    CraftMetaFirework(DataComponentPatch tag) {
         super(tag);
 
-        getOrEmpty(tag, FIREWORKS).ifPresent((fireworks) -> {
-            power = fireworks.flightDuration();
+        getOrEmpty(tag, CraftMetaFirework.FIREWORKS).ifPresent((fireworks) -> {
+            this.power = fireworks.flightDuration();
 
-            List<net.minecraft.world.item.component.FireworkExplosion> fireworkEffects = fireworks.explosions();
+            List<FireworkExplosion> fireworkEffects = fireworks.explosions();
             List<FireworkEffect> effects = this.effects = new ArrayList<FireworkEffect>(fireworkEffects.size());
 
             for (int i = 0; i < fireworkEffects.size(); i++) {
                 try {
-                    effects.add(getEffect(fireworkEffects.get(i)));
+                    effects.add(CraftMetaFirework.getEffect(fireworkEffects.get(i)));
                 } catch (IllegalArgumentException ex) {
                     // Ignore invalid effects
                 }
@@ -78,20 +82,20 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
     CraftMetaFirework(Map<String, Object> map) {
         super(map);
 
-        Integer power = SerializableMeta.getObject(Integer.class, map, FLIGHT.BUKKIT, true);
+        Integer power = SerializableMeta.getObject(Integer.class, map, CraftMetaFirework.FLIGHT.BUKKIT, true);
         if (power != null) {
             this.power = power;
         }
 
-        Iterable<?> effects = SerializableMeta.getObject(Iterable.class, map, EXPLOSIONS.BUKKIT, true);
-        safelyAddEffects(effects);
+        Iterable<?> effects = SerializableMeta.getObject(Iterable.class, map, CraftMetaFirework.EXPLOSIONS.BUKKIT, true);
+        this.safelyAddEffects(effects);
     }
 
-    static FireworkEffect getEffect(net.minecraft.world.item.component.FireworkExplosion explosion) {
+    static FireworkEffect getEffect(FireworkExplosion explosion) {
         FireworkEffect.Builder effect = FireworkEffect.builder()
                 .flicker(explosion.hasTwinkle())
                 .trail(explosion.hasTrail())
-                .with(getEffectType(explosion.shape()));
+                .with(CraftMetaFirework.getEffectType(explosion.shape()));
 
         IntList colors = explosion.colors();
         // People using buggy command generators specify a list rather than an int here, so recover with dummy data.
@@ -112,31 +116,31 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
         return effect.build();
     }
 
-    static net.minecraft.world.item.component.FireworkExplosion getExplosion(FireworkEffect effect) {
-        IntList colors = addColors(effect.getColors());
-        IntList fadeColors = addColors(effect.getFadeColors());
+    static FireworkExplosion getExplosion(FireworkEffect effect) {
+        IntList colors = CraftMetaFirework.addColors(effect.getColors());
+        IntList fadeColors = CraftMetaFirework.addColors(effect.getFadeColors());
 
-        return new net.minecraft.world.item.component.FireworkExplosion(getNBT(effect.getType()), colors, fadeColors, effect.hasTrail(), effect.hasFlicker());
+        return new FireworkExplosion(CraftMetaFirework.getNBT(effect.getType()), colors, fadeColors, effect.hasTrail(), effect.hasFlicker());
     }
 
-    static net.minecraft.world.item.component.FireworkExplosion.Shape getNBT(Type type) {
+    static FireworkExplosion.Shape getNBT(Type type) {
         switch (type) {
             case BALL:
-                return net.minecraft.world.item.component.FireworkExplosion.Shape.SMALL_BALL;
+                return FireworkExplosion.Shape.SMALL_BALL;
             case BALL_LARGE:
-                return net.minecraft.world.item.component.FireworkExplosion.Shape.LARGE_BALL;
+                return FireworkExplosion.Shape.LARGE_BALL;
             case STAR:
-                return net.minecraft.world.item.component.FireworkExplosion.Shape.STAR;
+                return FireworkExplosion.Shape.STAR;
             case CREEPER:
-                return net.minecraft.world.item.component.FireworkExplosion.Shape.CREEPER;
+                return FireworkExplosion.Shape.CREEPER;
             case BURST:
-                return net.minecraft.world.item.component.FireworkExplosion.Shape.BURST;
+                return FireworkExplosion.Shape.BURST;
             default:
                 throw new IllegalArgumentException("Unknown effect type " + type);
         }
     }
 
-    static Type getEffectType(net.minecraft.world.item.component.FireworkExplosion.Shape nbt) {
+    static Type getEffectType(FireworkExplosion.Shape nbt) {
         switch (nbt) {
             case SMALL_BALL:
                 return Type.BALL;
@@ -155,7 +159,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
 
     @Override
     public boolean hasEffects() {
-        return !(effects == null || effects.isEmpty());
+        return !(this.effects == null || this.effects.isEmpty());
     }
 
     void safelyAddEffects(Iterable<?> collection) {
@@ -177,18 +181,18 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
     @Override
     void applyToItem(CraftMetaItem.Applicator itemTag) {
         super.applyToItem(itemTag);
-        if (isFireworkEmpty()) {
+        if (this.isFireworkEmpty()) {
             return;
         }
 
-        List<net.minecraft.world.item.component.FireworkExplosion> effects = new ArrayList<>();
-        if (hasEffects()) {
+        List<FireworkExplosion> effects = new ArrayList<>();
+        if (this.hasEffects()) {
             for (FireworkEffect effect : this.effects) {
-                effects.add(getExplosion(effect));
+                effects.add(CraftMetaFirework.getExplosion(effect));
             }
         }
 
-        itemTag.put(FIREWORKS, new net.minecraft.world.item.component.Fireworks(this.getPower(), effects));
+        itemTag.put(CraftMetaFirework.FIREWORKS, new Fireworks(this.getPower(), effects));
     }
 
     static IntList addColors(List<Color> colors) {
@@ -207,11 +211,11 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
 
     @Override
     boolean isEmpty() {
-        return super.isEmpty() && isFireworkEmpty();
+        return super.isEmpty() && this.isFireworkEmpty();
     }
 
     boolean isFireworkEmpty() {
-        return !(hasEffects() || hasPower());
+        return !(this.hasEffects() || this.hasPower());
     }
 
     @Override
@@ -228,7 +232,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
         if (meta instanceof CraftMetaFirework that) {
 
             return (Objects.equals(this.power, that.power))
-                    && (hasEffects() ? that.hasEffects() && this.effects.equals(that.effects) : !that.hasEffects());
+                    && (this.hasEffects() ? that.hasEffects() && this.effects.equals(that.effects) : !that.hasEffects());
         }
 
         return true;
@@ -236,18 +240,18 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
 
     @Override
     boolean notUncommon(CraftMetaItem meta) {
-        return super.notUncommon(meta) && (meta instanceof CraftMetaFirework || isFireworkEmpty());
+        return super.notUncommon(meta) && (meta instanceof CraftMetaFirework || this.isFireworkEmpty());
     }
 
     @Override
     int applyHash() {
         final int original;
         int hash = original = super.applyHash();
-        if (hasPower()) {
-            hash = 61 * hash + power;
+        if (this.hasPower()) {
+            hash = 61 * hash + this.power;
         }
-        if (hasEffects()) {
-            hash = 61 * hash + 13 * effects.hashCode();
+        if (this.hasEffects()) {
+            hash = 61 * hash + 13 * this.effects.hashCode();
         }
         return hash != original ? CraftMetaFirework.class.hashCode() ^ hash : hash;
     }
@@ -256,12 +260,12 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
     Builder<String, Object> serialize(Builder<String, Object> builder) {
         super.serialize(builder);
 
-        if (hasEffects()) {
-            builder.put(EXPLOSIONS.BUKKIT, ImmutableList.copyOf(effects));
+        if (this.hasEffects()) {
+            builder.put(CraftMetaFirework.EXPLOSIONS.BUKKIT, ImmutableList.copyOf(this.effects));
         }
 
-        if (hasPower()) {
-            builder.put(FLIGHT.BUKKIT, power);
+        if (this.hasPower()) {
+            builder.put(CraftMetaFirework.FLIGHT.BUKKIT, this.power);
         }
 
         return builder;
@@ -308,7 +312,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
     @Override
     public void addEffects(Iterable<FireworkEffect> effects) {
         Preconditions.checkArgument(effects != null, "effects cannot be null");
-        safelyAddEffects(effects);
+        this.safelyAddEffects(effects);
     }
 
     @Override
@@ -337,7 +341,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
 
     @Override
     public int getPower() {
-        return hasPower() ? this.power : 0;
+        return this.hasPower() ? this.power : 0;
     }
 
     @Override

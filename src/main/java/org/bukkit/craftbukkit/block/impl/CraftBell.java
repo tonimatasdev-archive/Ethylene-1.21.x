@@ -19,12 +19,12 @@ public final class CraftBell extends org.bukkit.craftbukkit.block.data.CraftBloc
 
     @Override
     public org.bukkit.block.data.type.Bell.Attachment getAttachment() {
-        return get(ATTACHMENT, org.bukkit.block.data.type.Bell.Attachment.class);
+        return this.get(CraftBell.ATTACHMENT, org.bukkit.block.data.type.Bell.Attachment.class);
     }
 
     @Override
     public void setAttachment(org.bukkit.block.data.type.Bell.Attachment leaves) {
-        set(ATTACHMENT, leaves);
+        this.set(CraftBell.ATTACHMENT, leaves);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftDirectional
@@ -33,17 +33,17 @@ public final class CraftBell extends org.bukkit.craftbukkit.block.data.CraftBloc
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftBell.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftBell.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftBell.FACING, org.bukkit.block.BlockFace.class);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftPowerable
@@ -52,11 +52,11 @@ public final class CraftBell extends org.bukkit.craftbukkit.block.data.CraftBloc
 
     @Override
     public boolean isPowered() {
-        return get(POWERED);
+        return this.get(CraftBell.POWERED);
     }
 
     @Override
     public void setPowered(boolean powered) {
-        set(POWERED, powered);
+        this.set(CraftBell.POWERED, powered);
     }
 }

@@ -1,16 +1,19 @@
 package org.bukkit.craftbukkit;
 
 import com.google.common.base.Preconditions;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.sounds.SoundEvent;
 import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 
 public class CraftSound {
 
-    public static Sound minecraftToBukkit(net.minecraft.sounds.SoundEvent minecraft) {
+    public static Sound minecraftToBukkit(SoundEvent minecraft) {
         Preconditions.checkArgument(minecraft != null);
 
-        net.minecraft.core.Registry<net.minecraft.sounds.SoundEvent> registry = CraftRegistry.getMinecraftRegistry(net.minecraft.core.registries.Registries.SOUND_EVENT);
+        net.minecraft.core.Registry<SoundEvent> registry = CraftRegistry.getMinecraftRegistry(Registries.SOUND_EVENT);
         Sound bukkit = Registry.SOUNDS.get(CraftNamespacedKey.fromMinecraft(registry.getResourceKey(minecraft).orElseThrow().location()));
 
         Preconditions.checkArgument(bukkit != null);
@@ -18,19 +21,19 @@ public class CraftSound {
         return bukkit;
     }
 
-    public static net.minecraft.sounds.SoundEvent bukkitToMinecraft(Sound bukkit) {
+    public static SoundEvent bukkitToMinecraft(Sound bukkit) {
         Preconditions.checkArgument(bukkit != null);
 
-        return CraftRegistry.getMinecraftRegistry(net.minecraft.core.registries.Registries.SOUND_EVENT)
+        return CraftRegistry.getMinecraftRegistry(Registries.SOUND_EVENT)
                 .getOptional(CraftNamespacedKey.toMinecraft(bukkit.getKey())).orElseThrow();
     }
 
-    public static net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent> bukkitToMinecraftHolder(Sound bukkit) {
+    public static Holder<SoundEvent> bukkitToMinecraftHolder(Sound bukkit) {
         Preconditions.checkArgument(bukkit != null);
 
-        net.minecraft.core.Registry<net.minecraft.sounds.SoundEvent> registry = CraftRegistry.getMinecraftRegistry(net.minecraft.core.registries.Registries.SOUND_EVENT);
+        net.minecraft.core.Registry<SoundEvent> registry = CraftRegistry.getMinecraftRegistry(Registries.SOUND_EVENT);
 
-        if (registry.wrapAsHolder(bukkitToMinecraft(bukkit)) instanceof net.minecraft.core.Holder.Reference<net.minecraft.sounds.SoundEvent> holder) {
+        if (registry.wrapAsHolder(CraftSound.bukkitToMinecraft(bukkit)) instanceof Holder.Reference<SoundEvent> holder) {
             return holder;
         }
 

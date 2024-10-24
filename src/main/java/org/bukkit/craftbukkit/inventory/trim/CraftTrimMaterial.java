@@ -1,6 +1,9 @@
 package org.bukkit.craftbukkit.inventory.trim;
 
 import com.google.common.base.Preconditions;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.craftbukkit.CraftRegistry;
@@ -8,26 +11,26 @@ import org.bukkit.craftbukkit.util.Handleable;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.jetbrains.annotations.NotNull;
 
-public class CraftTrimMaterial implements TrimMaterial, Handleable<net.minecraft.world.item.armortrim.TrimMaterial> {
+public class CraftTrimMaterial implements TrimMaterial, Handleable<net.minecraft.world.item.equipment.trim.TrimMaterial> {
 
-    public static TrimMaterial minecraftToBukkit(net.minecraft.world.item.armortrim.TrimMaterial minecraft) {
-        return CraftRegistry.minecraftToBukkit(minecraft, net.minecraft.core.registries.Registries.TRIM_MATERIAL, Registry.TRIM_MATERIAL);
+    public static TrimMaterial minecraftToBukkit(net.minecraft.world.item.equipment.trim.TrimMaterial minecraft) {
+        return CraftRegistry.minecraftToBukkit(minecraft, Registries.TRIM_MATERIAL, Registry.TRIM_MATERIAL);
     }
 
-    public static TrimMaterial minecraftHolderToBukkit(net.minecraft.core.Holder<net.minecraft.world.item.armortrim.TrimMaterial> minecraft) {
-        return minecraftToBukkit(minecraft.value());
+    public static TrimMaterial minecraftHolderToBukkit(Holder<net.minecraft.world.item.equipment.trim.TrimMaterial> minecraft) {
+        return CraftTrimMaterial.minecraftToBukkit(minecraft.value());
     }
 
-    public static net.minecraft.world.item.armortrim.TrimMaterial bukkitToMinecraft(TrimMaterial bukkit) {
+    public static net.minecraft.world.item.equipment.trim.TrimMaterial bukkitToMinecraft(TrimMaterial bukkit) {
         return CraftRegistry.bukkitToMinecraft(bukkit);
     }
 
-    public static net.minecraft.core.Holder<net.minecraft.world.item.armortrim.TrimMaterial> bukkitToMinecraftHolder(TrimMaterial bukkit) {
+    public static Holder<net.minecraft.world.item.equipment.trim.TrimMaterial> bukkitToMinecraftHolder(TrimMaterial bukkit) {
         Preconditions.checkArgument(bukkit != null);
 
-        net.minecraft.core.Registry<net.minecraft.world.item.armortrim.TrimMaterial> registry = CraftRegistry.getMinecraftRegistry(net.minecraft.core.registries.Registries.TRIM_MATERIAL);
+        net.minecraft.core.Registry<net.minecraft.world.item.equipment.trim.TrimMaterial> registry = CraftRegistry.getMinecraftRegistry(Registries.TRIM_MATERIAL);
 
-        if (registry.wrapAsHolder(bukkitToMinecraft(bukkit)) instanceof net.minecraft.core.Holder.Reference<net.minecraft.world.item.armortrim.TrimMaterial> holder) {
+        if (registry.wrapAsHolder(CraftTrimMaterial.bukkitToMinecraft(bukkit)) instanceof Holder.Reference<net.minecraft.world.item.equipment.trim.TrimMaterial> holder) {
             return holder;
         }
 
@@ -36,27 +39,27 @@ public class CraftTrimMaterial implements TrimMaterial, Handleable<net.minecraft
     }
 
     private final NamespacedKey key;
-    private final net.minecraft.world.item.armortrim.TrimMaterial handle;
+    private final net.minecraft.world.item.equipment.trim.TrimMaterial handle;
 
-    public CraftTrimMaterial(NamespacedKey key, net.minecraft.world.item.armortrim.TrimMaterial handle) {
+    public CraftTrimMaterial(NamespacedKey key, net.minecraft.world.item.equipment.trim.TrimMaterial handle) {
         this.key = key;
         this.handle = handle;
     }
 
     @Override
-    public net.minecraft.world.item.armortrim.TrimMaterial getHandle() {
-        return handle;
+    public net.minecraft.world.item.equipment.trim.TrimMaterial getHandle() {
+        return this.handle;
     }
 
     @Override
     @NotNull
     public NamespacedKey getKey() {
-        return key;
+        return this.key;
     }
 
     @NotNull
     @Override
     public String getTranslationKey() {
-        return ((net.minecraft.network.chat.contents.TranslatableContents) handle.description().getContents()).getKey();
+        return ((TranslatableContents) this.handle.description().getContents()).getKey();
     }
 }

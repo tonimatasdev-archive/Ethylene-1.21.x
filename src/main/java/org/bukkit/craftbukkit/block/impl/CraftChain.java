@@ -19,17 +19,17 @@ public final class CraftChain extends org.bukkit.craftbukkit.block.data.CraftBlo
 
     @Override
     public org.bukkit.Axis getAxis() {
-        return get(AXIS, org.bukkit.Axis.class);
+        return this.get(CraftChain.AXIS, org.bukkit.Axis.class);
     }
 
     @Override
     public void setAxis(org.bukkit.Axis axis) {
-        set(AXIS, axis);
+        this.set(CraftChain.AXIS, axis);
     }
 
     @Override
     public java.util.Set<org.bukkit.Axis> getAxes() {
-        return getValues(AXIS, org.bukkit.Axis.class);
+        return this.getValues(CraftChain.AXIS, org.bukkit.Axis.class);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftWaterlogged
@@ -38,11 +38,11 @@ public final class CraftChain extends org.bukkit.craftbukkit.block.data.CraftBlo
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftChain.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftChain.WATERLOGGED, waterlogged);
     }
 }

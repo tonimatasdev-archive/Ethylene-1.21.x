@@ -19,11 +19,11 @@ public final class CraftMangroveRoots extends org.bukkit.craftbukkit.block.data.
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftMangroveRoots.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftMangroveRoots.WATERLOGGED, waterlogged);
     }
 }

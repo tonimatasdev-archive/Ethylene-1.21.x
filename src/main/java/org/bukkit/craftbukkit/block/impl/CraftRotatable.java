@@ -19,16 +19,16 @@ public final class CraftRotatable extends org.bukkit.craftbukkit.block.data.Craf
 
     @Override
     public org.bukkit.Axis getAxis() {
-        return get(AXIS, org.bukkit.Axis.class);
+        return this.get(CraftRotatable.AXIS, org.bukkit.Axis.class);
     }
 
     @Override
     public void setAxis(org.bukkit.Axis axis) {
-        set(AXIS, axis);
+        this.set(CraftRotatable.AXIS, axis);
     }
 
     @Override
     public java.util.Set<org.bukkit.Axis> getAxes() {
-        return getValues(AXIS, org.bukkit.Axis.class);
+        return this.getValues(CraftRotatable.AXIS, org.bukkit.Axis.class);
     }
 }

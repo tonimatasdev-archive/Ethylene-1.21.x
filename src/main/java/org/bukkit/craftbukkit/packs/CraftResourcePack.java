@@ -1,14 +1,15 @@
 package org.bukkit.craftbukkit.packs;
 
 import java.util.UUID;
+import net.minecraft.server.MinecraftServer;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.packs.ResourcePack;
 
 public class CraftResourcePack implements ResourcePack {
 
-    private final net.minecraft.server.MinecraftServer.ServerResourcePackInfo handle;
+    private final MinecraftServer.ServerResourcePackInfo handle;
 
-    public CraftResourcePack(net.minecraft.server.MinecraftServer.ServerResourcePackInfo handle) {
+    public CraftResourcePack(MinecraftServer.ServerResourcePackInfo handle) {
         this.handle = handle;
     }
 

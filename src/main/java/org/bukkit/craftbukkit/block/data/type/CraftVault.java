@@ -10,21 +10,21 @@ public abstract class CraftVault extends CraftBlockData implements Vault {
 
     @Override
     public org.bukkit.block.data.type.Vault.State getTrialSpawnerState() {
-        return get(VAULT_STATE, org.bukkit.block.data.type.Vault.State.class);
+        return this.get(CraftVault.VAULT_STATE, org.bukkit.block.data.type.Vault.State.class);
     }
 
     @Override
     public void setTrialSpawnerState(org.bukkit.block.data.type.Vault.State state) {
-        set(VAULT_STATE, state);
+        this.set(CraftVault.VAULT_STATE, state);
     }
 
     @Override
     public boolean isOminous() {
-        return get(OMINOUS);
+        return this.get(CraftVault.OMINOUS);
     }
 
     @Override
     public void setOminous(boolean ominous) {
-        set(OMINOUS, ominous);
+        this.set(CraftVault.OMINOUS, ominous);
     }
 }

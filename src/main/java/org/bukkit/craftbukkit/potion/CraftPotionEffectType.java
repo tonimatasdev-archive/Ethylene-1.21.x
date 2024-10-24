@@ -1,5 +1,8 @@
 package org.bukkit.craftbukkit.potion;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.effect.MobEffect;
 import org.bukkit.Color;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -10,43 +13,43 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionEffectTypeCategory;
 import org.jetbrains.annotations.NotNull;
 
-public class CraftPotionEffectType extends PotionEffectType implements Handleable<net.minecraft.world.effect.MobEffect> {
+public class CraftPotionEffectType extends PotionEffectType implements Handleable<MobEffect> {
 
-    public static PotionEffectType minecraftHolderToBukkit(net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> minecraft) {
-        return minecraftToBukkit(minecraft.value());
+    public static PotionEffectType minecraftHolderToBukkit(Holder<MobEffect> minecraft) {
+        return CraftPotionEffectType.minecraftToBukkit(minecraft.value());
     }
 
-    public static PotionEffectType minecraftToBukkit(net.minecraft.world.effect.MobEffect minecraft) {
-        return CraftRegistry.minecraftToBukkit(minecraft, net.minecraft.core.registries.Registries.MOB_EFFECT, Registry.EFFECT);
+    public static PotionEffectType minecraftToBukkit(MobEffect minecraft) {
+        return CraftRegistry.minecraftToBukkit(minecraft, Registries.MOB_EFFECT, Registry.EFFECT);
     }
 
-    public static net.minecraft.world.effect.MobEffect bukkitToMinecraft(PotionEffectType bukkit) {
+    public static MobEffect bukkitToMinecraft(PotionEffectType bukkit) {
         return CraftRegistry.bukkitToMinecraft(bukkit);
     }
 
-    public static net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> bukkitToMinecraftHolder(PotionEffectType bukkit) {
-        return CraftRegistry.bukkitToMinecraftHolder(bukkit, net.minecraft.core.registries.Registries.MOB_EFFECT);
+    public static Holder<MobEffect> bukkitToMinecraftHolder(PotionEffectType bukkit) {
+        return CraftRegistry.bukkitToMinecraftHolder(bukkit, Registries.MOB_EFFECT);
     }
 
     private final NamespacedKey key;
-    private final net.minecraft.world.effect.MobEffect handle;
+    private final MobEffect handle;
     private final int id;
 
-    public CraftPotionEffectType(NamespacedKey key, net.minecraft.world.effect.MobEffect handle) {
+    public CraftPotionEffectType(NamespacedKey key, MobEffect handle) {
         this.key = key;
         this.handle = handle;
-        this.id = CraftRegistry.getMinecraftRegistry(net.minecraft.core.registries.Registries.MOB_EFFECT).getId(handle) + 1;
+        this.id = CraftRegistry.getMinecraftRegistry(Registries.MOB_EFFECT).getId(handle) + 1;
     }
 
     @Override
-    public net.minecraft.world.effect.MobEffect getHandle() {
-        return handle;
+    public MobEffect getHandle() {
+        return this.handle;
     }
 
     @NotNull
     @Override
     public NamespacedKey getKey() {
-        return key;
+        return this.key;
     }
 
     @Override
@@ -56,12 +59,12 @@ public class CraftPotionEffectType extends PotionEffectType implements Handleabl
 
     @Override
     public int getId() {
-        return id;
+        return this.id;
     }
 
     @Override
     public String getName() {
-        return switch (getId()) {
+        return switch (this.getId()) {
             case 1 -> "SPEED";
             case 2 -> "SLOW";
             case 3 -> "FAST_DIGGING";
@@ -95,35 +98,35 @@ public class CraftPotionEffectType extends PotionEffectType implements Handleabl
             case 31 -> "BAD_OMEN";
             case 32 -> "HERO_OF_THE_VILLAGE";
             case 33 -> "DARKNESS";
-            default -> getKey().toString();
+            default -> this.getKey().toString();
         };
     }
 
     @NotNull
     @Override
     public PotionEffect createEffect(int duration, int amplifier) {
-        return new PotionEffect(this, isInstant() ? 1 : (int) (duration * getDurationModifier()), amplifier);
+        return new PotionEffect(this, this.isInstant() ? 1 : (int) (duration * this.getDurationModifier()), amplifier);
     }
 
     @Override
     public boolean isInstant() {
-        return handle.isInstantenous();
+        return this.handle.isInstantenous();
     }
 
     @Override
     public PotionEffectTypeCategory getCategory() {
-        return CraftPotionEffectTypeCategory.minecraftToBukkit(handle.getCategory());
+        return CraftPotionEffectTypeCategory.minecraftToBukkit(this.handle.getCategory());
     }
 
     @Override
     public Color getColor() {
-        return Color.fromRGB(handle.getColor());
+        return Color.fromRGB(this.handle.getColor());
     }
 
     @NotNull
     @Override
     public String getTranslationKey() {
-        return handle.getDescriptionId();
+        return this.handle.getDescriptionId();
     }
 
     @Override
@@ -136,16 +139,16 @@ public class CraftPotionEffectType extends PotionEffectType implements Handleabl
             return false;
         }
 
-        return getKey().equals(((PotionEffectType) other).getKey());
+        return this.getKey().equals(((PotionEffectType) other).getKey());
     }
 
     @Override
     public int hashCode() {
-        return getKey().hashCode();
+        return this.getKey().hashCode();
     }
 
     @Override
     public String toString() {
-        return "CraftPotionEffectType[" + getKey() + "]";
+        return "CraftPotionEffectType[" + this.getKey() + "]";
     }
 }

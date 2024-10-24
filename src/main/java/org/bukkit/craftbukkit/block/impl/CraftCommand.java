@@ -19,12 +19,12 @@ public final class CraftCommand extends org.bukkit.craftbukkit.block.data.CraftB
 
     @Override
     public boolean isConditional() {
-        return get(CONDITIONAL);
+        return this.get(CraftCommand.CONDITIONAL);
     }
 
     @Override
     public void setConditional(boolean conditional) {
-        set(CONDITIONAL, conditional);
+        this.set(CraftCommand.CONDITIONAL, conditional);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftDirectional
@@ -33,16 +33,16 @@ public final class CraftCommand extends org.bukkit.craftbukkit.block.data.CraftB
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftCommand.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftCommand.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftCommand.FACING, org.bukkit.block.BlockFace.class);
     }
 }

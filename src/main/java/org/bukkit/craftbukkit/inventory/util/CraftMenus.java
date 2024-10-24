@@ -2,7 +2,25 @@ package org.bukkit.craftbukkit.inventory.util;
 
 import static org.bukkit.craftbukkit.inventory.util.CraftMenuBuilder.*;
 
-import net.ethylenemc.EthyleneCaptures;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.inventory.AnvilMenu;
+import net.minecraft.world.inventory.CartographyTableMenu;
+import net.minecraft.world.inventory.CraftingMenu;
+import net.minecraft.world.inventory.EnchantmentMenu;
+import net.minecraft.world.inventory.GrindstoneMenu;
+import net.minecraft.world.inventory.SmithingMenu;
+import net.minecraft.world.inventory.StonecutterMenu;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BeaconBlockEntity;
+import net.minecraft.world.level.block.entity.BlastFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
+import net.minecraft.world.level.block.entity.CrafterBlockEntity;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
+import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
+import net.minecraft.world.level.block.entity.LecternBlockEntity;
+import net.minecraft.world.level.block.entity.SmokerBlockEntity;
 import org.bukkit.craftbukkit.inventory.CraftMenuType;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.MenuType;
@@ -22,78 +40,74 @@ public final class CraftMenus {
     public record MenuTypeData<V extends InventoryView>(Class<V> viewClass, CraftMenuBuilder menuBuilder) {
     }
 
-    private static final CraftMenuBuilder STANDARD = (player, menuType) -> {
-        player.nextContainerCounter();
-        return menuType.create(EthyleneCaptures.nextContainerCounter, player.getInventory()); // Ethylene - Method doesn't return an int
-    };
+    private static final CraftMenuBuilder STANDARD = (player, menuType) -> menuType.create(player.nextContainerCounter(), player.getInventory());
 
     public static <V extends InventoryView> MenuTypeData<V> getMenuTypeData(CraftMenuType<?> menuType) {
         // this isn't ideal as both dispenser and dropper are 3x3, InventoryType can't currently handle generic 3x3s with size 9
         // this needs to be removed when inventory creation is overhauled
         if (menuType == MenuType.GENERIC_3X3) {
-            return asType(new MenuTypeData<>(InventoryView.class, tileEntity(net.minecraft.world.level.block.entity.DispenserBlockEntity::new, net.minecraft.world.level.block.Blocks.DISPENSER)));
+            return CraftMenus.asType(new MenuTypeData<>(InventoryView.class, tileEntity(DispenserBlockEntity::new, Blocks.DISPENSER)));
         }
         if (menuType == MenuType.CRAFTER_3X3) {
-            return asType(new MenuTypeData<>(CrafterView.class, tileEntity(net.minecraft.world.level.block.entity.CrafterBlockEntity::new, net.minecraft.world.level.block.Blocks.CRAFTER)));
+            return CraftMenus.asType(new MenuTypeData<>(CrafterView.class, tileEntity(CrafterBlockEntity::new, Blocks.CRAFTER)));
         }
         if (menuType == MenuType.ANVIL) {
-            return asType(new MenuTypeData<>(AnvilView.class, worldAccess(net.minecraft.world.inventory.AnvilMenu::new)));
+            return CraftMenus.asType(new MenuTypeData<>(AnvilView.class, worldAccess(AnvilMenu::new)));
         }
         if (menuType == MenuType.BEACON) {
-            return asType(new MenuTypeData<>(BeaconView.class, tileEntity(net.minecraft.world.level.block.entity.BeaconBlockEntity::new, net.minecraft.world.level.block.Blocks.BEACON)));
+            return CraftMenus.asType(new MenuTypeData<>(BeaconView.class, tileEntity(BeaconBlockEntity::new, Blocks.BEACON)));
         }
         if (menuType == MenuType.BLAST_FURNACE) {
-            return asType(new MenuTypeData<>(FurnaceView.class, tileEntity(net.minecraft.world.level.block.entity.BlastFurnaceBlockEntity::new, net.minecraft.world.level.block.Blocks.BLAST_FURNACE)));
+            return CraftMenus.asType(new MenuTypeData<>(FurnaceView.class, tileEntity(BlastFurnaceBlockEntity::new, Blocks.BLAST_FURNACE)));
         }
         if (menuType == MenuType.BREWING_STAND) {
-            return asType(new MenuTypeData<>(BrewingStandView.class, tileEntity(net.minecraft.world.level.block.entity.BrewingStandBlockEntity::new, net.minecraft.world.level.block.Blocks.BREWING_STAND)));
+            return CraftMenus.asType(new MenuTypeData<>(BrewingStandView.class, tileEntity(BrewingStandBlockEntity::new, Blocks.BREWING_STAND)));
         }
         if (menuType == MenuType.CRAFTING) {
-            return asType(new MenuTypeData<>(InventoryView.class, worldAccess(net.minecraft.world.inventory.CraftingMenu::new)));
+            return CraftMenus.asType(new MenuTypeData<>(InventoryView.class, worldAccess(CraftingMenu::new)));
         }
         if (menuType == MenuType.ENCHANTMENT) {
-            return asType(new MenuTypeData<>(EnchantmentView.class, (player, type) -> {
-                player.nextContainerCounter();
-                return new net.minecraft.world.SimpleMenuProvider((syncId, inventory, human) -> {
-                    return worldAccess(net.minecraft.world.inventory.EnchantmentMenu::new).build(player, type);
-                }, net.minecraft.network.chat.Component.empty()).createMenu(EthyleneCaptures.nextContainerCounter, player.getInventory(), player); // Ethylene - Method doesn't return an int
+            return CraftMenus.asType(new MenuTypeData<>(EnchantmentView.class, (player, type) -> {
+                return new SimpleMenuProvider((syncId, inventory, human) -> {
+                    return worldAccess(EnchantmentMenu::new).build(player, type);
+                }, Component.empty()).createMenu(player.nextContainerCounter(), player.getInventory(), player);
             }));
         }
         if (menuType == MenuType.FURNACE) {
-            return asType(new MenuTypeData<>(FurnaceView.class, tileEntity(net.minecraft.world.level.block.entity.FurnaceBlockEntity::new, net.minecraft.world.level.block.Blocks.FURNACE)));
+            return CraftMenus.asType(new MenuTypeData<>(FurnaceView.class, tileEntity(FurnaceBlockEntity::new, Blocks.FURNACE)));
         }
         if (menuType == MenuType.GRINDSTONE) {
-            return asType(new MenuTypeData<>(InventoryView.class, worldAccess(net.minecraft.world.inventory.GrindstoneMenu::new)));
+            return CraftMenus.asType(new MenuTypeData<>(InventoryView.class, worldAccess(GrindstoneMenu::new)));
         }
         // We really don't need to be creating a tile entity for hopper but currently InventoryType doesn't have capacity
         // to understand otherwise
         if (menuType == MenuType.HOPPER) {
-            return asType(new MenuTypeData<>(InventoryView.class, tileEntity(net.minecraft.world.level.block.entity.HopperBlockEntity::new, net.minecraft.world.level.block.Blocks.HOPPER)));
+            return CraftMenus.asType(new MenuTypeData<>(InventoryView.class, tileEntity(HopperBlockEntity::new, Blocks.HOPPER)));
         }
         // We also don't need to create a tile entity for lectern, but again InventoryType isn't smart enough to know any better
         if (menuType == MenuType.LECTERN) {
-            return asType(new MenuTypeData<>(LecternView.class, tileEntity(net.minecraft.world.level.block.entity.LecternBlockEntity::new, net.minecraft.world.level.block.Blocks.LECTERN)));
+            return CraftMenus.asType(new MenuTypeData<>(LecternView.class, tileEntity(LecternBlockEntity::new, Blocks.LECTERN)));
         }
         if (menuType == MenuType.LOOM) {
-            return asType(new MenuTypeData<>(LoomView.class, STANDARD));
+            return CraftMenus.asType(new MenuTypeData<>(LoomView.class, CraftMenus.STANDARD));
         }
         if (menuType == MenuType.MERCHANT) {
-            return asType(new MenuTypeData<>(MerchantView.class, STANDARD));
+            return CraftMenus.asType(new MenuTypeData<>(MerchantView.class, CraftMenus.STANDARD));
         }
         if (menuType == MenuType.SMITHING) {
-            return asType(new MenuTypeData<>(InventoryView.class, worldAccess(net.minecraft.world.inventory.SmithingMenu::new)));
+            return CraftMenus.asType(new MenuTypeData<>(InventoryView.class, worldAccess(SmithingMenu::new)));
         }
         if (menuType == MenuType.SMOKER) {
-            return asType(new MenuTypeData<>(FurnaceView.class, tileEntity(net.minecraft.world.level.block.entity.SmokerBlockEntity::new, net.minecraft.world.level.block.Blocks.SMOKER)));
+            return CraftMenus.asType(new MenuTypeData<>(FurnaceView.class, tileEntity(SmokerBlockEntity::new, Blocks.SMOKER)));
         }
         if (menuType == MenuType.CARTOGRAPHY_TABLE) {
-            return asType(new MenuTypeData<>(InventoryView.class, worldAccess(net.minecraft.world.inventory.CartographyTableMenu::new)));
+            return CraftMenus.asType(new MenuTypeData<>(InventoryView.class, worldAccess(CartographyTableMenu::new)));
         }
         if (menuType == MenuType.STONECUTTER) {
-            return asType(new MenuTypeData<>(StonecutterView.class, worldAccess(net.minecraft.world.inventory.StonecutterMenu::new)));
+            return CraftMenus.asType(new MenuTypeData<>(StonecutterView.class, worldAccess(StonecutterMenu::new)));
         }
 
-        return asType(new MenuTypeData<>(InventoryView.class, STANDARD));
+        return CraftMenus.asType(new MenuTypeData<>(InventoryView.class, CraftMenus.STANDARD));
     }
 
     private static <V extends InventoryView> MenuTypeData<V> asType(MenuTypeData<?> data) {

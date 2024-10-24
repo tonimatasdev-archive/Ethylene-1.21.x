@@ -23,82 +23,82 @@ public class CraftPanda extends CraftAnimals implements Panda {
 
     @Override
     public Gene getMainGene() {
-        return fromNms(getHandle().getMainGene());
+        return CraftPanda.fromNms(this.getHandle().getMainGene());
     }
 
     @Override
     public void setMainGene(Gene gene) {
-        getHandle().setMainGene(toNms(gene));
+        this.getHandle().setMainGene(CraftPanda.toNms(gene));
     }
 
     @Override
     public Gene getHiddenGene() {
-        return fromNms(getHandle().getHiddenGene());
+        return CraftPanda.fromNms(this.getHandle().getHiddenGene());
     }
 
     @Override
     public void setHiddenGene(Gene gene) {
-        getHandle().setHiddenGene(toNms(gene));
+        this.getHandle().setHiddenGene(CraftPanda.toNms(gene));
     }
 
     @Override
     public boolean isRolling() {
-        return getHandle().isRolling();
+        return this.getHandle().isRolling();
     }
 
     @Override
     public void setRolling(boolean flag) {
-        getHandle().roll(flag);
+        this.getHandle().roll(flag);
     }
 
     @Override
     public boolean isSneezing() {
-        return getHandle().isSneezing();
+        return this.getHandle().isSneezing();
     }
 
     @Override
     public void setSneezing(boolean flag) {
-        getHandle().sneeze(flag);
+        this.getHandle().sneeze(flag);
     }
 
     @Override
     public boolean isSitting() {
-        return getHandle().isSitting();
+        return this.getHandle().isSitting();
     }
 
     @Override
     public void setSitting(boolean flag) {
-        getHandle().sit(flag);
+        this.getHandle().sit(flag);
     }
 
     @Override
     public boolean isOnBack() {
-        return getHandle().isOnBack();
+        return this.getHandle().isOnBack();
     }
 
     @Override
     public void setOnBack(boolean flag) {
-        getHandle().setOnBack(flag);
+        this.getHandle().setOnBack(flag);
     }
 
     @Override
     public boolean isEating() {
-        return getHandle().isEating();
+        return this.getHandle().isEating();
     }
 
     @Override
     public void setEating(boolean flag) {
-        getHandle().eat(flag);
+        this.getHandle().eat(flag);
     }
 
     @Override
     public boolean isScared() {
-        return getHandle().isScared();
+        return this.getHandle().isScared();
     }
 
     @Override
     public int getUnhappyTicks() {
-        return getHandle().getUnhappyCounter();
+        return this.getHandle().getUnhappyCounter();
     }
 
     public static Gene fromNms(net.minecraft.world.entity.animal.Panda.Gene gene) {

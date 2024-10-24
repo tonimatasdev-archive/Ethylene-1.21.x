@@ -1,8 +1,8 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
-import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
-import net.ethylenemc.interfaces.world.entity.projectile.EthyleneFishingHook;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.projectile.FishingHook;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
@@ -10,13 +10,13 @@ import org.bukkit.entity.FishHook;
 public class CraftFishHook extends CraftProjectile implements FishHook {
     private double biteChance = -1;
 
-    public CraftFishHook(CraftServer server, net.minecraft.world.entity.projectile.FishingHook entity) {
+    public CraftFishHook(CraftServer server, FishingHook entity) {
         super(server, entity);
     }
 
     @Override
-    public net.minecraft.world.entity.projectile.FishingHook getHandle() {
-        return (net.minecraft.world.entity.projectile.FishingHook) entity;
+    public FishingHook getHandle() {
+        return (FishingHook) this.entity;
     }
 
     @Override
@@ -26,129 +26,129 @@ public class CraftFishHook extends CraftProjectile implements FishHook {
 
     @Override
     public int getMinWaitTime() {
-        return ((EthyleneFishingHook) getHandle()).getMinWaitTime();
+        return this.getHandle().minWaitTime;
     }
 
     @Override
     public void setMinWaitTime(int minWaitTime) {
         Preconditions.checkArgument(minWaitTime >= 0 && minWaitTime <= this.getMaxWaitTime(), "The minimum wait time should be between %s and %s (the maximum wait time)", 0, this.getMaxWaitTime());
-        net.minecraft.world.entity.projectile.FishingHook hook = getHandle();
-        ((EthyleneFishingHook) hook).setMinWaitTime(minWaitTime);
+        FishingHook hook = this.getHandle();
+        hook.minWaitTime = minWaitTime;
     }
 
     @Override
     public int getMaxWaitTime() {
-        return ((EthyleneFishingHook) getHandle()).getMaxWaitTime();
+        return this.getHandle().maxWaitTime;
     }
 
     @Override
     public void setMaxWaitTime(int maxWaitTime) {
         Preconditions.checkArgument(maxWaitTime >= 0 && maxWaitTime >= this.getMinWaitTime(), "The maximum wait time should be between %s and %s (the minimum wait time)", 0, this.getMinWaitTime());
-        net.minecraft.world.entity.projectile.FishingHook hook = getHandle();
-        ((EthyleneFishingHook) hook).setMaxWaitTime(maxWaitTime);
+        FishingHook hook = this.getHandle();
+        hook.maxWaitTime = maxWaitTime;
     }
 
     @Override
     public void setWaitTime(int min, int max) {
         Preconditions.checkArgument(min >= 0 && max >= 0 && min <= max, "The minimum/maximum wait time should be higher than or equal to 0 and the minimum wait time");
-        ((EthyleneFishingHook) getHandle()).setMinWaitTime(min);
-        ((EthyleneFishingHook) getHandle()).setMaxWaitTime(max);
+        this.getHandle().minWaitTime = min;
+        this.getHandle().maxWaitTime = max;
     }
 
     @Override
     public int getMinLureTime() {
-        return ((EthyleneFishingHook) getHandle()).getMinLureTime();
+        return this.getHandle().minLureTime;
     }
 
     @Override
     public void setMinLureTime(int minLureTime) {
         Preconditions.checkArgument(minLureTime >= 0 && minLureTime <= this.getMaxLureTime(), "The minimum lure time (%s) should be between 0 and %s (the maximum wait time)", minLureTime, this.getMaxLureTime());
-        ((EthyleneFishingHook) getHandle()).setMinLureTime(minLureTime);
+        this.getHandle().minLureTime = minLureTime;
     }
 
     @Override
     public int getMaxLureTime() {
-        return ((EthyleneFishingHook) getHandle()).getMaxLureTime();
+        return this.getHandle().maxLureTime;
     }
 
     @Override
     public void setMaxLureTime(int maxLureTime) {
         Preconditions.checkArgument(maxLureTime >= 0 && maxLureTime >= this.getMinLureTime(), "The maximum lure time (%s) should be higher than or equal to 0 and %s (the minimum wait time)", maxLureTime, this.getMinLureTime());
-        ((EthyleneFishingHook) getHandle()).setMaxLureTime(maxLureTime);
+        this.getHandle().maxLureTime = maxLureTime;
     }
 
     @Override
     public void setLureTime(int min, int max) {
         Preconditions.checkArgument(min >= 0 && max >= 0 && min <= max, "The minimum/maximum lure time should be higher than or equal to 0 and the minimum wait time.");
-        ((EthyleneFishingHook) getHandle()).setMinLureTime(min);
-        ((EthyleneFishingHook) getHandle()).setMaxLureTime(max);
+        this.getHandle().minLureTime = min;
+        this.getHandle().maxLureTime = max;
     }
 
     @Override
     public float getMinLureAngle() {
-        return ((EthyleneFishingHook) getHandle()).getMinLureAngle();
+        return this.getHandle().minLureAngle;
     }
 
     @Override
     public void setMinLureAngle(float minLureAngle) {
         Preconditions.checkArgument(minLureAngle <= this.getMaxLureAngle(), "The minimum lure angle (%s) should be less than %s (the maximum lure angle)", minLureAngle, this.getMaxLureAngle());
-        ((EthyleneFishingHook) getHandle()).setMinLureAngle(minLureAngle);
+        this.getHandle().minLureAngle = minLureAngle;
     }
 
     @Override
     public float getMaxLureAngle() {
-        return ((EthyleneFishingHook) getHandle()).getMaxLureAngle();
+        return this.getHandle().maxLureAngle;
     }
 
     @Override
     public void setMaxLureAngle(float maxLureAngle) {
         Preconditions.checkArgument(maxLureAngle >= this.getMinLureAngle(), "The minimum lure angle (%s) should be less than %s (the maximum lure angle)", maxLureAngle, this.getMinLureAngle());
-        ((EthyleneFishingHook) getHandle()).setMaxLureAngle(maxLureAngle);
+        this.getHandle().maxLureAngle = maxLureAngle;
     }
 
     @Override
     public void setLureAngle(float min, float max) {
         Preconditions.checkArgument(min <= max, "The minimum lure (%s) angle should be less than the maximum lure angle (%s)", min, max);
-        ((EthyleneFishingHook) getHandle()).setMinLureAngle(min);
-        ((EthyleneFishingHook) getHandle()).setMaxLureAngle(max);
+        this.getHandle().minLureAngle = min;
+        this.getHandle().maxLureAngle = max;
     }
 
     @Override
     public boolean isSkyInfluenced() {
-        return ((EthyleneFishingHook) getHandle()).getSkyInfluenced();
+        return this.getHandle().skyInfluenced;
     }
 
     @Override
     public void setSkyInfluenced(boolean skyInfluenced) {
-        ((EthyleneFishingHook) getHandle()).setSkyInfluenced(skyInfluenced);
+        this.getHandle().skyInfluenced = skyInfluenced;
     }
 
     @Override
     public boolean isRainInfluenced() {
-        return ((EthyleneFishingHook) getHandle()).getRainInfluenced();
+        return this.getHandle().rainInfluenced;
     }
 
     @Override
     public void setRainInfluenced(boolean rainInfluenced) {
-        ((EthyleneFishingHook) getHandle()).setRainInfluenced(rainInfluenced);
+        this.getHandle().rainInfluenced = rainInfluenced;
     }
 
     @Override
     public boolean getApplyLure() {
-        return ((EthyleneFishingHook) getHandle()).getApplyLure();
+        return this.getHandle().applyLure;
     }
 
     @Override
     public void setApplyLure(boolean applyLure) {
-        ((EthyleneFishingHook) getHandle()).setApplyLure(applyLure);
+        this.getHandle().applyLure = applyLure;
     }
 
     @Override
     public double getBiteChance() {
-        net.minecraft.world.entity.projectile.FishingHook hook = getHandle();
+        FishingHook hook = this.getHandle();
 
         if (this.biteChance == -1) {
-            if (hook.level().isRainingAt(net.minecraft.core.BlockPos.containing(hook.position()).offset(0, 1, 0))) {
+            if (hook.level().isRainingAt(BlockPos.containing(hook.position()).offset(0, 1, 0))) {
                 return 1 / 300.0;
             }
             return 1 / 500.0;
@@ -164,26 +164,26 @@ public class CraftFishHook extends CraftProjectile implements FishHook {
 
     @Override
     public boolean isInOpenWater() {
-        return getHandle().isOpenWaterFishing();
+        return this.getHandle().isOpenWaterFishing();
     }
 
     @Override
     public Entity getHookedEntity() {
-        net.minecraft.world.entity.Entity hooked = getHandle().hookedIn;
-        return (hooked != null) ? ((EthyleneEntity) hooked).getBukkitEntity() : null;
+        net.minecraft.world.entity.Entity hooked = this.getHandle().hookedIn;
+        return (hooked != null) ? hooked.getBukkitEntity() : null;
     }
 
     @Override
     public void setHookedEntity(Entity entity) {
-        net.minecraft.world.entity.projectile.FishingHook hook = getHandle();
+        FishingHook hook = this.getHandle();
 
         hook.hookedIn = (entity != null) ? ((CraftEntity) entity).getHandle() : null;
-        hook.getEntityData().set(net.minecraft.world.entity.projectile.FishingHook.DATA_HOOKED_ENTITY, hook.hookedIn != null ? hook.hookedIn.getId() + 1 : 0);
+        hook.getEntityData().set(FishingHook.DATA_HOOKED_ENTITY, hook.hookedIn != null ? hook.hookedIn.getId() + 1 : 0);
     }
 
     @Override
     public boolean pullHookedEntity() {
-        net.minecraft.world.entity.projectile.FishingHook hook = getHandle();
+        FishingHook hook = this.getHandle();
         if (hook.hookedIn == null) {
             return false;
         }
@@ -194,6 +194,6 @@ public class CraftFishHook extends CraftProjectile implements FishHook {
 
     @Override
     public HookState getState() {
-        return HookState.values()[getHandle().currentState.ordinal()];
+        return HookState.values()[this.getHandle().currentState.ordinal()];
     }
 }

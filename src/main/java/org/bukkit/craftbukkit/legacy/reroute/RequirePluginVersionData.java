@@ -28,16 +28,16 @@ public record RequirePluginVersionData(ApiVersion minInclusive, ApiVersion maxIn
                 throw new IllegalArgumentException("Min inclusive cannot be newer than max inclusive.");
             }
         }
-        
+
         return new RequirePluginVersionData(minInclusive, maxInclusive);
     }
 
     public boolean test(ApiVersion pluginVersion) {
-        if (minInclusive != null && pluginVersion.isOlderThan(minInclusive)) {
+        if (this.minInclusive != null && pluginVersion.isOlderThan(this.minInclusive)) {
             return false;
         }
 
-        if (maxInclusive != null && pluginVersion.isNewerThan(maxInclusive)) {
+        if (this.maxInclusive != null && pluginVersion.isNewerThan(this.maxInclusive)) {
             return false;
         }
 

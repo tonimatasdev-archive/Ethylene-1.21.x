@@ -19,12 +19,12 @@ public final class CraftMinecartDetector extends org.bukkit.craftbukkit.block.da
 
     @Override
     public boolean isPowered() {
-        return get(POWERED);
+        return this.get(CraftMinecartDetector.POWERED);
     }
 
     @Override
     public void setPowered(boolean powered) {
-        set(POWERED, powered);
+        this.set(CraftMinecartDetector.POWERED, powered);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftRail
@@ -33,17 +33,17 @@ public final class CraftMinecartDetector extends org.bukkit.craftbukkit.block.da
 
     @Override
     public org.bukkit.block.data.Rail.Shape getShape() {
-        return get(SHAPE, org.bukkit.block.data.Rail.Shape.class);
+        return this.get(CraftMinecartDetector.SHAPE, org.bukkit.block.data.Rail.Shape.class);
     }
 
     @Override
     public void setShape(org.bukkit.block.data.Rail.Shape shape) {
-        set(SHAPE, shape);
+        this.set(CraftMinecartDetector.SHAPE, shape);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.data.Rail.Shape> getShapes() {
-        return getValues(SHAPE, org.bukkit.block.data.Rail.Shape.class);
+        return this.getValues(CraftMinecartDetector.SHAPE, org.bukkit.block.data.Rail.Shape.class);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftWaterlogged
@@ -52,11 +52,11 @@ public final class CraftMinecartDetector extends org.bukkit.craftbukkit.block.da
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftMinecartDetector.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftMinecartDetector.WATERLOGGED, waterlogged);
     }
 }

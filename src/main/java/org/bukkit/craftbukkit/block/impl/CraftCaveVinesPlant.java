@@ -19,11 +19,11 @@ public final class CraftCaveVinesPlant extends org.bukkit.craftbukkit.block.data
 
     @Override
     public boolean isBerries() {
-        return get(BERRIES);
+        return this.get(CraftCaveVinesPlant.BERRIES);
     }
 
     @Override
     public void setBerries(boolean berries) {
-        set(BERRIES, berries);
+        this.set(CraftCaveVinesPlant.BERRIES, berries);
     }
 }

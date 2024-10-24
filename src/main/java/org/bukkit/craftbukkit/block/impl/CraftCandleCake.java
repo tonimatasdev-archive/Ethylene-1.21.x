@@ -19,11 +19,11 @@ public final class CraftCandleCake extends org.bukkit.craftbukkit.block.data.Cra
 
     @Override
     public boolean isLit() {
-        return get(LIT);
+        return this.get(CraftCandleCake.LIT);
     }
 
     @Override
     public void setLit(boolean lit) {
-        set(LIT, lit);
+        this.set(CraftCandleCake.LIT, lit);
     }
 }

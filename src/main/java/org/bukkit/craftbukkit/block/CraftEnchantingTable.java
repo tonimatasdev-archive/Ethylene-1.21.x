@@ -1,13 +1,14 @@
 package org.bukkit.craftbukkit.block;
 
+import net.minecraft.world.level.block.entity.EnchantingTableBlockEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.EnchantingTable;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 
-public class CraftEnchantingTable extends CraftBlockEntityState<net.minecraft.world.level.block.entity.EnchantingTableBlockEntity> implements EnchantingTable {
+public class CraftEnchantingTable extends CraftBlockEntityState<EnchantingTableBlockEntity> implements EnchantingTable {
 
-    public CraftEnchantingTable(World world, net.minecraft.world.level.block.entity.EnchantingTableBlockEntity tileEntity) {
+    public CraftEnchantingTable(World world, EnchantingTableBlockEntity tileEntity) {
         super(world, tileEntity);
     }
 
@@ -17,7 +18,7 @@ public class CraftEnchantingTable extends CraftBlockEntityState<net.minecraft.wo
 
     @Override
     public String getCustomName() {
-        net.minecraft.world.level.block.entity.EnchantingTableBlockEntity enchant = this.getSnapshot();
+        EnchantingTableBlockEntity enchant = this.getSnapshot();
         return enchant.hasCustomName() ? CraftChatMessage.fromComponent(enchant.getCustomName()) : null;
     }
 
@@ -27,7 +28,7 @@ public class CraftEnchantingTable extends CraftBlockEntityState<net.minecraft.wo
     }
 
     @Override
-    public void applyTo(net.minecraft.world.level.block.entity.EnchantingTableBlockEntity enchantingTable) {
+    public void applyTo(EnchantingTableBlockEntity enchantingTable) {
         super.applyTo(enchantingTable);
 
         if (!this.getSnapshot().hasCustomName()) {

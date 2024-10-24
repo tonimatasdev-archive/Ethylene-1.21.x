@@ -1,13 +1,14 @@
 package org.bukkit.craftbukkit.block;
 
-import net.ethylenemc.interfaces.world.level.block.entity.EthyleneContainerOpenersCounter;
+import net.minecraft.world.level.block.entity.EnderChestBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.EnderChest;
 
-public class CraftEnderChest extends CraftBlockEntityState<net.minecraft.world.level.block.entity.EnderChestBlockEntity> implements EnderChest {
+public class CraftEnderChest extends CraftBlockEntityState<EnderChestBlockEntity> implements EnderChest {
 
-    public CraftEnderChest(World world, net.minecraft.world.level.block.entity.EnderChestBlockEntity tileEntity) {
+    public CraftEnderChest(World world, EnderChestBlockEntity tileEntity) {
         super(world, tileEntity);
     }
 
@@ -17,28 +18,28 @@ public class CraftEnderChest extends CraftBlockEntityState<net.minecraft.world.l
 
     @Override
     public void open() {
-        requirePlaced();
-        if (!((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).getOpened() && getWorldHandle() instanceof net.minecraft.world.level.Level) {
-            net.minecraft.world.level.block.state.BlockState block = getTileEntity().getBlockState();
-            int openCount = getTileEntity().openersCounter.getOpenerCount();
+        this.requirePlaced();
+        if (!this.getTileEntity().openersCounter.opened && this.getWorldHandle() instanceof net.minecraft.world.level.Level) {
+            BlockState block = this.getTileEntity().getBlockState();
+            int openCount = this.getTileEntity().openersCounter.getOpenerCount();
 
-            ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).onAPIOpen((net.minecraft.world.level.Level) getWorldHandle(), getPosition(), block);
-            ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).openerAPICountChanged((net.minecraft.world.level.Level) getWorldHandle(), getPosition(), block, openCount, openCount + 1);
+            this.getTileEntity().openersCounter.onAPIOpen((net.minecraft.world.level.Level) this.getWorldHandle(), this.getPosition(), block);
+            this.getTileEntity().openersCounter.openerAPICountChanged((net.minecraft.world.level.Level) this.getWorldHandle(), this.getPosition(), block, openCount, openCount + 1);
         }
-        ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).setOpened(true);
+        this.getTileEntity().openersCounter.opened = true;
     }
 
     @Override
     public void close() {
-        requirePlaced();
-        if (((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).getOpened() && getWorldHandle() instanceof net.minecraft.world.level.Level) {
-            net.minecraft.world.level.block.state.BlockState block = getTileEntity().getBlockState();
-            int openCount = getTileEntity().openersCounter.getOpenerCount();
+        this.requirePlaced();
+        if (this.getTileEntity().openersCounter.opened && this.getWorldHandle() instanceof net.minecraft.world.level.Level) {
+            BlockState block = this.getTileEntity().getBlockState();
+            int openCount = this.getTileEntity().openersCounter.getOpenerCount();
 
-            ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).onAPIClose((net.minecraft.world.level.Level) getWorldHandle(), getPosition(), block);
-            ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).openerAPICountChanged((net.minecraft.world.level.Level) getWorldHandle(), getPosition(), block, openCount, 0);
+            this.getTileEntity().openersCounter.onAPIClose((net.minecraft.world.level.Level) this.getWorldHandle(), this.getPosition(), block);
+            this.getTileEntity().openersCounter.openerAPICountChanged((net.minecraft.world.level.Level) this.getWorldHandle(), this.getPosition(), block, openCount, 0);
         }
-        ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).setOpened(false);
+        this.getTileEntity().openersCounter.opened = false;
     }
 
     @Override

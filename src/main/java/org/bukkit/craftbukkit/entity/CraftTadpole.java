@@ -1,16 +1,17 @@
 package org.bukkit.craftbukkit.entity;
 
+import net.minecraft.world.entity.animal.frog.Tadpole;
 import org.bukkit.craftbukkit.CraftServer;
 
 public class CraftTadpole extends CraftFish implements org.bukkit.entity.Tadpole {
 
-    public CraftTadpole(CraftServer server, net.minecraft.world.entity.animal.frog.Tadpole entity) {
+    public CraftTadpole(CraftServer server, Tadpole entity) {
         super(server, entity);
     }
 
     @Override
-    public net.minecraft.world.entity.animal.frog.Tadpole getHandle() {
-        return (net.minecraft.world.entity.animal.frog.Tadpole) entity;
+    public Tadpole getHandle() {
+        return (Tadpole) this.entity;
     }
 
     @Override
@@ -20,11 +21,11 @@ public class CraftTadpole extends CraftFish implements org.bukkit.entity.Tadpole
 
     @Override
     public int getAge() {
-        return getHandle().age;
+        return this.getHandle().age;
     }
 
     @Override
     public void setAge(int age) {
-        getHandle().age = age;
+        this.getHandle().age = age;
     }
 }

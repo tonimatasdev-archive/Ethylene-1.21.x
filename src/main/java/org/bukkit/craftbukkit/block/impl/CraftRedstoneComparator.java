@@ -19,12 +19,12 @@ public final class CraftRedstoneComparator extends org.bukkit.craftbukkit.block.
 
     @Override
     public org.bukkit.block.data.type.Comparator.Mode getMode() {
-        return get(MODE, org.bukkit.block.data.type.Comparator.Mode.class);
+        return this.get(CraftRedstoneComparator.MODE, org.bukkit.block.data.type.Comparator.Mode.class);
     }
 
     @Override
     public void setMode(org.bukkit.block.data.type.Comparator.Mode mode) {
-        set(MODE, mode);
+        this.set(CraftRedstoneComparator.MODE, mode);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftDirectional
@@ -33,17 +33,17 @@ public final class CraftRedstoneComparator extends org.bukkit.craftbukkit.block.
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftRedstoneComparator.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftRedstoneComparator.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftRedstoneComparator.FACING, org.bukkit.block.BlockFace.class);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftPowerable
@@ -52,11 +52,11 @@ public final class CraftRedstoneComparator extends org.bukkit.craftbukkit.block.
 
     @Override
     public boolean isPowered() {
-        return get(POWERED);
+        return this.get(CraftRedstoneComparator.POWERED);
     }
 
     @Override
     public void setPowered(boolean powered) {
-        set(POWERED, powered);
+        this.set(CraftRedstoneComparator.POWERED, powered);
     }
 }

@@ -1,6 +1,8 @@
 package org.bukkit.craftbukkit.damage;
 
 import com.google.common.base.Preconditions;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.craftbukkit.CraftRegistry;
@@ -32,7 +34,7 @@ public class CraftDamageType implements DamageType, Handleable<net.minecraft.wor
 
     @Override
     public DamageScaling getDamageScaling() {
-        return damageScalingToBukkit(this.getHandle().scaling());
+        return CraftDamageType.damageScalingToBukkit(this.getHandle().scaling());
     }
 
     @Override
@@ -42,7 +44,7 @@ public class CraftDamageType implements DamageType, Handleable<net.minecraft.wor
 
     @Override
     public DeathMessageType getDeathMessageType() {
-        return deathMessageTypeToBukkit(this.getHandle().deathMessageType());
+        return CraftDamageType.deathMessageTypeToBukkit(this.getHandle().deathMessageType());
     }
 
     @Override
@@ -96,16 +98,16 @@ public class CraftDamageType implements DamageType, Handleable<net.minecraft.wor
         };
     }
 
-    public static DamageType minecraftHolderToBukkit(net.minecraft.core.Holder<net.minecraft.world.damagesource.DamageType> minecraftHolder) {
-        return minecraftToBukkit(minecraftHolder.value());
+    public static DamageType minecraftHolderToBukkit(Holder<net.minecraft.world.damagesource.DamageType> minecraftHolder) {
+        return CraftDamageType.minecraftToBukkit(minecraftHolder.value());
     }
 
-    public static net.minecraft.core.Holder<net.minecraft.world.damagesource.DamageType> bukkitToMinecraftHolder(DamageType bukkitDamageType) {
+    public static Holder<net.minecraft.world.damagesource.DamageType> bukkitToMinecraftHolder(DamageType bukkitDamageType) {
         Preconditions.checkArgument(bukkitDamageType != null);
 
-        net.minecraft.core.Registry<net.minecraft.world.damagesource.DamageType> registry = CraftRegistry.getMinecraftRegistry(net.minecraft.core.registries.Registries.DAMAGE_TYPE);
+        net.minecraft.core.Registry<net.minecraft.world.damagesource.DamageType> registry = CraftRegistry.getMinecraftRegistry(Registries.DAMAGE_TYPE);
 
-        if (registry.wrapAsHolder(bukkitToMinecraft(bukkitDamageType)) instanceof net.minecraft.core.Holder.Reference<net.minecraft.world.damagesource.DamageType> holder) {
+        if (registry.wrapAsHolder(CraftDamageType.bukkitToMinecraft(bukkitDamageType)) instanceof Holder.Reference<net.minecraft.world.damagesource.DamageType> holder) {
             return holder;
         }
 
@@ -118,6 +120,6 @@ public class CraftDamageType implements DamageType, Handleable<net.minecraft.wor
     }
 
     public static DamageType minecraftToBukkit(net.minecraft.world.damagesource.DamageType minecraftDamageType) {
-        return CraftRegistry.minecraftToBukkit(minecraftDamageType, net.minecraft.core.registries.Registries.DAMAGE_TYPE, Registry.DAMAGE_TYPE);
+        return CraftRegistry.minecraftToBukkit(minecraftDamageType, Registries.DAMAGE_TYPE, Registry.DAMAGE_TYPE);
     }
 }

@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
+import net.minecraft.world.entity.monster.SpellcasterIllager;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Evoker;
 
@@ -21,11 +22,11 @@ public class CraftEvoker extends CraftSpellcaster implements Evoker {
 
     @Override
     public Evoker.Spell getCurrentSpell() {
-        return Evoker.Spell.values()[getHandle().getCurrentSpell().ordinal()];
+        return Evoker.Spell.values()[this.getHandle().getCurrentSpell().ordinal()];
     }
 
     @Override
     public void setCurrentSpell(Evoker.Spell spell) {
-        getHandle().setIsCastingSpell(spell == null ? net.minecraft.world.entity.monster.SpellcasterIllager.IllagerSpell.NONE : net.minecraft.world.entity.monster.SpellcasterIllager.IllagerSpell.byId(spell.ordinal()));
+        this.getHandle().setIsCastingSpell(spell == null ? SpellcasterIllager.IllagerSpell.NONE : SpellcasterIllager.IllagerSpell.byId(spell.ordinal()));
     }
 }

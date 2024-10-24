@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit;
 
+import net.minecraft.core.registries.Registries;
 import org.bukkit.GameEvent;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -9,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class CraftGameEvent extends GameEvent implements Handleable<net.minecraft.world.level.gameevent.GameEvent> {
 
     public static GameEvent minecraftToBukkit(net.minecraft.world.level.gameevent.GameEvent minecraft) {
-        return CraftRegistry.minecraftToBukkit(minecraft, net.minecraft.core.registries.Registries.GAME_EVENT, Registry.GAME_EVENT);
+        return CraftRegistry.minecraftToBukkit(minecraft, Registries.GAME_EVENT, Registry.GAME_EVENT);
     }
 
     public static net.minecraft.world.level.gameevent.GameEvent bukkitToMinecraft(GameEvent bukkit) {
@@ -26,13 +27,13 @@ public class CraftGameEvent extends GameEvent implements Handleable<net.minecraf
 
     @Override
     public net.minecraft.world.level.gameevent.GameEvent getHandle() {
-        return handle;
+        return this.handle;
     }
 
     @NotNull
     @Override
     public NamespacedKey getKey() {
-        return key;
+        return this.key;
     }
 
     @Override
@@ -45,16 +46,16 @@ public class CraftGameEvent extends GameEvent implements Handleable<net.minecraf
             return false;
         }
 
-        return getKey().equals(((GameEvent) other).getKey());
+        return this.getKey().equals(((GameEvent) other).getKey());
     }
 
     @Override
     public int hashCode() {
-        return getKey().hashCode();
+        return this.getKey().hashCode();
     }
 
     @Override
     public String toString() {
-        return "CraftGameEvent{key=" + key + "}";
+        return "CraftGameEvent{key=" + this.key + "}";
     }
 }

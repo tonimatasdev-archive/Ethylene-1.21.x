@@ -1,11 +1,12 @@
 package org.bukkit.craftbukkit.block;
 
+import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-public class CraftFurnaceFurnace extends CraftFurnace<net.minecraft.world.level.block.entity.FurnaceBlockEntity> {
+public class CraftFurnaceFurnace extends CraftFurnace<FurnaceBlockEntity> {
 
-    public CraftFurnaceFurnace(World world, net.minecraft.world.level.block.entity.FurnaceBlockEntity tileEntity) {
+    public CraftFurnaceFurnace(World world, FurnaceBlockEntity tileEntity) {
         super(world, tileEntity);
     }
 

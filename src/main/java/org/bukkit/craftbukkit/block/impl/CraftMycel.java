@@ -19,11 +19,11 @@ public final class CraftMycel extends org.bukkit.craftbukkit.block.data.CraftBlo
 
     @Override
     public boolean isSnowy() {
-        return get(SNOWY);
+        return this.get(CraftMycel.SNOWY);
     }
 
     @Override
     public void setSnowy(boolean snowy) {
-        set(SNOWY, snowy);
+        this.set(CraftMycel.SNOWY, snowy);
     }
 }

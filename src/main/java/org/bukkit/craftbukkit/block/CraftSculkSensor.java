@@ -1,11 +1,12 @@
 package org.bukkit.craftbukkit.block;
 
 import com.google.common.base.Preconditions;
+import net.minecraft.world.level.block.entity.SculkSensorBlockEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.SculkSensor;
 
-public class CraftSculkSensor<T extends net.minecraft.world.level.block.entity.SculkSensorBlockEntity> extends CraftBlockEntityState<T> implements SculkSensor {
+public class CraftSculkSensor<T extends SculkSensorBlockEntity> extends CraftBlockEntityState<T> implements SculkSensor {
 
     public CraftSculkSensor(World world, T tileEntity) {
         super(world, tileEntity);
@@ -17,13 +18,13 @@ public class CraftSculkSensor<T extends net.minecraft.world.level.block.entity.S
 
     @Override
     public int getLastVibrationFrequency() {
-        return getSnapshot().getLastVibrationFrequency();
+        return this.getSnapshot().getLastVibrationFrequency();
     }
 
     @Override
     public void setLastVibrationFrequency(int lastVibrationFrequency) {
         Preconditions.checkArgument(0 <= lastVibrationFrequency && lastVibrationFrequency <= 15, "Vibration frequency must be between 0-15");
-        getSnapshot().lastVibrationFrequency = lastVibrationFrequency;
+        this.getSnapshot().lastVibrationFrequency = lastVibrationFrequency;
     }
 
     @Override

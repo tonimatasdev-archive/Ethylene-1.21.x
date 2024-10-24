@@ -19,16 +19,16 @@ public final class CraftBeetroot extends org.bukkit.craftbukkit.block.data.Craft
 
     @Override
     public int getAge() {
-        return get(AGE);
+        return this.get(CraftBeetroot.AGE);
     }
 
     @Override
     public void setAge(int age) {
-        set(AGE, age);
+        this.set(CraftBeetroot.AGE, age);
     }
 
     @Override
     public int getMaximumAge() {
-        return getMax(AGE);
+        return getMax(CraftBeetroot.AGE);
     }
 }

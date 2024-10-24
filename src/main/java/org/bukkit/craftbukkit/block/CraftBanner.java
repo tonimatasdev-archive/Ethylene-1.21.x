@@ -3,8 +3,9 @@ package org.bukkit.craftbukkit.block;
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.ethylenemc.interfaces.world.level.block.entity.EthyleneBannerBlockEntity;
+import net.minecraft.world.level.block.AbstractBannerBlock;
+import net.minecraft.world.level.block.entity.BannerBlockEntity;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -12,12 +13,12 @@ import org.bukkit.block.Banner;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.craftbukkit.block.banner.CraftPatternType;
 
-public class CraftBanner extends CraftBlockEntityState<net.minecraft.world.level.block.entity.BannerBlockEntity> implements Banner {
+public class CraftBanner extends CraftBlockEntityState<BannerBlockEntity> implements Banner {
 
     private DyeColor base;
     private List<Pattern> patterns;
 
-    public CraftBanner(World world, net.minecraft.world.level.block.entity.BannerBlockEntity tileEntity) {
+    public CraftBanner(World world, BannerBlockEntity tileEntity) {
         super(world, tileEntity);
     }
 
@@ -28,16 +29,16 @@ public class CraftBanner extends CraftBlockEntityState<net.minecraft.world.level
     }
 
     @Override
-    public void load(net.minecraft.world.level.block.entity.BannerBlockEntity banner) {
+    public void load(BannerBlockEntity banner) {
         super.load(banner);
 
-        base = DyeColor.getByWoolData((byte) ((net.minecraft.world.level.block.AbstractBannerBlock) this.data.getBlock()).getColor().getId());
-        patterns = new ArrayList<Pattern>();
+        this.base = DyeColor.getByWoolData((byte) ((AbstractBannerBlock) this.data.getBlock()).getColor().getId());
+        this.patterns = new ArrayList<Pattern>();
 
         if (banner.getPatterns() != null) {
             for (int i = 0; i < banner.getPatterns().layers().size(); i++) {
-                net.minecraft.world.level.block.entity.BannerPatternLayers.Layer p = banner.getPatterns().layers().get(i);
-                patterns.add(new Pattern(DyeColor.getByWoolData((byte) p.color().getId()), CraftPatternType.minecraftHolderToBukkit(p.pattern())));
+                BannerPatternLayers.Layer p = banner.getPatterns().layers().get(i);
+                this.patterns.add(new Pattern(DyeColor.getByWoolData((byte) p.color().getId()), CraftPatternType.minecraftHolderToBukkit(p.pattern())));
             }
         }
     }
@@ -55,7 +56,7 @@ public class CraftBanner extends CraftBlockEntityState<net.minecraft.world.level
 
     @Override
     public List<Pattern> getPatterns() {
-        return new ArrayList<Pattern>(patterns);
+        return new ArrayList<Pattern>(this.patterns);
     }
 
     @Override
@@ -85,21 +86,21 @@ public class CraftBanner extends CraftBlockEntityState<net.minecraft.world.level
 
     @Override
     public int numberOfPatterns() {
-        return patterns.size();
+        return this.patterns.size();
     }
 
     @Override
-    public void applyTo(net.minecraft.world.level.block.entity.BannerBlockEntity banner) {
+    public void applyTo(BannerBlockEntity banner) {
         super.applyTo(banner);
 
-        banner.baseColor = net.minecraft.world.item.DyeColor.byId(base.getWoolData());
+        banner.baseColor = net.minecraft.world.item.DyeColor.byId(this.base.getWoolData());
 
-        List<net.minecraft.world.level.block.entity.BannerPatternLayers.Layer> newPatterns = new ArrayList<>();
+        List<BannerPatternLayers.Layer> newPatterns = new ArrayList<>();
 
-        for (Pattern p : patterns) {
+        for (Pattern p : this.patterns) {
             newPatterns.add(new net.minecraft.world.level.block.entity.BannerPatternLayers.Layer(CraftPatternType.bukkitToMinecraftHolder(p.getPattern()), net.minecraft.world.item.DyeColor.byId(p.getColor().getWoolData())));
         }
-        ((EthyleneBannerBlockEntity) banner).setPatterns(new net.minecraft.world.level.block.entity.BannerPatternLayers(newPatterns));
+        banner.setPatterns(new BannerPatternLayers(newPatterns));
     }
 
     @Override

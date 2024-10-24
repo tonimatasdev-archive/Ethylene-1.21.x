@@ -12,20 +12,20 @@ public abstract class CraftChiseledBookshelf extends CraftBlockData implements C
 
     @Override
     public boolean isSlotOccupied(int slot) {
-        return get(SLOT_OCCUPIED[slot]);
+        return this.get(CraftChiseledBookshelf.SLOT_OCCUPIED[slot]);
     }
 
     @Override
     public void setSlotOccupied(int slot, boolean has) {
-        set(SLOT_OCCUPIED[slot], has);
+        this.set(CraftChiseledBookshelf.SLOT_OCCUPIED[slot], has);
     }
 
     @Override
     public java.util.Set<Integer> getOccupiedSlots() {
         com.google.common.collect.ImmutableSet.Builder<Integer> slots = com.google.common.collect.ImmutableSet.builder();
 
-        for (int index = 0; index < getMaximumOccupiedSlots(); index++) {
-            if (isSlotOccupied(index)) {
+        for (int index = 0; index < this.getMaximumOccupiedSlots(); index++) {
+            if (this.isSlotOccupied(index)) {
                 slots.add(index);
             }
         }
@@ -35,6 +35,6 @@ public abstract class CraftChiseledBookshelf extends CraftBlockData implements C
 
     @Override
     public int getMaximumOccupiedSlots() {
-        return SLOT_OCCUPIED.length;
+        return CraftChiseledBookshelf.SLOT_OCCUPIED.length;
     }
 }

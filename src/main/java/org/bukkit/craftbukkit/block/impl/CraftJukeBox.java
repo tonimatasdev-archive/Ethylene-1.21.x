@@ -19,6 +19,6 @@ public final class CraftJukeBox extends org.bukkit.craftbukkit.block.data.CraftB
 
     @Override
     public boolean hasRecord() {
-        return get(HAS_RECORD);
+        return this.get(CraftJukeBox.HAS_RECORD);
     }
 }

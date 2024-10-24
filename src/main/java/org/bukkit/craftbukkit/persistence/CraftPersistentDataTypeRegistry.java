@@ -12,6 +12,19 @@ import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import net.minecraft.nbt.ByteArrayTag;
+import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.IntArrayTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.LongArrayTag;
+import net.minecraft.nbt.LongTag;
+import net.minecraft.nbt.ShortTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import org.bukkit.persistence.ListPersistentDataType;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -20,11 +33,11 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The craft persistent data type registry, at its core, is responsible for the
  * conversion process between a {@link PersistentDataType} and a respective
- * {@link net.minecraft.nbt.Tag} instance.
+ * {@link Tag} instance.
  * <p>
  * It does so by creating {@link TagAdapter} instances that are capable of
  * mappings the supported "primitive types" of {@link PersistentDataType}s to
- * their respective {@link net.minecraft.nbt.Tag} instances.
+ * their respective {@link Tag} instances.
  * <p>
  * To accomplish this, the class makes <b>heavy</b> use of raw arguments. Their
  * validity is enforced by the mapping of class to {@link TagAdapter}
@@ -37,39 +50,39 @@ public final class CraftPersistentDataTypeRegistry {
 
     /**
      * A tag adapter is a closely related type to a specific implementation of
-     * the {@link net.minecraft.nbt.Tag} interface. It exists to convert from and to the
-     * respective value of a {@link net.minecraft.nbt.Tag} to a "primitive type" for later
+     * the {@link Tag} interface. It exists to convert from and to the
+     * respective value of a {@link Tag} to a "primitive type" for later
      * usage in {@link PersistentDataType}.
      *
      * @param primitiveType the class of the primitive type, e.g.
      * {@link String}.
      * @param nbtBaseType the class of the tag implementation that is used to
-     * store this primitive type, e.g {@link net.minecraft.nbt.StringTag}.
+     * store this primitive type, e.g {@link StringTag}.
      * @param nmsTypeByte the byte identifier of the tag as defined by
-     * {@link net.minecraft.nbt.Tag#getId()}.
+     * {@link Tag#getId()}.
      * @param builder a bi function that is responsible for mapping a "primitive
-     * type" and its respective {@link PersistentDataType} to a {@link net.minecraft.nbt.Tag}.
+     * type" and its respective {@link PersistentDataType} to a {@link Tag}.
      * @param extractor a bi function that is responsible for extracting a
-     * "primitive type" from a {@link net.minecraft.nbt.Tag} given a
+     * "primitive type" from a {@link Tag} given a
      * {@link PersistentDataType}.
      * @param matcher a bi predicate that is responsible for computing if the
-     * passed {@link net.minecraft.nbt.Tag} holds a value that the {@link PersistentDataType}
+     * passed {@link Tag} holds a value that the {@link PersistentDataType}
      * can extract.
      * @param <P> the generic type of the primitive the persistent data type
      * expects.
-     * @param <T> the generic type of the concrete {@link net.minecraft.nbt.Tag}
+     * @param <T> the generic type of the concrete {@link Tag}
      * implementation that the primitive type is mapped into.
      */
-    private record TagAdapter<P, T extends net.minecraft.nbt.Tag>(
+    private record TagAdapter<P, T extends Tag>(
             Class<P> primitiveType,
             Class<T> nbtBaseType,
             byte nmsTypeByte,
             BiFunction<PersistentDataType<P, ?>, P, T> builder,
             BiFunction<PersistentDataType<P, ?>, T, P> extractor,
-            BiPredicate<PersistentDataType<P, ?>, net.minecraft.nbt.Tag> matcher) {
+            BiPredicate<PersistentDataType<P, ?>, Tag> matcher) {
 
         /**
-         * Extract the primitive value from the {@link net.minecraft.nbt.Tag}.
+         * Extract the primitive value from the {@link Tag}.
          *
          * @param base the base to extract from
          * @return the value stored inside the tag
@@ -77,8 +90,8 @@ public final class CraftPersistentDataTypeRegistry {
          * the defined base type and therefore is not applicable to the
          * extractor function.
          */
-        private P extract(final PersistentDataType<P, ?> dataType, final net.minecraft.nbt.Tag base) {
-            Preconditions.checkArgument(this.nbtBaseType.isInstance(base), "The provided net.minecraft.nbt.Tag was of the type %s. Expected type %s", base.getClass().getSimpleName(), this.nbtBaseType.getSimpleName());
+        private P extract(final PersistentDataType<P, ?> dataType, final Tag base) {
+            Preconditions.checkArgument(this.nbtBaseType.isInstance(base), "The provided NBTBase was of the type %s. Expected type %s", base.getClass().getSimpleName(), this.nbtBaseType.getSimpleName());
             return this.extractor.apply(dataType, this.nbtBaseType.cast(base));
         }
 
@@ -98,12 +111,12 @@ public final class CraftPersistentDataTypeRegistry {
 
         /**
          * Computes if the provided persistent data type's primitive type is a
-         * representation of the {@link net.minecraft.nbt.Tag}.
+         * representation of the {@link Tag}.
          *
          * @param base the base tag instance to check against
          * @return if the tag was an instance of the set type
          */
-        private boolean isInstance(final PersistentDataType<P, ?> persistentDataType, final net.minecraft.nbt.Tag base) {
+        private boolean isInstance(final PersistentDataType<P, ?> persistentDataType, final Tag base) {
             return this.matcher.test(persistentDataType, base);
         }
     }
@@ -127,63 +140,63 @@ public final class CraftPersistentDataTypeRegistry {
         // Primitives
         if (Objects.equals(Byte.class, type)) {
             return this.createAdapter(
-                    Byte.class, net.minecraft.nbt.ByteTag.class, net.minecraft.nbt.Tag.TAG_BYTE,
-                    net.minecraft.nbt.ByteTag::valueOf, net.minecraft.nbt.ByteTag::getAsByte
+                    Byte.class, ByteTag.class, Tag.TAG_BYTE,
+                    ByteTag::valueOf, ByteTag::getAsByte
             );
         }
         if (Objects.equals(Short.class, type)) {
             return this.createAdapter(
-                    Short.class, net.minecraft.nbt.ShortTag.class, net.minecraft.nbt.Tag.TAG_SHORT, net.minecraft.nbt.ShortTag::valueOf, net.minecraft.nbt.ShortTag::getAsShort
+                    Short.class, ShortTag.class, Tag.TAG_SHORT, ShortTag::valueOf, ShortTag::getAsShort
             );
         }
         if (Objects.equals(Integer.class, type)) {
             return this.createAdapter(
-                    Integer.class, net.minecraft.nbt.IntTag.class, net.minecraft.nbt.Tag.TAG_INT, net.minecraft.nbt.IntTag::valueOf, net.minecraft.nbt.IntTag::getAsInt
+                    Integer.class, IntTag.class, Tag.TAG_INT, IntTag::valueOf, IntTag::getAsInt
             );
         }
         if (Objects.equals(Long.class, type)) {
             return this.createAdapter(
-                    Long.class, net.minecraft.nbt.LongTag.class, net.minecraft.nbt.Tag.TAG_LONG, net.minecraft.nbt.LongTag::valueOf, net.minecraft.nbt.LongTag::getAsLong
+                    Long.class, LongTag.class, Tag.TAG_LONG, LongTag::valueOf, LongTag::getAsLong
             );
         }
         if (Objects.equals(Float.class, type)) {
             return this.createAdapter(
-                    Float.class, net.minecraft.nbt.FloatTag.class, net.minecraft.nbt.Tag.TAG_FLOAT,
-                    net.minecraft.nbt.FloatTag::valueOf, net.minecraft.nbt.FloatTag::getAsFloat
+                    Float.class, FloatTag.class, Tag.TAG_FLOAT,
+                    FloatTag::valueOf, FloatTag::getAsFloat
             );
         }
         if (Objects.equals(Double.class, type)) {
             return this.createAdapter(
-                    Double.class, net.minecraft.nbt.DoubleTag.class, net.minecraft.nbt.Tag.TAG_DOUBLE,
-                    net.minecraft.nbt.DoubleTag::valueOf, net.minecraft.nbt.DoubleTag::getAsDouble
+                    Double.class, DoubleTag.class, Tag.TAG_DOUBLE,
+                    DoubleTag::valueOf, DoubleTag::getAsDouble
             );
         }
         if (Objects.equals(String.class, type)) {
             return this.createAdapter(
-                    String.class, net.minecraft.nbt.StringTag.class, net.minecraft.nbt.Tag.TAG_STRING,
-                    net.minecraft.nbt.StringTag::valueOf, net.minecraft.nbt.StringTag::getAsString
+                    String.class, StringTag.class, Tag.TAG_STRING,
+                    StringTag::valueOf, StringTag::getAsString
             );
         }
 
         // Primitive non-list arrays
         if (Objects.equals(byte[].class, type)) {
             return this.createAdapter(
-                    byte[].class, net.minecraft.nbt.ByteArrayTag.class, net.minecraft.nbt.Tag.TAG_BYTE_ARRAY,
-                    array -> new net.minecraft.nbt.ByteArrayTag(Arrays.copyOf(array, array.length)),
+                    byte[].class, ByteArrayTag.class, Tag.TAG_BYTE_ARRAY,
+                    array -> new ByteArrayTag(Arrays.copyOf(array, array.length)),
                     n -> Arrays.copyOf(n.getAsByteArray(), n.size())
             );
         }
         if (Objects.equals(int[].class, type)) {
             return this.createAdapter(
-                    int[].class, net.minecraft.nbt.IntArrayTag.class, net.minecraft.nbt.Tag.TAG_INT_ARRAY,
-                    array -> new net.minecraft.nbt.IntArrayTag(Arrays.copyOf(array, array.length)),
+                    int[].class, IntArrayTag.class, Tag.TAG_INT_ARRAY,
+                    array -> new IntArrayTag(Arrays.copyOf(array, array.length)),
                     n -> Arrays.copyOf(n.getAsIntArray(), n.size())
             );
         }
         if (Objects.equals(long[].class, type)) {
             return this.createAdapter(
-                    long[].class, net.minecraft.nbt.LongArrayTag.class, net.minecraft.nbt.Tag.TAG_LONG_ARRAY,
-                    array -> new net.minecraft.nbt.LongArrayTag(Arrays.copyOf(array, array.length)),
+                    long[].class, LongArrayTag.class, Tag.TAG_LONG_ARRAY,
+                    array -> new LongArrayTag(Arrays.copyOf(array, array.length)),
                     n -> Arrays.copyOf(n.getAsLongArray(), n.size())
             );
         }
@@ -191,9 +204,9 @@ public final class CraftPersistentDataTypeRegistry {
         // Previously "emulated" compound lists, now useless as a proper list type exists.
         if (Objects.equals(PersistentDataContainer[].class, type)) {
             return this.createAdapter(
-                    PersistentDataContainer[].class, net.minecraft.nbt.ListTag.class, net.minecraft.nbt.Tag.TAG_LIST,
+                    PersistentDataContainer[].class, ListTag.class, Tag.TAG_LIST,
                     (containerArray) -> {
-                        final net.minecraft.nbt.ListTag list = new net.minecraft.nbt.ListTag();
+                        final ListTag list = new ListTag();
                         for (final PersistentDataContainer persistentDataContainer : containerArray) {
                             list.add(((CraftPersistentDataContainer) persistentDataContainer).toTagCompound());
                         }
@@ -203,7 +216,7 @@ public final class CraftPersistentDataTypeRegistry {
                         final PersistentDataContainer[] containerArray = new CraftPersistentDataContainer[tag.size()];
                         for (int i = 0; i < tag.size(); i++) {
                             final CraftPersistentDataContainer container = new CraftPersistentDataContainer(this);
-                            final net.minecraft.nbt.CompoundTag compound = tag.getCompound(i);
+                            final CompoundTag compound = tag.getCompound(i);
                             for (final String key : compound.getAllKeys()) {
                                 container.put(key, compound.get(key));
                             }
@@ -219,7 +232,7 @@ public final class CraftPersistentDataTypeRegistry {
         // as defined in TagAdapter#build.
         if (Objects.equals(PersistentDataContainer.class, type)) {
             return this.createAdapter(
-                    CraftPersistentDataContainer.class, net.minecraft.nbt.CompoundTag.class, net.minecraft.nbt.Tag.TAG_COMPOUND,
+                    CraftPersistentDataContainer.class, CompoundTag.class, Tag.TAG_COMPOUND,
                     CraftPersistentDataContainer::toTagCompound,
                     tag -> {
                         final CraftPersistentDataContainer container = new CraftPersistentDataContainer(this);
@@ -231,10 +244,10 @@ public final class CraftPersistentDataTypeRegistry {
         }
 
         if (Objects.equals(List.class, type)) {
-            return createAdapter(
+            return this.createAdapter(
                     List.class,
                     net.minecraft.nbt.ListTag.class,
-                    net.minecraft.nbt.Tag.TAG_LIST,
+                    Tag.TAG_LIST,
                     this::constructList,
                     this::extractList,
                     this::matchesListTag
@@ -245,11 +258,11 @@ public final class CraftPersistentDataTypeRegistry {
     }
 
     // Plain constructor helper method.
-    private <T, Z extends net.minecraft.nbt.Tag> TagAdapter<T, Z> createAdapter(
+    private <T, Z extends Tag> TagAdapter<T, Z> createAdapter(
             final Class<T> primitiveType, final Class<Z> nbtBaseType, final byte nmsTypeByte,
             final Function<T, Z> builder, final Function<Z, T> extractor
     ) {
-        return createAdapter(
+        return this.createAdapter(
                 primitiveType,
                 nbtBaseType,
                 nmsTypeByte,
@@ -260,11 +273,11 @@ public final class CraftPersistentDataTypeRegistry {
     }
 
     // Plain constructor helper method.
-    private <T, Z extends net.minecraft.nbt.Tag> TagAdapter<T, Z> createAdapter(
+    private <T, Z extends Tag> TagAdapter<T, Z> createAdapter(
             final Class<T> primitiveType, final Class<Z> nbtBaseType, final byte nmsTypeByte,
             final BiFunction<PersistentDataType<T, ?>, T, Z> builder,
             final BiFunction<PersistentDataType<T, ?>, Z, T> extractor,
-            final BiPredicate<PersistentDataType<T, ?>, net.minecraft.nbt.Tag> matcher
+            final BiPredicate<PersistentDataType<T, ?>, Tag> matcher
     ) {
         return new TagAdapter<>(primitiveType, nbtBaseType, nmsTypeByte, builder, extractor, matcher);
     }
@@ -279,7 +292,7 @@ public final class CraftPersistentDataTypeRegistry {
      * @throws IllegalArgumentException if no suitable tag type adapter for this
      * type was found.
      */
-    public <T> net.minecraft.nbt.Tag wrap(final PersistentDataType<T, ?> type, final T value) {
+    public <T> Tag wrap(final PersistentDataType<T, ?> type, final T value) {
         return this.getOrCreateAdapter(type).build(type, value);
     }
 
@@ -293,7 +306,7 @@ public final class CraftPersistentDataTypeRegistry {
      * @throws IllegalArgumentException if no suitable tag type adapter for this
      * type was found.
      */
-    public <T> boolean isInstanceOf(final PersistentDataType<T, ?> type, final net.minecraft.nbt.Tag base) {
+    public <T> boolean isInstanceOf(final PersistentDataType<T, ?> type, final Tag base) {
         return this.getOrCreateAdapter(type).isInstance(type, base);
     }
 
@@ -310,8 +323,8 @@ public final class CraftPersistentDataTypeRegistry {
      * persistent data type.
      */
     @NotNull
-    private <T, Z extends net.minecraft.nbt.Tag> TagAdapter<T, Z> getOrCreateAdapter(@NotNull final PersistentDataType<T, ?> type) {
-        return this.adapters.computeIfAbsent(type.getPrimitiveType(), CREATE_ADAPTER);
+    private <T, Z extends Tag> TagAdapter<T, Z> getOrCreateAdapter(@NotNull final PersistentDataType<T, ?> type) {
+        return this.adapters.computeIfAbsent(type.getPrimitiveType(), this.CREATE_ADAPTER);
     }
 
     /**
@@ -329,7 +342,7 @@ public final class CraftPersistentDataTypeRegistry {
      * @throws IllegalArgumentException if no suitable tag type adapter for this
      * type was found.
      */
-    public <T, Z extends net.minecraft.nbt.Tag> T extract(final PersistentDataType<T, ?> type, final net.minecraft.nbt.Tag tag) throws ClassCastException, IllegalArgumentException {
+    public <T, Z extends Tag> T extract(final PersistentDataType<T, ?> type, final Tag tag) throws ClassCastException, IllegalArgumentException {
         final Class<T> primitiveType = type.getPrimitiveType();
         final TagAdapter<T, Z> adapter = this.getOrCreateAdapter(type);
         Preconditions.checkArgument(adapter.isInstance(type, tag), "The found tag instance (%s) cannot store %s", tag.getClass().getSimpleName(), primitiveType.getSimpleName());
@@ -340,30 +353,30 @@ public final class CraftPersistentDataTypeRegistry {
     }
 
     /**
-     * Constructs a {@link net.minecraft.nbt.ListTag} from a {@link List} instance by using the
+     * Constructs a {@link ListTag} from a {@link List} instance by using the
      * passed persistent data type.
      *
      * @param type the persistent data type of the list.
      * @param list the list or primitive values.
      * @param <P> the generic type of the primitive values in the list.
-     * @return the constructed {@link net.minecraft.nbt.ListTag}.
+     * @return the constructed {@link ListTag}.
      */
-    private <P, T extends List<P>> net.minecraft.nbt.ListTag constructList(@NotNull final PersistentDataType<T, ?> type, @NotNull final List<P> list) {
+    private <P, T extends List<P>> ListTag constructList(@NotNull final PersistentDataType<T, ?> type, @NotNull final List<P> list) {
         Preconditions.checkArgument(type instanceof ListPersistentDataType<?, ?>, "The passed list cannot be written to the PDC with a %s (expected a list data type)", type.getClass().getSimpleName());
         final ListPersistentDataType<P, ?> listPersistentDataType = (ListPersistentDataType<P, ?>) type;
 
-        final TagAdapter<P, net.minecraft.nbt.Tag> elementAdapter = this.getOrCreateAdapter(listPersistentDataType.elementType());
+        final TagAdapter<P, Tag> elementAdapter = this.getOrCreateAdapter(listPersistentDataType.elementType());
 
-        final List<net.minecraft.nbt.Tag> values = Lists.newArrayListWithCapacity(list.size());
+        final List<Tag> values = Lists.newArrayListWithCapacity(list.size());
         for (final P primitiveValue : list) {
             values.add(this.wrap(listPersistentDataType.elementType(), primitiveValue));
         }
 
-        return new net.minecraft.nbt.ListTag(values, values.isEmpty() ? net.minecraft.nbt.ListTag.TAG_END : elementAdapter.nmsTypeByte());
+        return new ListTag(values, values.isEmpty() ? ListTag.TAG_END : elementAdapter.nmsTypeByte());
     }
 
     /**
-     * Extracts a {@link List} from a {@link net.minecraft.nbt.ListTag} and a respective
+     * Extracts a {@link List} from a {@link ListTag} and a respective
      * {@link PersistentDataType}.
      *
      * @param type the persistent data type of the list.
@@ -376,12 +389,12 @@ public final class CraftPersistentDataTypeRegistry {
      * extract a {@link List}.
      */
     private <P> List<P> extractList(@NotNull final PersistentDataType<P, ?> type,
-            @NotNull final net.minecraft.nbt.ListTag listTag) {
+            @NotNull final ListTag listTag) {
         Preconditions.checkArgument(type instanceof ListPersistentDataType<?, ?>, "The found list tag cannot be read with a %s (expected a list data type)", type.getClass().getSimpleName());
         final ListPersistentDataType<P, ?> listPersistentDataType = (ListPersistentDataType<P, ?>) type;
 
         final List<P> output = new ObjectArrayList<>(listTag.size());
-        for (final net.minecraft.nbt.Tag tag : listTag) {
+        for (final Tag tag : listTag) {
             output.add(this.extract(listPersistentDataType.elementType(), tag));
         }
 
@@ -389,7 +402,7 @@ public final class CraftPersistentDataTypeRegistry {
     }
 
     /**
-     * Computes if the passed {@link net.minecraft.nbt.Tag} is a {@link net.minecraft.nbt.ListTag} and it,
+     * Computes if the passed {@link Tag} is a {@link ListTag} and it,
      * including its elements, can be read/written via the passed
      * {@link PersistentDataType}.
      * <p>
@@ -403,17 +416,17 @@ public final class CraftPersistentDataTypeRegistry {
      * @param tag the tag that is to be checked if it matches the data type.
      * @return whether the passed tag can be read/written via the passed type.
      */
-    private boolean matchesListTag(final PersistentDataType<List, ?> type, final net.minecraft.nbt.Tag tag) {
+    private boolean matchesListTag(final PersistentDataType<List, ?> type, final Tag tag) {
         if ((!(type instanceof final ListPersistentDataType listPersistentDataType))) {
             return false;
         }
-        if (!(tag instanceof final net.minecraft.nbt.ListTag listTag)) {
+        if (!(tag instanceof final ListTag listTag)) {
             return false;
         }
 
         final byte elementType = listTag.getElementType();
         final TagAdapter elementAdapter = this.getOrCreateAdapter(listPersistentDataType.elementType());
 
-        return elementAdapter.nmsTypeByte() == elementType || elementType == net.minecraft.nbt.ListTag.TAG_END;
+        return elementAdapter.nmsTypeByte() == elementType || elementType == ListTag.TAG_END;
     }
 }

@@ -19,12 +19,12 @@ public final class CraftTripwire extends org.bukkit.craftbukkit.block.data.Craft
 
     @Override
     public boolean isDisarmed() {
-        return get(DISARMED);
+        return this.get(CraftTripwire.DISARMED);
     }
 
     @Override
     public void setDisarmed(boolean disarmed) {
-        set(DISARMED, disarmed);
+        this.set(CraftTripwire.DISARMED, disarmed);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftAttachable
@@ -33,12 +33,12 @@ public final class CraftTripwire extends org.bukkit.craftbukkit.block.data.Craft
 
     @Override
     public boolean isAttached() {
-        return get(ATTACHED);
+        return this.get(CraftTripwire.ATTACHED);
     }
 
     @Override
     public void setAttached(boolean attached) {
-        set(ATTACHED, attached);
+        this.set(CraftTripwire.ATTACHED, attached);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftMultipleFacing
@@ -49,28 +49,28 @@ public final class CraftTripwire extends org.bukkit.craftbukkit.block.data.Craft
 
     @Override
     public boolean hasFace(org.bukkit.block.BlockFace face) {
-        net.minecraft.world.level.block.state.properties.BooleanProperty state = FACES[face.ordinal()];
+        net.minecraft.world.level.block.state.properties.BooleanProperty state = CraftTripwire.FACES[face.ordinal()];
         if (state == null) {
             throw new IllegalArgumentException("Non-allowed face " + face + ". Check MultipleFacing.getAllowedFaces.");
         }
-        return get(state);
+        return this.get(state);
     }
 
     @Override
     public void setFace(org.bukkit.block.BlockFace face, boolean has) {
-        net.minecraft.world.level.block.state.properties.BooleanProperty state = FACES[face.ordinal()];
+        net.minecraft.world.level.block.state.properties.BooleanProperty state = CraftTripwire.FACES[face.ordinal()];
         if (state == null) {
             throw new IllegalArgumentException("Non-allowed face " + face + ". Check MultipleFacing.getAllowedFaces.");
         }
-        set(state, has);
+        this.set(state, has);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
         com.google.common.collect.ImmutableSet.Builder<org.bukkit.block.BlockFace> faces = com.google.common.collect.ImmutableSet.builder();
 
-        for (int i = 0; i < FACES.length; i++) {
-            if (FACES[i] != null && get(FACES[i])) {
+        for (int i = 0; i < CraftTripwire.FACES.length; i++) {
+            if (CraftTripwire.FACES[i] != null && this.get(CraftTripwire.FACES[i])) {
                 faces.add(org.bukkit.block.BlockFace.values()[i]);
             }
         }
@@ -82,8 +82,8 @@ public final class CraftTripwire extends org.bukkit.craftbukkit.block.data.Craft
     public java.util.Set<org.bukkit.block.BlockFace> getAllowedFaces() {
         com.google.common.collect.ImmutableSet.Builder<org.bukkit.block.BlockFace> faces = com.google.common.collect.ImmutableSet.builder();
 
-        for (int i = 0; i < FACES.length; i++) {
-            if (FACES[i] != null) {
+        for (int i = 0; i < CraftTripwire.FACES.length; i++) {
+            if (CraftTripwire.FACES[i] != null) {
                 faces.add(org.bukkit.block.BlockFace.values()[i]);
             }
         }
@@ -97,11 +97,11 @@ public final class CraftTripwire extends org.bukkit.craftbukkit.block.data.Craft
 
     @Override
     public boolean isPowered() {
-        return get(POWERED);
+        return this.get(CraftTripwire.POWERED);
     }
 
     @Override
     public void setPowered(boolean powered) {
-        set(POWERED, powered);
+        this.set(CraftTripwire.POWERED, powered);
     }
 }

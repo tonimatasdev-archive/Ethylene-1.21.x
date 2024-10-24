@@ -19,7 +19,7 @@ public final class CraftFloorSign extends org.bukkit.craftbukkit.block.data.Craf
 
     @Override
     public org.bukkit.block.BlockFace getRotation() {
-        int data = get(ROTATION);
+        int data = this.get(CraftFloorSign.ROTATION);
         switch (data) {
             case 0x0:
                 return org.bukkit.block.BlockFace.SOUTH;
@@ -113,7 +113,7 @@ public final class CraftFloorSign extends org.bukkit.craftbukkit.block.data.Craf
             default:
                 throw new IllegalArgumentException("Illegal rotation " + rotation);
         }
-        set(ROTATION, val);
+        this.set(CraftFloorSign.ROTATION, val);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftWaterlogged
@@ -122,11 +122,11 @@ public final class CraftFloorSign extends org.bukkit.craftbukkit.block.data.Craf
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftFloorSign.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftFloorSign.WATERLOGGED, waterlogged);
     }
 }

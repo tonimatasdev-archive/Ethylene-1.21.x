@@ -20,22 +20,22 @@ public final class CraftMangroveLeaves extends org.bukkit.craftbukkit.block.data
 
     @Override
     public boolean isPersistent() {
-        return get(PERSISTENT);
+        return this.get(CraftMangroveLeaves.PERSISTENT);
     }
 
     @Override
     public void setPersistent(boolean persistent) {
-        set(PERSISTENT, persistent);
+        this.set(CraftMangroveLeaves.PERSISTENT, persistent);
     }
 
     @Override
     public int getDistance() {
-        return get(DISTANCE);
+        return this.get(CraftMangroveLeaves.DISTANCE);
     }
 
     @Override
     public void setDistance(int distance) {
-        set(DISTANCE, distance);
+        this.set(CraftMangroveLeaves.DISTANCE, distance);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftWaterlogged
@@ -44,11 +44,11 @@ public final class CraftMangroveLeaves extends org.bukkit.craftbukkit.block.data
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftMangroveLeaves.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftMangroveLeaves.WATERLOGGED, waterlogged);
     }
 }

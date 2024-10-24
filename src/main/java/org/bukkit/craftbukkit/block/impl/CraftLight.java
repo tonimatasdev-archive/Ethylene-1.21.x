@@ -19,17 +19,17 @@ public final class CraftLight extends org.bukkit.craftbukkit.block.data.CraftBlo
 
     @Override
     public int getLevel() {
-        return get(LEVEL);
+        return this.get(CraftLight.LEVEL);
     }
 
     @Override
     public void setLevel(int level) {
-        set(LEVEL, level);
+        this.set(CraftLight.LEVEL, level);
     }
 
     @Override
     public int getMaximumLevel() {
-        return getMax(LEVEL);
+        return getMax(CraftLight.LEVEL);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftWaterlogged
@@ -38,11 +38,11 @@ public final class CraftLight extends org.bukkit.craftbukkit.block.data.CraftBlo
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftLight.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftLight.WATERLOGGED, waterlogged);
     }
 }

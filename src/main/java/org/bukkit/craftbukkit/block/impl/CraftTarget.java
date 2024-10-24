@@ -19,16 +19,16 @@ public final class CraftTarget extends org.bukkit.craftbukkit.block.data.CraftBl
 
     @Override
     public int getPower() {
-        return get(POWER);
+        return this.get(CraftTarget.POWER);
     }
 
     @Override
     public void setPower(int power) {
-        set(POWER, power);
+        this.set(CraftTarget.POWER, power);
     }
 
     @Override
     public int getMaximumPower() {
-        return getMax(POWER);
+        return getMax(CraftTarget.POWER);
     }
 }

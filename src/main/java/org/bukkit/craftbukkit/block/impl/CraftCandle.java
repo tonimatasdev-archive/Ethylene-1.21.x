@@ -19,17 +19,17 @@ public final class CraftCandle extends org.bukkit.craftbukkit.block.data.CraftBl
 
     @Override
     public int getCandles() {
-        return get(CANDLES);
+        return this.get(CraftCandle.CANDLES);
     }
 
     @Override
     public void setCandles(int candles) {
-        set(CANDLES, candles);
+        this.set(CraftCandle.CANDLES, candles);
     }
 
     @Override
     public int getMaximumCandles() {
-        return getMax(CANDLES);
+        return getMax(CraftCandle.CANDLES);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftLightable
@@ -38,12 +38,12 @@ public final class CraftCandle extends org.bukkit.craftbukkit.block.data.CraftBl
 
     @Override
     public boolean isLit() {
-        return get(LIT);
+        return this.get(CraftCandle.LIT);
     }
 
     @Override
     public void setLit(boolean lit) {
-        set(LIT, lit);
+        this.set(CraftCandle.LIT, lit);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftWaterlogged
@@ -52,11 +52,11 @@ public final class CraftCandle extends org.bukkit.craftbukkit.block.data.CraftBl
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftCandle.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftCandle.WATERLOGGED, waterlogged);
     }
 }

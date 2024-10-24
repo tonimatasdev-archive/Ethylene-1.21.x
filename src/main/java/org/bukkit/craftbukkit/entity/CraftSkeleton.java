@@ -33,7 +33,7 @@ public class CraftSkeleton extends CraftAbstractSkeleton implements Skeleton {
 
     @Override
     public net.minecraft.world.entity.monster.Skeleton getHandle() {
-        return (net.minecraft.world.entity.monster.Skeleton) entity;
+        return (net.minecraft.world.entity.monster.Skeleton) this.entity;
     }
 
     @Override

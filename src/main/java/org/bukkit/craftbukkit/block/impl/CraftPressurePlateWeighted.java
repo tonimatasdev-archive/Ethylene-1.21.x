@@ -19,16 +19,16 @@ public final class CraftPressurePlateWeighted extends org.bukkit.craftbukkit.blo
 
     @Override
     public int getPower() {
-        return get(POWER);
+        return this.get(CraftPressurePlateWeighted.POWER);
     }
 
     @Override
     public void setPower(int power) {
-        set(POWER, power);
+        this.set(CraftPressurePlateWeighted.POWER, power);
     }
 
     @Override
     public int getMaximumPower() {
-        return getMax(POWER);
+        return getMax(CraftPressurePlateWeighted.POWER);
     }
 }

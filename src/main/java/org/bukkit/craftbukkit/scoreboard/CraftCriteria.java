@@ -2,6 +2,8 @@ package org.bukkit.craftbukkit.scoreboard;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
+import net.minecraft.world.scores.Objective;
+import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.RenderType;
 
@@ -12,9 +14,9 @@ public final class CraftCriteria implements Criteria {
     static {
         ImmutableMap.Builder<String, CraftCriteria> defaults = ImmutableMap.builder();
 
-        for (Map.Entry<String, net.minecraft.world.scores.criteria.ObjectiveCriteria> entry : net.minecraft.world.scores.criteria.ObjectiveCriteria.CRITERIA_CACHE.entrySet()) {
+        for (Map.Entry<String, ObjectiveCriteria> entry : ObjectiveCriteria.CRITERIA_CACHE.entrySet()) {
             String name = entry.getKey();
-            net.minecraft.world.scores.criteria.ObjectiveCriteria criteria = entry.getValue();
+            ObjectiveCriteria criteria = entry.getValue();
 
             defaults.put(name, new CraftCriteria(criteria));
         }
@@ -23,45 +25,45 @@ public final class CraftCriteria implements Criteria {
         DUMMY = DEFAULTS.get("dummy");
     }
 
-    final net.minecraft.world.scores.criteria.ObjectiveCriteria criteria;
+    final ObjectiveCriteria criteria;
     final String bukkitName;
 
     private CraftCriteria(String bukkitName) {
         this.bukkitName = bukkitName;
-        this.criteria = DUMMY.criteria;
+        this.criteria = CraftCriteria.DUMMY.criteria;
     }
 
-    private CraftCriteria(net.minecraft.world.scores.criteria.ObjectiveCriteria criteria) {
+    private CraftCriteria(ObjectiveCriteria criteria) {
         this.criteria = criteria;
         this.bukkitName = criteria.getName();
     }
 
     @Override
     public String getName() {
-        return bukkitName;
+        return this.bukkitName;
     }
 
     @Override
     public boolean isReadOnly() {
-        return criteria.isReadOnly();
+        return this.criteria.isReadOnly();
     }
 
     @Override
     public RenderType getDefaultRenderType() {
-        return RenderType.values()[criteria.getDefaultRenderType().ordinal()];
+        return RenderType.values()[this.criteria.getDefaultRenderType().ordinal()];
     }
 
-    static CraftCriteria getFromNMS(net.minecraft.world.scores.Objective objective) {
-        return DEFAULTS.get(objective.getCriteria().getName());
+    static CraftCriteria getFromNMS(Objective objective) {
+        return CraftCriteria.DEFAULTS.get(objective.getCriteria().getName());
     }
 
     public static CraftCriteria getFromBukkit(String name) {
-        CraftCriteria criteria = DEFAULTS.get(name);
+        CraftCriteria criteria = CraftCriteria.DEFAULTS.get(name);
         if (criteria != null) {
             return criteria;
         }
 
-        return net.minecraft.world.scores.criteria.ObjectiveCriteria.byName(name).map(CraftCriteria::new).orElseGet(() -> new CraftCriteria(name));
+        return ObjectiveCriteria.byName(name).map(CraftCriteria::new).orElseGet(() -> new CraftCriteria(name));
     }
 
     @Override

@@ -3,7 +3,14 @@ package org.bukkit.craftbukkit.inventory;
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.inventory.ItemStack;
+import java.util.Optional;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Ingredient;
+import org.bukkit.NamespacedKey;
+import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.recipe.CookingBookCategory;
@@ -13,47 +20,53 @@ public interface CraftRecipe extends Recipe {
 
     void addToCraftingManager();
 
-    default net.minecraft.world.item.crafting.Ingredient toNMS(RecipeChoice bukkit, boolean requireNotEmpty) {
-        net.minecraft.world.item.crafting.Ingredient stack;
+    default Optional<Ingredient> toNMSOptional(RecipeChoice bukkit, boolean requireNotEmpty) {
+        return (bukkit == null) ? Optional.empty() : Optional.of(this.toNMS(bukkit, requireNotEmpty));
+    }
+
+    default Ingredient toNMS(RecipeChoice bukkit, boolean requireNotEmpty) {
+        Ingredient stack;
 
         if (bukkit == null) {
-            stack = net.minecraft.world.item.crafting.Ingredient.EMPTY;
+            stack = Ingredient.of();
         } else if (bukkit instanceof RecipeChoice.MaterialChoice) {
-            stack = new net.minecraft.world.item.crafting.Ingredient(((RecipeChoice.MaterialChoice) bukkit).getChoices().stream().map((mat) -> new net.minecraft.world.item.crafting.Ingredient.ItemValue(CraftItemStack.asNMSCopy(new ItemStack(mat)))));
+            stack = Ingredient.of(((RecipeChoice.MaterialChoice) bukkit).getChoices().stream().map((mat) -> CraftItemType.bukkitToMinecraft(mat)));
         } else if (bukkit instanceof RecipeChoice.ExactChoice) {
-            stack = new net.minecraft.world.item.crafting.Ingredient(((RecipeChoice.ExactChoice) bukkit).getChoices().stream().map((mat) -> new net.minecraft.world.item.crafting.Ingredient.ItemValue(CraftItemStack.asNMSCopy(mat))));
-            stack.exact = true;
+            stack = Ingredient.ofStacks(((RecipeChoice.ExactChoice) bukkit).getChoices().stream().map((mat) -> CraftItemStack.asNMSCopy(mat)).toList());
         } else {
             throw new IllegalArgumentException("Unknown recipe stack instance " + bukkit);
         }
 
-        stack.getItems();
+        List<Holder<Item>> items = stack.items();
         if (requireNotEmpty) {
-            Preconditions.checkArgument(stack.itemStacks.length != 0, "Recipe requires at least one non-air choice");
+            Preconditions.checkArgument(!items.isEmpty(), "Recipe requires at least one non-air choice");
         }
 
         return stack;
     }
 
-    public static RecipeChoice toBukkit(net.minecraft.world.item.crafting.Ingredient list) {
-        list.getItems();
+    public static RecipeChoice toBukkit(Optional<Ingredient> list) {
+        return list.map(CraftRecipe::toBukkit).orElse(null);
+    }
 
-        if (list.itemStacks.length == 0) {
+    public static RecipeChoice toBukkit(Ingredient list) {
+        List<Holder<Item>> items = list.items();
+
+        if (items.isEmpty()) {
             return null;
         }
 
-        if (list.exact) {
-            List<org.bukkit.inventory.ItemStack> choices = new ArrayList<>(list.itemStacks.length);
-            for (net.minecraft.world.item.ItemStack i : list.itemStacks) {
+        if (list.isExact()) {
+            List<org.bukkit.inventory.ItemStack> choices = new ArrayList<>(list.itemStacks().size());
+            for (net.minecraft.world.item.ItemStack i : list.itemStacks()) {
                 choices.add(CraftItemStack.asBukkitCopy(i));
             }
 
             return new RecipeChoice.ExactChoice(choices);
         } else {
-
-            List<org.bukkit.Material> choices = new ArrayList<>(list.itemStacks.length);
-            for (net.minecraft.world.item.ItemStack i : list.itemStacks) {
-                choices.add(CraftItemType.minecraftToBukkit(i.getItem()));
+            List<org.bukkit.Material> choices = new ArrayList<>(items.size());
+            for (Holder<Item> i : items) {
+                choices.add(CraftItemType.minecraftToBukkit(i.value()));
             }
 
             return new RecipeChoice.MaterialChoice(choices);
@@ -74,5 +87,9 @@ public interface CraftRecipe extends Recipe {
 
     public static CookingBookCategory getCategory(net.minecraft.world.item.crafting.CookingBookCategory nms) {
         return CookingBookCategory.valueOf(nms.name());
+    }
+
+    public static ResourceKey<net.minecraft.world.item.crafting.Recipe<?>> toMinecraft(NamespacedKey key) {
+        return ResourceKey.create(Registries.RECIPE, CraftNamespacedKey.toMinecraft(key));
     }
 }

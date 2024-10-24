@@ -19,17 +19,17 @@ public final class CraftFurnaceFurace extends org.bukkit.craftbukkit.block.data.
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftFurnaceFurace.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftFurnaceFurace.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftFurnaceFurace.FACING, org.bukkit.block.BlockFace.class);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftLightable
@@ -38,11 +38,11 @@ public final class CraftFurnaceFurace extends org.bukkit.craftbukkit.block.data.
 
     @Override
     public boolean isLit() {
-        return get(LIT);
+        return this.get(CraftFurnaceFurace.LIT);
     }
 
     @Override
     public void setLit(boolean lit) {
-        set(LIT, lit);
+        this.set(CraftFurnaceFurace.LIT, lit);
     }
 }

@@ -19,16 +19,16 @@ public final class CraftPortal extends org.bukkit.craftbukkit.block.data.CraftBl
 
     @Override
     public org.bukkit.Axis getAxis() {
-        return get(AXIS, org.bukkit.Axis.class);
+        return this.get(CraftPortal.AXIS, org.bukkit.Axis.class);
     }
 
     @Override
     public void setAxis(org.bukkit.Axis axis) {
-        set(AXIS, axis);
+        this.set(CraftPortal.AXIS, axis);
     }
 
     @Override
     public java.util.Set<org.bukkit.Axis> getAxes() {
-        return getValues(AXIS, org.bukkit.Axis.class);
+        return this.getValues(CraftPortal.AXIS, org.bukkit.Axis.class);
     }
 }

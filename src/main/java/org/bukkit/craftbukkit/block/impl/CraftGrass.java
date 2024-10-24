@@ -19,11 +19,11 @@ public final class CraftGrass extends org.bukkit.craftbukkit.block.data.CraftBlo
 
     @Override
     public boolean isSnowy() {
-        return get(SNOWY);
+        return this.get(CraftGrass.SNOWY);
     }
 
     @Override
     public void setSnowy(boolean snowy) {
-        set(SNOWY, snowy);
+        this.set(CraftGrass.SNOWY, snowy);
     }
 }

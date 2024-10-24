@@ -19,16 +19,16 @@ public final class CraftInfestedRotatedPillar extends org.bukkit.craftbukkit.blo
 
     @Override
     public org.bukkit.Axis getAxis() {
-        return get(AXIS, org.bukkit.Axis.class);
+        return this.get(CraftInfestedRotatedPillar.AXIS, org.bukkit.Axis.class);
     }
 
     @Override
     public void setAxis(org.bukkit.Axis axis) {
-        set(AXIS, axis);
+        this.set(CraftInfestedRotatedPillar.AXIS, axis);
     }
 
     @Override
     public java.util.Set<org.bukkit.Axis> getAxes() {
-        return getValues(AXIS, org.bukkit.Axis.class);
+        return this.getValues(CraftInfestedRotatedPillar.AXIS, org.bukkit.Axis.class);
     }
 }

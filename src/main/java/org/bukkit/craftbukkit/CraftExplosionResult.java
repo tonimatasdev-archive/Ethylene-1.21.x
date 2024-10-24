@@ -1,13 +1,14 @@
 package org.bukkit.craftbukkit;
 
 import com.google.common.base.Preconditions;
+import net.minecraft.world.level.Explosion;
 import org.bukkit.ExplosionResult;
 
 public final class CraftExplosionResult {
 
     private CraftExplosionResult() {}
 
-    public static ExplosionResult toBukkit(net.minecraft.world.level.Explosion.BlockInteraction effect) {
+    public static ExplosionResult toBukkit(Explosion.BlockInteraction effect) {
         Preconditions.checkArgument(effect != null, "explosion effect cannot be null");
 
         switch (effect) {

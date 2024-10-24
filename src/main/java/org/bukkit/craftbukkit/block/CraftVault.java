@@ -1,12 +1,13 @@
 package org.bukkit.craftbukkit.block;
 
+import net.minecraft.world.level.block.entity.vault.VaultBlockEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Vault;
 
-public class CraftVault extends CraftBlockEntityState<net.minecraft.world.level.block.entity.vault.VaultBlockEntity> implements Vault {
+public class CraftVault extends CraftBlockEntityState<VaultBlockEntity> implements Vault {
 
-    public CraftVault(World world, net.minecraft.world.level.block.entity.vault.VaultBlockEntity tileEntity) {
+    public CraftVault(World world, VaultBlockEntity tileEntity) {
         super(world, tileEntity);
     }
 

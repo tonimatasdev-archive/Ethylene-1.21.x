@@ -19,16 +19,16 @@ public final class CraftCrops extends org.bukkit.craftbukkit.block.data.CraftBlo
 
     @Override
     public int getAge() {
-        return get(AGE);
+        return this.get(CraftCrops.AGE);
     }
 
     @Override
     public void setAge(int age) {
-        set(AGE, age);
+        this.set(CraftCrops.AGE, age);
     }
 
     @Override
     public int getMaximumAge() {
-        return getMax(AGE);
+        return getMax(CraftCrops.AGE);
     }
 }

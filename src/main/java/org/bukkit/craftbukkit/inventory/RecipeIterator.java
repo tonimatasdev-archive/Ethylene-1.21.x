@@ -2,30 +2,30 @@ package org.bukkit.craftbukkit.inventory;
 
 import java.util.Iterator;
 import java.util.Map;
-
-import net.ethylenemc.EthyleneStatic;
-import net.ethylenemc.interfaces.world.item.crafting.EthyleneRecipeHolder;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
 import org.bukkit.inventory.Recipe;
 
 public class RecipeIterator implements Iterator<Recipe> {
-    private final Iterator<Map.Entry<net.minecraft.world.item.crafting.RecipeType<?>, net.minecraft.world.item.crafting.RecipeHolder<?>>> recipes;
+    private final Iterator<Map.Entry<RecipeType<?>, RecipeHolder<?>>> recipes;
 
     public RecipeIterator() {
-        this.recipes = EthyleneStatic.getServer().getRecipeManager().byType.entries().iterator();
+        this.recipes = MinecraftServer.getServer().getRecipeManager().recipes.byType.entries().iterator();
     }
 
     @Override
     public boolean hasNext() {
-        return recipes.hasNext();
+        return this.recipes.hasNext();
     }
 
     @Override
     public Recipe next() {
-        return ((EthyleneRecipeHolder) (Object) recipes.next().getValue()).toBukkitRecipe();
+        return this.recipes.next().getValue().toBukkitRecipe();
     }
 
     @Override
     public void remove() {
-        recipes.remove();
+        this.recipes.remove();
     }
 }

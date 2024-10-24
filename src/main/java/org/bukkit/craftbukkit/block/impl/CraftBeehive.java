@@ -19,17 +19,17 @@ public final class CraftBeehive extends org.bukkit.craftbukkit.block.data.CraftB
 
     @Override
     public int getHoneyLevel() {
-        return get(HONEY_LEVEL);
+        return this.get(CraftBeehive.HONEY_LEVEL);
     }
 
     @Override
     public void setHoneyLevel(int honeyLevel) {
-        set(HONEY_LEVEL, honeyLevel);
+        this.set(CraftBeehive.HONEY_LEVEL, honeyLevel);
     }
 
     @Override
     public int getMaximumHoneyLevel() {
-        return getMax(HONEY_LEVEL);
+        return getMax(CraftBeehive.HONEY_LEVEL);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftDirectional
@@ -38,16 +38,16 @@ public final class CraftBeehive extends org.bukkit.craftbukkit.block.data.CraftB
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftBeehive.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftBeehive.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftBeehive.FACING, org.bukkit.block.BlockFace.class);
     }
 }

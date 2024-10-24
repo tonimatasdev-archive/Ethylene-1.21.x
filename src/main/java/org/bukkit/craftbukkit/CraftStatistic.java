@@ -3,7 +3,14 @@ package org.bukkit.craftbukkit;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
-import net.ethylenemc.interfaces.world.level.EthyleneLevel;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.ServerStatsCounter;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.Statistic.Type;
@@ -13,95 +20,95 @@ import org.bukkit.craftbukkit.inventory.CraftItemType;
 import org.bukkit.entity.EntityType;
 
 public enum CraftStatistic {
-    DAMAGE_DEALT(net.minecraft.stats.Stats.DAMAGE_DEALT),
-    DAMAGE_TAKEN(net.minecraft.stats.Stats.DAMAGE_TAKEN),
-    DEATHS(net.minecraft.stats.Stats.DEATHS),
-    MOB_KILLS(net.minecraft.stats.Stats.MOB_KILLS),
-    PLAYER_KILLS(net.minecraft.stats.Stats.PLAYER_KILLS),
-    FISH_CAUGHT(net.minecraft.stats.Stats.FISH_CAUGHT),
-    ANIMALS_BRED(net.minecraft.stats.Stats.ANIMALS_BRED),
-    LEAVE_GAME(net.minecraft.stats.Stats.LEAVE_GAME),
-    JUMP(net.minecraft.stats.Stats.JUMP),
-    DROP_COUNT(net.minecraft.stats.Stats.DROP),
-    DROP(net.minecraft.resources.ResourceLocation.withDefaultNamespace("dropped")),
-    PICKUP(net.minecraft.resources.ResourceLocation.withDefaultNamespace("picked_up")),
-    PLAY_ONE_MINUTE(net.minecraft.stats.Stats.PLAY_TIME),
-    TOTAL_WORLD_TIME(net.minecraft.stats.Stats.TOTAL_WORLD_TIME),
-    WALK_ONE_CM(net.minecraft.stats.Stats.WALK_ONE_CM),
-    WALK_ON_WATER_ONE_CM(net.minecraft.stats.Stats.WALK_ON_WATER_ONE_CM),
-    FALL_ONE_CM(net.minecraft.stats.Stats.FALL_ONE_CM),
-    SNEAK_TIME(net.minecraft.stats.Stats.CROUCH_TIME),
-    CLIMB_ONE_CM(net.minecraft.stats.Stats.CLIMB_ONE_CM),
-    FLY_ONE_CM(net.minecraft.stats.Stats.FLY_ONE_CM),
-    WALK_UNDER_WATER_ONE_CM(net.minecraft.stats.Stats.WALK_UNDER_WATER_ONE_CM),
-    MINECART_ONE_CM(net.minecraft.stats.Stats.MINECART_ONE_CM),
-    BOAT_ONE_CM(net.minecraft.stats.Stats.BOAT_ONE_CM),
-    PIG_ONE_CM(net.minecraft.stats.Stats.PIG_ONE_CM),
-    HORSE_ONE_CM(net.minecraft.stats.Stats.HORSE_ONE_CM),
-    SPRINT_ONE_CM(net.minecraft.stats.Stats.SPRINT_ONE_CM),
-    CROUCH_ONE_CM(net.minecraft.stats.Stats.CROUCH_ONE_CM),
-    AVIATE_ONE_CM(net.minecraft.stats.Stats.AVIATE_ONE_CM),
-    MINE_BLOCK(net.minecraft.resources.ResourceLocation.withDefaultNamespace("mined")),
-    USE_ITEM(net.minecraft.resources.ResourceLocation.withDefaultNamespace("used")),
-    BREAK_ITEM(net.minecraft.resources.ResourceLocation.withDefaultNamespace("broken")),
-    CRAFT_ITEM(net.minecraft.resources.ResourceLocation.withDefaultNamespace("crafted")),
-    KILL_ENTITY(net.minecraft.resources.ResourceLocation.withDefaultNamespace("killed")),
-    ENTITY_KILLED_BY(net.minecraft.resources.ResourceLocation.withDefaultNamespace("killed_by")),
-    TIME_SINCE_DEATH(net.minecraft.stats.Stats.TIME_SINCE_DEATH),
-    TALKED_TO_VILLAGER(net.minecraft.stats.Stats.TALKED_TO_VILLAGER),
-    TRADED_WITH_VILLAGER(net.minecraft.stats.Stats.TRADED_WITH_VILLAGER),
-    CAKE_SLICES_EATEN(net.minecraft.stats.Stats.EAT_CAKE_SLICE),
-    CAULDRON_FILLED(net.minecraft.stats.Stats.FILL_CAULDRON),
-    CAULDRON_USED(net.minecraft.stats.Stats.USE_CAULDRON),
-    ARMOR_CLEANED(net.minecraft.stats.Stats.CLEAN_ARMOR),
-    BANNER_CLEANED(net.minecraft.stats.Stats.CLEAN_BANNER),
-    BREWINGSTAND_INTERACTION(net.minecraft.stats.Stats.INTERACT_WITH_BREWINGSTAND),
-    BEACON_INTERACTION(net.minecraft.stats.Stats.INTERACT_WITH_BEACON),
-    DROPPER_INSPECTED(net.minecraft.stats.Stats.INSPECT_DROPPER),
-    HOPPER_INSPECTED(net.minecraft.stats.Stats.INSPECT_HOPPER),
-    DISPENSER_INSPECTED(net.minecraft.stats.Stats.INSPECT_DISPENSER),
-    NOTEBLOCK_PLAYED(net.minecraft.stats.Stats.PLAY_NOTEBLOCK),
-    NOTEBLOCK_TUNED(net.minecraft.stats.Stats.TUNE_NOTEBLOCK),
-    FLOWER_POTTED(net.minecraft.stats.Stats.POT_FLOWER),
-    TRAPPED_CHEST_TRIGGERED(net.minecraft.stats.Stats.TRIGGER_TRAPPED_CHEST),
-    ENDERCHEST_OPENED(net.minecraft.stats.Stats.OPEN_ENDERCHEST),
-    ITEM_ENCHANTED(net.minecraft.stats.Stats.ENCHANT_ITEM),
-    RECORD_PLAYED(net.minecraft.stats.Stats.PLAY_RECORD),
-    FURNACE_INTERACTION(net.minecraft.stats.Stats.INTERACT_WITH_FURNACE),
-    CRAFTING_TABLE_INTERACTION(net.minecraft.stats.Stats.INTERACT_WITH_CRAFTING_TABLE),
-    CHEST_OPENED(net.minecraft.stats.Stats.OPEN_CHEST),
-    SLEEP_IN_BED(net.minecraft.stats.Stats.SLEEP_IN_BED),
-    SHULKER_BOX_OPENED(net.minecraft.stats.Stats.OPEN_SHULKER_BOX),
-    TIME_SINCE_REST(net.minecraft.stats.Stats.TIME_SINCE_REST),
-    SWIM_ONE_CM(net.minecraft.stats.Stats.SWIM_ONE_CM),
-    DAMAGE_DEALT_ABSORBED(net.minecraft.stats.Stats.DAMAGE_DEALT_ABSORBED),
-    DAMAGE_DEALT_RESISTED(net.minecraft.stats.Stats.DAMAGE_DEALT_RESISTED),
-    DAMAGE_BLOCKED_BY_SHIELD(net.minecraft.stats.Stats.DAMAGE_BLOCKED_BY_SHIELD),
-    DAMAGE_ABSORBED(net.minecraft.stats.Stats.DAMAGE_ABSORBED),
-    DAMAGE_RESISTED(net.minecraft.stats.Stats.DAMAGE_RESISTED),
-    CLEAN_SHULKER_BOX(net.minecraft.stats.Stats.CLEAN_SHULKER_BOX),
-    OPEN_BARREL(net.minecraft.stats.Stats.OPEN_BARREL),
-    INTERACT_WITH_BLAST_FURNACE(net.minecraft.stats.Stats.INTERACT_WITH_BLAST_FURNACE),
-    INTERACT_WITH_SMOKER(net.minecraft.stats.Stats.INTERACT_WITH_SMOKER),
-    INTERACT_WITH_LECTERN(net.minecraft.stats.Stats.INTERACT_WITH_LECTERN),
-    INTERACT_WITH_CAMPFIRE(net.minecraft.stats.Stats.INTERACT_WITH_CAMPFIRE),
-    INTERACT_WITH_CARTOGRAPHY_TABLE(net.minecraft.stats.Stats.INTERACT_WITH_CARTOGRAPHY_TABLE),
-    INTERACT_WITH_LOOM(net.minecraft.stats.Stats.INTERACT_WITH_LOOM),
-    INTERACT_WITH_STONECUTTER(net.minecraft.stats.Stats.INTERACT_WITH_STONECUTTER),
-    BELL_RING(net.minecraft.stats.Stats.BELL_RING),
-    RAID_TRIGGER(net.minecraft.stats.Stats.RAID_TRIGGER),
-    RAID_WIN(net.minecraft.stats.Stats.RAID_WIN),
-    INTERACT_WITH_ANVIL(net.minecraft.stats.Stats.INTERACT_WITH_ANVIL),
-    INTERACT_WITH_GRINDSTONE(net.minecraft.stats.Stats.INTERACT_WITH_GRINDSTONE),
-    TARGET_HIT(net.minecraft.stats.Stats.TARGET_HIT),
-    INTERACT_WITH_SMITHING_TABLE(net.minecraft.stats.Stats.INTERACT_WITH_SMITHING_TABLE),
-    STRIDER_ONE_CM(net.minecraft.stats.Stats.STRIDER_ONE_CM);
-    private final net.minecraft.resources.ResourceLocation minecraftKey;
+    DAMAGE_DEALT(Stats.DAMAGE_DEALT),
+    DAMAGE_TAKEN(Stats.DAMAGE_TAKEN),
+    DEATHS(Stats.DEATHS),
+    MOB_KILLS(Stats.MOB_KILLS),
+    PLAYER_KILLS(Stats.PLAYER_KILLS),
+    FISH_CAUGHT(Stats.FISH_CAUGHT),
+    ANIMALS_BRED(Stats.ANIMALS_BRED),
+    LEAVE_GAME(Stats.LEAVE_GAME),
+    JUMP(Stats.JUMP),
+    DROP_COUNT(Stats.DROP),
+    DROP(ResourceLocation.withDefaultNamespace("dropped")),
+    PICKUP(ResourceLocation.withDefaultNamespace("picked_up")),
+    PLAY_ONE_MINUTE(Stats.PLAY_TIME),
+    TOTAL_WORLD_TIME(Stats.TOTAL_WORLD_TIME),
+    WALK_ONE_CM(Stats.WALK_ONE_CM),
+    WALK_ON_WATER_ONE_CM(Stats.WALK_ON_WATER_ONE_CM),
+    FALL_ONE_CM(Stats.FALL_ONE_CM),
+    SNEAK_TIME(Stats.CROUCH_TIME),
+    CLIMB_ONE_CM(Stats.CLIMB_ONE_CM),
+    FLY_ONE_CM(Stats.FLY_ONE_CM),
+    WALK_UNDER_WATER_ONE_CM(Stats.WALK_UNDER_WATER_ONE_CM),
+    MINECART_ONE_CM(Stats.MINECART_ONE_CM),
+    BOAT_ONE_CM(Stats.BOAT_ONE_CM),
+    PIG_ONE_CM(Stats.PIG_ONE_CM),
+    HORSE_ONE_CM(Stats.HORSE_ONE_CM),
+    SPRINT_ONE_CM(Stats.SPRINT_ONE_CM),
+    CROUCH_ONE_CM(Stats.CROUCH_ONE_CM),
+    AVIATE_ONE_CM(Stats.AVIATE_ONE_CM),
+    MINE_BLOCK(ResourceLocation.withDefaultNamespace("mined")),
+    USE_ITEM(ResourceLocation.withDefaultNamespace("used")),
+    BREAK_ITEM(ResourceLocation.withDefaultNamespace("broken")),
+    CRAFT_ITEM(ResourceLocation.withDefaultNamespace("crafted")),
+    KILL_ENTITY(ResourceLocation.withDefaultNamespace("killed")),
+    ENTITY_KILLED_BY(ResourceLocation.withDefaultNamespace("killed_by")),
+    TIME_SINCE_DEATH(Stats.TIME_SINCE_DEATH),
+    TALKED_TO_VILLAGER(Stats.TALKED_TO_VILLAGER),
+    TRADED_WITH_VILLAGER(Stats.TRADED_WITH_VILLAGER),
+    CAKE_SLICES_EATEN(Stats.EAT_CAKE_SLICE),
+    CAULDRON_FILLED(Stats.FILL_CAULDRON),
+    CAULDRON_USED(Stats.USE_CAULDRON),
+    ARMOR_CLEANED(Stats.CLEAN_ARMOR),
+    BANNER_CLEANED(Stats.CLEAN_BANNER),
+    BREWINGSTAND_INTERACTION(Stats.INTERACT_WITH_BREWINGSTAND),
+    BEACON_INTERACTION(Stats.INTERACT_WITH_BEACON),
+    DROPPER_INSPECTED(Stats.INSPECT_DROPPER),
+    HOPPER_INSPECTED(Stats.INSPECT_HOPPER),
+    DISPENSER_INSPECTED(Stats.INSPECT_DISPENSER),
+    NOTEBLOCK_PLAYED(Stats.PLAY_NOTEBLOCK),
+    NOTEBLOCK_TUNED(Stats.TUNE_NOTEBLOCK),
+    FLOWER_POTTED(Stats.POT_FLOWER),
+    TRAPPED_CHEST_TRIGGERED(Stats.TRIGGER_TRAPPED_CHEST),
+    ENDERCHEST_OPENED(Stats.OPEN_ENDERCHEST),
+    ITEM_ENCHANTED(Stats.ENCHANT_ITEM),
+    RECORD_PLAYED(Stats.PLAY_RECORD),
+    FURNACE_INTERACTION(Stats.INTERACT_WITH_FURNACE),
+    CRAFTING_TABLE_INTERACTION(Stats.INTERACT_WITH_CRAFTING_TABLE),
+    CHEST_OPENED(Stats.OPEN_CHEST),
+    SLEEP_IN_BED(Stats.SLEEP_IN_BED),
+    SHULKER_BOX_OPENED(Stats.OPEN_SHULKER_BOX),
+    TIME_SINCE_REST(Stats.TIME_SINCE_REST),
+    SWIM_ONE_CM(Stats.SWIM_ONE_CM),
+    DAMAGE_DEALT_ABSORBED(Stats.DAMAGE_DEALT_ABSORBED),
+    DAMAGE_DEALT_RESISTED(Stats.DAMAGE_DEALT_RESISTED),
+    DAMAGE_BLOCKED_BY_SHIELD(Stats.DAMAGE_BLOCKED_BY_SHIELD),
+    DAMAGE_ABSORBED(Stats.DAMAGE_ABSORBED),
+    DAMAGE_RESISTED(Stats.DAMAGE_RESISTED),
+    CLEAN_SHULKER_BOX(Stats.CLEAN_SHULKER_BOX),
+    OPEN_BARREL(Stats.OPEN_BARREL),
+    INTERACT_WITH_BLAST_FURNACE(Stats.INTERACT_WITH_BLAST_FURNACE),
+    INTERACT_WITH_SMOKER(Stats.INTERACT_WITH_SMOKER),
+    INTERACT_WITH_LECTERN(Stats.INTERACT_WITH_LECTERN),
+    INTERACT_WITH_CAMPFIRE(Stats.INTERACT_WITH_CAMPFIRE),
+    INTERACT_WITH_CARTOGRAPHY_TABLE(Stats.INTERACT_WITH_CARTOGRAPHY_TABLE),
+    INTERACT_WITH_LOOM(Stats.INTERACT_WITH_LOOM),
+    INTERACT_WITH_STONECUTTER(Stats.INTERACT_WITH_STONECUTTER),
+    BELL_RING(Stats.BELL_RING),
+    RAID_TRIGGER(Stats.RAID_TRIGGER),
+    RAID_WIN(Stats.RAID_WIN),
+    INTERACT_WITH_ANVIL(Stats.INTERACT_WITH_ANVIL),
+    INTERACT_WITH_GRINDSTONE(Stats.INTERACT_WITH_GRINDSTONE),
+    TARGET_HIT(Stats.TARGET_HIT),
+    INTERACT_WITH_SMITHING_TABLE(Stats.INTERACT_WITH_SMITHING_TABLE),
+    STRIDER_ONE_CM(Stats.STRIDER_ONE_CM);
+    private final ResourceLocation minecraftKey;
     private final org.bukkit.Statistic bukkit;
-    private static final BiMap<net.minecraft.resources.ResourceLocation, org.bukkit.Statistic> statistics;
+    private static final BiMap<ResourceLocation, org.bukkit.Statistic> statistics;
 
     static {
-        ImmutableBiMap.Builder<net.minecraft.resources.ResourceLocation, org.bukkit.Statistic> statisticBuilder = ImmutableBiMap.builder();
+        ImmutableBiMap.Builder<ResourceLocation, org.bukkit.Statistic> statisticBuilder = ImmutableBiMap.builder();
         for (CraftStatistic statistic : CraftStatistic.values()) {
             statisticBuilder.put(statistic.minecraftKey, statistic.bukkit);
         }
@@ -109,20 +116,20 @@ public enum CraftStatistic {
         statistics = statisticBuilder.build();
     }
 
-    private CraftStatistic(net.minecraft.resources.ResourceLocation minecraftKey) {
+    private CraftStatistic(ResourceLocation minecraftKey) {
         this.minecraftKey = minecraftKey;
 
         this.bukkit = org.bukkit.Statistic.valueOf(this.name());
-        Preconditions.checkState(bukkit != null, "Bukkit statistic %s does not exist", this.name());
+        Preconditions.checkState(this.bukkit != null, "Bukkit statistic %s does not exist", this.name());
     }
 
     public static org.bukkit.Statistic getBukkitStatistic(net.minecraft.stats.Stat<?> statistic) {
         Preconditions.checkArgument(statistic != null, "NMS Statistic cannot be null");
-        net.minecraft.core.Registry statRegistry = statistic.getType().getRegistry();
-        net.minecraft.resources.ResourceLocation nmsKey = net.minecraft.core.registries.BuiltInRegistries.STAT_TYPE.getKey(statistic.getType());
+        Registry statRegistry = statistic.getType().getRegistry();
+        ResourceLocation nmsKey = BuiltInRegistries.STAT_TYPE.getKey(statistic.getType());
 
-        if (statRegistry == net.minecraft.core.registries.BuiltInRegistries.CUSTOM_STAT) {
-            nmsKey = (net.minecraft.resources.ResourceLocation) statistic.getValue();
+        if (statRegistry == BuiltInRegistries.CUSTOM_STAT) {
+            nmsKey = (ResourceLocation) statistic.getValue();
         }
 
         return statistics.get(nmsKey);
@@ -131,7 +138,7 @@ public enum CraftStatistic {
     public static net.minecraft.stats.Stat getNMSStatistic(org.bukkit.Statistic bukkit) {
         Preconditions.checkArgument(bukkit.getType() == Statistic.Type.UNTYPED, "This method only accepts untyped statistics");
 
-        net.minecraft.stats.Stat<net.minecraft.resources.ResourceLocation> nms = net.minecraft.stats.Stats.CUSTOM.get(statistics.inverse().get(bukkit));
+        net.minecraft.stats.Stat<ResourceLocation> nms = Stats.CUSTOM.get(statistics.inverse().get(bukkit));
         Preconditions.checkArgument(nms != null, "NMS Statistic %s does not exist", bukkit);
 
         return nms;
@@ -140,22 +147,22 @@ public enum CraftStatistic {
     public static net.minecraft.stats.Stat getMaterialStatistic(org.bukkit.Statistic stat, Material material) {
         try {
             if (stat == Statistic.MINE_BLOCK) {
-                return net.minecraft.stats.Stats.BLOCK_MINED.get(CraftBlockType.bukkitToMinecraft(material));
+                return Stats.BLOCK_MINED.get(CraftBlockType.bukkitToMinecraft(material));
             }
             if (stat == Statistic.CRAFT_ITEM) {
-                return net.minecraft.stats.Stats.ITEM_CRAFTED.get(CraftItemType.bukkitToMinecraft(material));
+                return Stats.ITEM_CRAFTED.get(CraftItemType.bukkitToMinecraft(material));
             }
             if (stat == Statistic.USE_ITEM) {
-                return net.minecraft.stats.Stats.ITEM_USED.get(CraftItemType.bukkitToMinecraft(material));
+                return Stats.ITEM_USED.get(CraftItemType.bukkitToMinecraft(material));
             }
             if (stat == Statistic.BREAK_ITEM) {
-                return net.minecraft.stats.Stats.ITEM_BROKEN.get(CraftItemType.bukkitToMinecraft(material));
+                return Stats.ITEM_BROKEN.get(CraftItemType.bukkitToMinecraft(material));
             }
             if (stat == Statistic.PICKUP) {
-                return net.minecraft.stats.Stats.ITEM_PICKED_UP.get(CraftItemType.bukkitToMinecraft(material));
+                return Stats.ITEM_PICKED_UP.get(CraftItemType.bukkitToMinecraft(material));
             }
             if (stat == Statistic.DROP) {
-                return net.minecraft.stats.Stats.ITEM_DROPPED.get(CraftItemType.bukkitToMinecraft(material));
+                return Stats.ITEM_DROPPED.get(CraftItemType.bukkitToMinecraft(material));
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
@@ -184,40 +191,40 @@ public enum CraftStatistic {
     }
 
     public static Material getMaterialFromStatistic(net.minecraft.stats.Stat<?> statistic) {
-        if (statistic.getValue() instanceof net.minecraft.world.item.Item statisticItemValue) {
+        if (statistic.getValue() instanceof Item statisticItemValue) {
             return CraftItemType.minecraftToBukkit(statisticItemValue);
         }
-        if (statistic.getValue() instanceof net.minecraft.world.level.block.Block statisticBlockValue) {
+        if (statistic.getValue() instanceof Block statisticBlockValue) {
             return CraftBlockType.minecraftToBukkit(statisticBlockValue);
         }
         return null;
     }
 
-    public static void incrementStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, net.minecraft.server.level.ServerPlayer player) {
+    public static void incrementStatistic(ServerStatsCounter manager, Statistic statistic, ServerPlayer player) {
         incrementStatistic(manager, statistic, 1, player);
     }
 
-    public static void decrementStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, net.minecraft.server.level.ServerPlayer player) {
+    public static void decrementStatistic(ServerStatsCounter manager, Statistic statistic, ServerPlayer player) {
         decrementStatistic(manager, statistic, 1, player);
     }
 
-    public static int getStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic) {
+    public static int getStatistic(ServerStatsCounter manager, Statistic statistic) {
         Preconditions.checkArgument(statistic != null, "Statistic cannot be null");
         Preconditions.checkArgument(statistic.getType() == Type.UNTYPED, "Must supply additional parameter for this statistic");
         return manager.getValue(CraftStatistic.getNMSStatistic(statistic));
     }
 
-    public static void incrementStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, int amount, net.minecraft.server.level.ServerPlayer player) {
+    public static void incrementStatistic(ServerStatsCounter manager, Statistic statistic, int amount, ServerPlayer player) {
         Preconditions.checkArgument(amount > 0, "Amount must be greater than 0");
         setStatistic(manager, statistic, getStatistic(manager, statistic) + amount, player);
     }
 
-    public static void decrementStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, int amount, net.minecraft.server.level.ServerPlayer player) {
+    public static void decrementStatistic(ServerStatsCounter manager, Statistic statistic, int amount, ServerPlayer player) {
         Preconditions.checkArgument(amount > 0, "Amount must be greater than 0");
         setStatistic(manager, statistic, getStatistic(manager, statistic) - amount, player);
     }
 
-    public static void setStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, int newValue, net.minecraft.server.level.ServerPlayer player) {
+    public static void setStatistic(ServerStatsCounter manager, Statistic statistic, int newValue, ServerPlayer player) {
         Preconditions.checkArgument(statistic != null, "Statistic cannot be null");
         Preconditions.checkArgument(statistic.getType() == Type.UNTYPED, "Must supply additional parameter for this statistic");
         Preconditions.checkArgument(newValue >= 0, "Value must be greater than or equal to 0");
@@ -226,21 +233,21 @@ public enum CraftStatistic {
 
         // Update scoreboards
         if (player != null) {
-            ((EthyleneLevel) player.level()).getCraftServer().getScoreboardManager().forAllObjectives(nmsStatistic, player, score -> {
+            player.level().getCraftServer().getScoreboardManager().forAllObjectives(nmsStatistic, player, score -> {
                 score.set(newValue);
             });
         }
     }
 
-    public static void incrementStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, Material material, net.minecraft.server.level.ServerPlayer player) {
+    public static void incrementStatistic(ServerStatsCounter manager, Statistic statistic, Material material, ServerPlayer player) {
         incrementStatistic(manager, statistic, material, 1, player);
     }
 
-    public static void decrementStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, Material material, net.minecraft.server.level.ServerPlayer player) {
+    public static void decrementStatistic(ServerStatsCounter manager, Statistic statistic, Material material, ServerPlayer player) {
         decrementStatistic(manager, statistic, material, 1, player);
     }
 
-    public static int getStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, Material material) {
+    public static int getStatistic(ServerStatsCounter manager, Statistic statistic, Material material) {
         Preconditions.checkArgument(statistic != null, "Statistic cannot be null");
         Preconditions.checkArgument(material != null, "Material cannot be null");
         Preconditions.checkArgument(statistic.getType() == Type.BLOCK || statistic.getType() == Type.ITEM, "This statistic does not take a Material parameter");
@@ -249,17 +256,17 @@ public enum CraftStatistic {
         return manager.getValue(nmsStatistic);
     }
 
-    public static void incrementStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, Material material, int amount, net.minecraft.server.level.ServerPlayer player) {
+    public static void incrementStatistic(ServerStatsCounter manager, Statistic statistic, Material material, int amount, ServerPlayer player) {
         Preconditions.checkArgument(amount > 0, "Amount must be greater than 0");
         setStatistic(manager, statistic, material, getStatistic(manager, statistic, material) + amount, player);
     }
 
-    public static void decrementStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, Material material, int amount, net.minecraft.server.level.ServerPlayer player) {
+    public static void decrementStatistic(ServerStatsCounter manager, Statistic statistic, Material material, int amount, ServerPlayer player) {
         Preconditions.checkArgument(amount > 0, "Amount must be greater than 0");
         setStatistic(manager, statistic, material, getStatistic(manager, statistic, material) - amount, player);
     }
 
-    public static void setStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, Material material, int newValue, net.minecraft.server.level.ServerPlayer player) {
+    public static void setStatistic(ServerStatsCounter manager, Statistic statistic, Material material, int newValue, ServerPlayer player) {
         Preconditions.checkArgument(statistic != null, "Statistic cannot be null");
         Preconditions.checkArgument(material != null, "Material cannot be null");
         Preconditions.checkArgument(newValue >= 0, "Value must be greater than or equal to 0");
@@ -270,21 +277,21 @@ public enum CraftStatistic {
 
         // Update scoreboards
         if (player != null) {
-            ((EthyleneLevel) player.level()).getCraftServer().getScoreboardManager().forAllObjectives(nmsStatistic, player, score -> {
+            player.level().getCraftServer().getScoreboardManager().forAllObjectives(nmsStatistic, player, score -> {
                 score.set(newValue);
             });
         }
     }
 
-    public static void incrementStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, EntityType entityType, net.minecraft.server.level.ServerPlayer player) {
+    public static void incrementStatistic(ServerStatsCounter manager, Statistic statistic, EntityType entityType, ServerPlayer player) {
         incrementStatistic(manager, statistic, entityType, 1, player);
     }
 
-    public static void decrementStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, EntityType entityType, net.minecraft.server.level.ServerPlayer player) {
+    public static void decrementStatistic(ServerStatsCounter manager, Statistic statistic, EntityType entityType, ServerPlayer player) {
         decrementStatistic(manager, statistic, entityType, 1, player);
     }
 
-    public static int getStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, EntityType entityType) {
+    public static int getStatistic(ServerStatsCounter manager, Statistic statistic, EntityType entityType) {
         Preconditions.checkArgument(statistic != null, "Statistic cannot be null");
         Preconditions.checkArgument(entityType != null, "EntityType cannot be null");
         Preconditions.checkArgument(statistic.getType() == Type.ENTITY, "This statistic does not take an EntityType parameter");
@@ -293,17 +300,17 @@ public enum CraftStatistic {
         return manager.getValue(nmsStatistic);
     }
 
-    public static void incrementStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, EntityType entityType, int amount, net.minecraft.server.level.ServerPlayer player) {
+    public static void incrementStatistic(ServerStatsCounter manager, Statistic statistic, EntityType entityType, int amount, ServerPlayer player) {
         Preconditions.checkArgument(amount > 0, "Amount must be greater than 0");
         setStatistic(manager, statistic, entityType, getStatistic(manager, statistic, entityType) + amount, player);
     }
 
-    public static void decrementStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, EntityType entityType, int amount, net.minecraft.server.level.ServerPlayer player) {
+    public static void decrementStatistic(ServerStatsCounter manager, Statistic statistic, EntityType entityType, int amount, ServerPlayer player) {
         Preconditions.checkArgument(amount > 0, "Amount must be greater than 0");
         setStatistic(manager, statistic, entityType, getStatistic(manager, statistic, entityType) - amount, player);
     }
 
-    public static void setStatistic(net.minecraft.stats.ServerStatsCounter manager, Statistic statistic, EntityType entityType, int newValue, net.minecraft.server.level.ServerPlayer player) {
+    public static void setStatistic(ServerStatsCounter manager, Statistic statistic, EntityType entityType, int newValue, ServerPlayer player) {
         Preconditions.checkArgument(statistic != null, "Statistic cannot be null");
         Preconditions.checkArgument(entityType != null, "EntityType cannot be null");
         Preconditions.checkArgument(newValue >= 0, "Value must be greater than or equal to 0");
@@ -314,7 +321,7 @@ public enum CraftStatistic {
 
         // Update scoreboards
         if (player != null) {
-            ((EthyleneLevel) player.level()).getCraftServer().getScoreboardManager().forAllObjectives(nmsStatistic, player, score -> {
+            player.level().getCraftServer().getScoreboardManager().forAllObjectives(nmsStatistic, player, score -> {
                 score.set(newValue);
             });
         }

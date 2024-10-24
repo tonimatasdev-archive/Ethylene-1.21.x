@@ -2,38 +2,39 @@ package org.bukkit.craftbukkit.advancement;
 
 import java.util.Collection;
 import java.util.Collections;
+import net.minecraft.advancements.AdvancementHolder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.AdvancementDisplay;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 
 public class CraftAdvancement implements org.bukkit.advancement.Advancement {
 
-    private final net.minecraft.advancements.AdvancementHolder handle;
+    private final AdvancementHolder handle;
 
-    public CraftAdvancement(net.minecraft.advancements.AdvancementHolder handle) {
+    public CraftAdvancement(AdvancementHolder handle) {
         this.handle = handle;
     }
 
-    public net.minecraft.advancements.AdvancementHolder getHandle() {
-        return handle;
+    public AdvancementHolder getHandle() {
+        return this.handle;
     }
 
     @Override
     public NamespacedKey getKey() {
-        return CraftNamespacedKey.fromMinecraft(handle.id());
+        return CraftNamespacedKey.fromMinecraft(this.handle.id());
     }
 
     @Override
     public Collection<String> getCriteria() {
-        return Collections.unmodifiableCollection(handle.value().criteria().keySet());
+        return Collections.unmodifiableCollection(this.handle.value().criteria().keySet());
     }
 
     @Override
     public AdvancementDisplay getDisplay() {
-        if (handle.value().display().isEmpty()) {
+        if (this.handle.value().display().isEmpty()) {
             return null;
         }
 
-        return new CraftAdvancementDisplay(handle.value().display().get());
+        return new CraftAdvancementDisplay(this.handle.value().display().get());
     }
 }

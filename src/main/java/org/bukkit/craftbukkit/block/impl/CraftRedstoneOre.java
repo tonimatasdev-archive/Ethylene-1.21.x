@@ -19,11 +19,11 @@ public final class CraftRedstoneOre extends org.bukkit.craftbukkit.block.data.Cr
 
     @Override
     public boolean isLit() {
-        return get(LIT);
+        return this.get(CraftRedstoneOre.LIT);
     }
 
     @Override
     public void setLit(boolean lit) {
-        set(LIT, lit);
+        this.set(CraftRedstoneOre.LIT, lit);
     }
 }

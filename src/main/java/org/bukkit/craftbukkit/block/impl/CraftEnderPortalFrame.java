@@ -19,12 +19,12 @@ public final class CraftEnderPortalFrame extends org.bukkit.craftbukkit.block.da
 
     @Override
     public boolean hasEye() {
-        return get(EYE);
+        return this.get(CraftEnderPortalFrame.EYE);
     }
 
     @Override
     public void setEye(boolean eye) {
-        set(EYE, eye);
+        this.set(CraftEnderPortalFrame.EYE, eye);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftDirectional
@@ -33,16 +33,16 @@ public final class CraftEnderPortalFrame extends org.bukkit.craftbukkit.block.da
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftEnderPortalFrame.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftEnderPortalFrame.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftEnderPortalFrame.FACING, org.bukkit.block.BlockFace.class);
     }
 }

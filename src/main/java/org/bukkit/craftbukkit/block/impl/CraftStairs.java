@@ -19,12 +19,12 @@ public final class CraftStairs extends org.bukkit.craftbukkit.block.data.CraftBl
 
     @Override
     public org.bukkit.block.data.type.Stairs.Shape getShape() {
-        return get(SHAPE, org.bukkit.block.data.type.Stairs.Shape.class);
+        return this.get(CraftStairs.SHAPE, org.bukkit.block.data.type.Stairs.Shape.class);
     }
 
     @Override
     public void setShape(org.bukkit.block.data.type.Stairs.Shape shape) {
-        set(SHAPE, shape);
+        this.set(CraftStairs.SHAPE, shape);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftBisected
@@ -33,12 +33,12 @@ public final class CraftStairs extends org.bukkit.craftbukkit.block.data.CraftBl
 
     @Override
     public org.bukkit.block.data.Bisected.Half getHalf() {
-        return get(HALF, org.bukkit.block.data.Bisected.Half.class);
+        return this.get(CraftStairs.HALF, org.bukkit.block.data.Bisected.Half.class);
     }
 
     @Override
     public void setHalf(org.bukkit.block.data.Bisected.Half half) {
-        set(HALF, half);
+        this.set(CraftStairs.HALF, half);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftDirectional
@@ -47,17 +47,17 @@ public final class CraftStairs extends org.bukkit.craftbukkit.block.data.CraftBl
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftStairs.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftStairs.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftStairs.FACING, org.bukkit.block.BlockFace.class);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftWaterlogged
@@ -66,11 +66,11 @@ public final class CraftStairs extends org.bukkit.craftbukkit.block.data.CraftBl
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftStairs.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftStairs.WATERLOGGED, waterlogged);
     }
 }

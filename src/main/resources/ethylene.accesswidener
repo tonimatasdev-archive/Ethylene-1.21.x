@@ -48,7 +48,6 @@ accessible method net/minecraft/world/entity/animal/Bee setHasStung (Z)V
 accessible field net/minecraft/world/entity/animal/Bee stayOutOfHiveCountdown I
 accessible field net/minecraft/world/level/block/entity/BeehiveBlockEntity savedFlowerPos Lnet/minecraft/core/BlockPos;
 accessible field net/minecraft/world/level/block/entity/BellBlockEntity resonating Z
-accessible method net/minecraft/world/level/biome/Biome getTemperature (Lnet/minecraft/core/BlockPos;)F
 accessible method net/minecraft/world/item/context/UseOnContext <init> (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/phys/BlockHitResult;)V
 accessible field net/minecraft/commands/CommandSourceStack source Lnet/minecraft/commands/CommandSource;
 accessible field net/minecraft/world/level/block/state/StateHolder PROPERTY_ENTRY_TO_STRING_FUNCTION Ljava/util/function/Function;
@@ -85,7 +84,6 @@ accessible field net/minecraft/server/level/ServerLevel entityManager Lnet/minec
 accessible method net/minecraft/world/level/entity/PersistentEntitySectionManager ensureChunkQueuedForLoad (J)V
 accessible field net/minecraft/world/level/entity/PersistentEntitySectionManager permanentStorage Lnet/minecraft/world/level/entity/EntityPersistentStorage;
 accessible field net/minecraft/world/level/chunk/ChunkAccess blockEntities Ljava/util/Map;
-accessible field net/minecraft/world/level/chunk/storage/ChunkSerializer BLOCK_STATE_CODEC Lcom/mojang/serialization/Codec;
 accessible field net/minecraft/world/level/chunk/ChunkAccess heightmaps Ljava/util/Map;
 accessible field net/minecraft/world/level/block/entity/ConduitBlockEntity effectBlocks Ljava/util/List;
 accessible field net/minecraft/world/level/block/entity/ConduitBlockEntity destroyTarget Lnet/minecraft/world/entity/LivingEntity;
@@ -93,7 +91,6 @@ accessible field net/minecraft/world/level/block/entity/ConduitBlockEntity destr
 accessible method net/minecraft/world/level/block/entity/ConduitBlockEntity updateDestroyTarget (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Ljava/util/List;Lnet/minecraft/world/level/block/entity/ConduitBlockEntity;)V
 accessible method net/minecraft/world/level/block/entity/ConduitBlockEntity getDestroyRangeAABB (Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/AABB;
 accessible method net/minecraft/world/entity/animal/allay/Allay duplicateAllay ()V
-accessible field net/minecraft/world/level/chunk/storage/EntityStorage entityDeserializerQueue Lnet/minecraft/util/thread/ProcessorMailbox;
 accessible field net/minecraft/world/level/block/entity/BaseContainerBlockEntity lockKey Lnet/minecraft/world/LockCode;
 accessible field net/minecraft/world/level/block/entity/BaseContainerBlockEntity name Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/world/inventory/AbstractContainerMenu lastSlots Lnet/minecraft/core/NonNullList;
@@ -472,6 +469,9 @@ accessible method net/minecraft/world/entity/LivingEntity getHurtSound (Lnet/min
 accessible method net/minecraft/world/entity/LivingEntity getDeathSound ()Lnet/minecraft/sounds/SoundEvent;
 accessible method net/minecraft/world/entity/LivingEntity getFallDamageSound (I)Lnet/minecraft/sounds/SoundEvent;
 accessible method net/minecraft/world/entity/LivingEntity getDrinkingSound (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/sounds/SoundEvent;
+accessible method net/minecraft/world/level/biome/Biome getTemperature (Lnet/minecraft/core/BlockPos;I)F
+accessible field net/minecraft/world/level/chunk/storage/EntityStorage entityDeserializerQueue Lnet/minecraft/util/thread/ConsecutiveExecutor;
+accessible field net/minecraft/world/level/chunk/storage/SerializableChunkData BLOCK_STATE_CODEC Lcom/mojang/serialization/Codec;
 
 mutable field net/minecraft/server/level/TicketType timeout J
 mutable field net/minecraft/world/level/saveddata/maps/MapItemSavedData scale B

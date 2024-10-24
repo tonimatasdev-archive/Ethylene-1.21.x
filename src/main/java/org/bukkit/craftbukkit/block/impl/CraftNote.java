@@ -20,22 +20,22 @@ public final class CraftNote extends org.bukkit.craftbukkit.block.data.CraftBloc
 
     @Override
     public org.bukkit.Instrument getInstrument() {
-        return get(INSTRUMENT, org.bukkit.Instrument.class);
+        return this.get(CraftNote.INSTRUMENT, org.bukkit.Instrument.class);
     }
 
     @Override
     public void setInstrument(org.bukkit.Instrument instrument) {
-        set(INSTRUMENT, instrument);
+        this.set(CraftNote.INSTRUMENT, instrument);
     }
 
     @Override
     public org.bukkit.Note getNote() {
-       return new org.bukkit.Note(get(NOTE));
+       return new org.bukkit.Note(this.get(CraftNote.NOTE));
     }
 
     @Override
     public void setNote(org.bukkit.Note note) {
-        set(NOTE, (int) note.getId());
+        this.set(CraftNote.NOTE, (int) note.getId());
     }
 
     // org.bukkit.craftbukkit.block.data.CraftPowerable
@@ -44,11 +44,11 @@ public final class CraftNote extends org.bukkit.craftbukkit.block.data.CraftBloc
 
     @Override
     public boolean isPowered() {
-        return get(POWERED);
+        return this.get(CraftNote.POWERED);
     }
 
     @Override
     public void setPowered(boolean powered) {
-        set(POWERED, powered);
+        this.set(CraftNote.POWERED, powered);
     }
 }

@@ -19,17 +19,17 @@ public final class CraftCaveVines extends org.bukkit.craftbukkit.block.data.Craf
 
     @Override
     public int getAge() {
-        return get(AGE);
+        return this.get(CraftCaveVines.AGE);
     }
 
     @Override
     public void setAge(int age) {
-        set(AGE, age);
+        this.set(CraftCaveVines.AGE, age);
     }
 
     @Override
     public int getMaximumAge() {
-        return getMax(AGE);
+        return getMax(CraftCaveVines.AGE);
     }
 
     // org.bukkit.craftbukkit.block.data.type.CraftCaveVinesPlant
@@ -38,11 +38,11 @@ public final class CraftCaveVines extends org.bukkit.craftbukkit.block.data.Craf
 
     @Override
     public boolean isBerries() {
-        return get(BERRIES);
+        return this.get(CraftCaveVines.BERRIES);
     }
 
     @Override
     public void setBerries(boolean berries) {
-        set(BERRIES, berries);
+        this.set(CraftCaveVines.BERRIES, berries);
     }
 }

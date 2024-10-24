@@ -19,12 +19,12 @@ public final class CraftBigDripleaf extends org.bukkit.craftbukkit.block.data.Cr
 
     @Override
     public Tilt getTilt() {
-        return get(TILT, org.bukkit.block.data.type.BigDripleaf.Tilt.class);
+        return this.get(CraftBigDripleaf.TILT, org.bukkit.block.data.type.BigDripleaf.Tilt.class);
     }
 
     @Override
     public void setTilt(org.bukkit.block.data.type.BigDripleaf.Tilt tilt) {
-        set(TILT, tilt);
+        this.set(CraftBigDripleaf.TILT, tilt);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftDirectional
@@ -33,17 +33,17 @@ public final class CraftBigDripleaf extends org.bukkit.craftbukkit.block.data.Cr
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftBigDripleaf.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftBigDripleaf.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftBigDripleaf.FACING, org.bukkit.block.BlockFace.class);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftWaterlogged
@@ -52,11 +52,11 @@ public final class CraftBigDripleaf extends org.bukkit.craftbukkit.block.data.Cr
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftBigDripleaf.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftBigDripleaf.WATERLOGGED, waterlogged);
     }
 }

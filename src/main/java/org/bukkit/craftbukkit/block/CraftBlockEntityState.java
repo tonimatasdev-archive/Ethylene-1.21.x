@@ -1,10 +1,17 @@
 package org.bukkit.craftbukkit.block;
 
 import java.util.Set;
-
-import net.ethylenemc.EthyleneStatic;
-import net.ethylenemc.interfaces.world.level.block.entity.EthyleneBlockEntity;
-import net.ethylenemc.interfaces.world.level.chunk.EthyleneChunkAccess;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.TileState;
@@ -13,7 +20,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CraftBlockEntityState<T extends net.minecraft.world.level.block.entity.BlockEntity> extends CraftBlockState implements TileState {
+public class CraftBlockEntityState<T extends BlockEntity> extends CraftBlockState implements TileState {
 
     private final T tileEntity;
     private final T snapshot;
@@ -25,23 +32,23 @@ public class CraftBlockEntityState<T extends net.minecraft.world.level.block.ent
 
         // copy tile entity data:
         this.snapshot = this.createSnapshot(tileEntity);
-        this.load(snapshot);
+        this.load(this.snapshot);
     }
 
     protected CraftBlockEntityState(CraftBlockEntityState<T> state, Location location) {
         super(state, location);
-        this.tileEntity = createSnapshot(state.snapshot);
-        this.snapshot = tileEntity;
-        loadData(state.getSnapshotNBT());
+        this.tileEntity = this.createSnapshot(state.snapshot);
+        this.snapshot = this.tileEntity;
+        this.loadData(state.getSnapshotNBT());
     }
 
     public void refreshSnapshot() {
-        this.load(tileEntity);
+        this.load(this.tileEntity);
     }
 
-    private net.minecraft.core.RegistryAccess getRegistryAccess() {
-        net.minecraft.world.level.LevelAccessor worldHandle = getWorldHandle();
-        return (worldHandle != null) ? worldHandle.registryAccess() : EthyleneStatic.getDefaultRegistryAccess();
+    private RegistryAccess getRegistryAccess() {
+        LevelAccessor worldHandle = this.getWorldHandle();
+        return (worldHandle != null) ? worldHandle.registryAccess() : MinecraftServer.getDefaultRegistryAccess();
     }
 
     private T createSnapshot(T tileEntity) {
@@ -49,96 +56,96 @@ public class CraftBlockEntityState<T extends net.minecraft.world.level.block.ent
             return null;
         }
 
-        net.minecraft.nbt.CompoundTag nbtTagCompound = tileEntity.saveWithFullMetadata(getRegistryAccess());
-        T snapshot = (T) net.minecraft.world.level.block.entity.BlockEntity.loadStatic(getPosition(), getHandle(), nbtTagCompound, getRegistryAccess());
+        CompoundTag nbtTagCompound = tileEntity.saveWithFullMetadata(this.getRegistryAccess());
+        T snapshot = (T) BlockEntity.loadStatic(this.getPosition(), this.getHandle(), nbtTagCompound, this.getRegistryAccess());
 
         return snapshot;
     }
 
-    public Set<net.minecraft.core.component.DataComponentType<?>> applyComponents(net.minecraft.core.component.DataComponentMap datacomponentmap, net.minecraft.core.component.DataComponentPatch datacomponentpatch) {
-        Set<net.minecraft.core.component.DataComponentType<?>> result = ((EthyleneBlockEntity) snapshot).applyComponentsSet(datacomponentmap, datacomponentpatch);
-        load(snapshot);
+    public Set<DataComponentType<?>> applyComponents(DataComponentMap datacomponentmap, DataComponentPatch datacomponentpatch) {
+        Set<DataComponentType<?>> result = this.snapshot.applyComponentsSet(datacomponentmap, datacomponentpatch);
+        this.load(this.snapshot);
         return result;
     }
 
-    public net.minecraft.core.component.DataComponentMap collectComponents() {
-        return snapshot.collectComponents();
+    public DataComponentMap collectComponents() {
+        return this.snapshot.collectComponents();
     }
 
-    // Loads the specified data into the snapshot net.minecraft.world.level.block.entity.BlockEntity.
-    public void loadData(net.minecraft.nbt.CompoundTag nbtTagCompound) {
-        snapshot.loadWithComponents(nbtTagCompound, getRegistryAccess());
-        load(snapshot);
+    // Loads the specified data into the snapshot TileEntity.
+    public void loadData(CompoundTag nbtTagCompound) {
+        this.snapshot.loadWithComponents(nbtTagCompound, this.getRegistryAccess());
+        this.load(this.snapshot);
     }
 
-    // copies the net.minecraft.world.level.block.entity.BlockEntity-specific data, retains the position
+    // copies the TileEntity-specific data, retains the position
     private void copyData(T from, T to) {
-        net.minecraft.nbt.CompoundTag nbtTagCompound = from.saveWithFullMetadata(getRegistryAccess());
-        to.loadWithComponents(nbtTagCompound, getRegistryAccess());
+        CompoundTag nbtTagCompound = from.saveWithFullMetadata(this.getRegistryAccess());
+        to.loadWithComponents(nbtTagCompound, this.getRegistryAccess());
     }
 
-    // gets the wrapped net.minecraft.world.level.block.entity.BlockEntity
+    // gets the wrapped TileEntity
     protected T getTileEntity() {
-        return tileEntity;
+        return this.tileEntity;
     }
 
-    // gets the cloned net.minecraft.world.level.block.entity.BlockEntity which is used to store the captured data
+    // gets the cloned TileEntity which is used to store the captured data
     protected T getSnapshot() {
-        return snapshot;
+        return this.snapshot;
     }
 
-    // gets the current net.minecraft.world.level.block.entity.BlockEntity from the world at this position
-    protected net.minecraft.world.level.block.entity.BlockEntity getTileEntityFromWorld() {
-        requirePlaced();
+    // gets the current TileEntity from the world at this position
+    protected BlockEntity getTileEntityFromWorld() {
+        this.requirePlaced();
 
-        return getWorldHandle().getBlockEntity(this.getPosition());
+        return this.getWorldHandle().getBlockEntity(this.getPosition());
     }
 
-    // gets the NBT data of the net.minecraft.world.level.block.entity.BlockEntity represented by this block state
-    public net.minecraft.nbt.CompoundTag getSnapshotNBT() {
+    // gets the NBT data of the TileEntity represented by this block state
+    public CompoundTag getSnapshotNBT() {
         // update snapshot
-        applyTo(snapshot);
+        this.applyTo(this.snapshot);
 
-        return snapshot.saveWithFullMetadata(getRegistryAccess());
+        return this.snapshot.saveWithFullMetadata(this.getRegistryAccess());
     }
 
-    public net.minecraft.nbt.CompoundTag getItemNBT() {
+    public CompoundTag getItemNBT() {
         // update snapshot
-        applyTo(snapshot);
+        this.applyTo(this.snapshot);
 
-        // See net.minecraft.world.level.block.entity.BlockEntity#saveToItem
-        net.minecraft.nbt.CompoundTag nbt = snapshot.saveCustomOnly(getRegistryAccess());
-        snapshot.removeComponentsFromTag(nbt);
+        // See TileEntity#saveToItem
+        CompoundTag nbt = this.snapshot.saveCustomOnly(this.getRegistryAccess());
+        this.snapshot.removeComponentsFromTag(nbt);
         return nbt;
     }
 
-    public void addEntityType(net.minecraft.nbt.CompoundTag nbt) {
-        net.minecraft.world.level.block.entity.BlockEntity.addEntityType(nbt, snapshot.getType());
+    public void addEntityType(CompoundTag nbt) {
+        BlockEntity.addEntityType(nbt, this.snapshot.getType());
     }
 
-    // gets the packet data of the net.minecraft.world.level.block.entity.BlockEntity represented by this block state
-    public net.minecraft.nbt.CompoundTag getUpdateNBT() {
+    // gets the packet data of the TileEntity represented by this block state
+    public CompoundTag getUpdateNBT() {
         // update snapshot
-        applyTo(snapshot);
+        this.applyTo(this.snapshot);
 
-        return snapshot.getUpdateTag(getRegistryAccess());
+        return this.snapshot.getUpdateTag(this.getRegistryAccess());
     }
 
     // copies the data of the given tile entity to this block state
     protected void load(T tileEntity) {
-        if (tileEntity != null && tileEntity != snapshot) {
-            copyData(tileEntity, snapshot);
+        if (tileEntity != null && tileEntity != this.snapshot) {
+            this.copyData(tileEntity, this.snapshot);
         }
     }
 
-    // applies the net.minecraft.world.level.block.entity.BlockEntity data of this block state to the given net.minecraft.world.level.block.entity.BlockEntity
+    // applies the TileEntity data of this block state to the given TileEntity
     protected void applyTo(T tileEntity) {
-        if (tileEntity != null && tileEntity != snapshot) {
-            copyData(snapshot, tileEntity);
+        if (tileEntity != null && tileEntity != this.snapshot) {
+            this.copyData(this.snapshot, tileEntity);
         }
     }
 
-    protected boolean isApplicable(net.minecraft.world.level.block.entity.BlockEntity tileEntity) {
+    protected boolean isApplicable(BlockEntity tileEntity) {
         return tileEntity != null && this.tileEntity.getClass() == tileEntity.getClass();
     }
 
@@ -147,10 +154,10 @@ public class CraftBlockEntityState<T extends net.minecraft.world.level.block.ent
         boolean result = super.update(force, applyPhysics);
 
         if (result && this.isPlaced()) {
-            net.minecraft.world.level.block.entity.BlockEntity tile = getTileEntityFromWorld();
+            BlockEntity tile = this.getTileEntityFromWorld();
 
-            if (isApplicable(tile)) {
-                applyTo((T) tile);
+            if (this.isApplicable(tile)) {
+                this.applyTo((T) tile);
                 tile.setChanged();
             }
         }
@@ -160,12 +167,12 @@ public class CraftBlockEntityState<T extends net.minecraft.world.level.block.ent
 
     @Override
     public PersistentDataContainer getPersistentDataContainer() {
-        return ((EthyleneChunkAccess) this.getSnapshot()).getPersistentDataContainer();
+        return this.getSnapshot().persistentDataContainer;
     }
 
     @Nullable
-    public net.minecraft.network.protocol.Packet<net.minecraft.network.protocol.game.ClientGamePacketListener> getUpdatePacket(@NotNull Location location) {
-        return new net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket(CraftLocation.toBlockPosition(location), snapshot.getType(), getUpdateNBT());
+    public Packet<ClientGamePacketListener> getUpdatePacket(@NotNull Location location) {
+        return new ClientboundBlockEntityDataPacket(CraftLocation.toBlockPosition(location), this.snapshot.getType(), this.getUpdateNBT());
     }
 
     @Override

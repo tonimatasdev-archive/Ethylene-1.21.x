@@ -6,6 +6,13 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.level.block.ComposterBlock;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -29,29 +36,29 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CraftItemType<M extends ItemMeta> implements ItemType.Typed<M>, Handleable<net.minecraft.world.item.Item> {
+public class CraftItemType<M extends ItemMeta> implements ItemType.Typed<M>, Handleable<Item> {
 
     private final NamespacedKey key;
-    private final net.minecraft.world.item.Item item;
+    private final Item item;
     private final Supplier<CraftItemMetas.ItemMetaData<M>> itemMetaData;
 
-    public static Material minecraftToBukkit(net.minecraft.world.item.Item item) {
+    public static Material minecraftToBukkit(Item item) {
         return CraftMagicNumbers.getMaterial(item);
     }
 
-    public static net.minecraft.world.item.Item bukkitToMinecraft(Material material) {
+    public static Item bukkitToMinecraft(Material material) {
         return CraftMagicNumbers.getItem(material);
     }
 
-    public static ItemType minecraftToBukkitNew(net.minecraft.world.item.Item minecraft) {
-        return CraftRegistry.minecraftToBukkit(minecraft, net.minecraft.core.registries.Registries.ITEM, Registry.ITEM);
+    public static ItemType minecraftToBukkitNew(Item minecraft) {
+        return CraftRegistry.minecraftToBukkit(minecraft, Registries.ITEM, Registry.ITEM);
     }
 
-    public static net.minecraft.world.item.Item bukkitToMinecraftNew(ItemType bukkit) {
+    public static Item bukkitToMinecraftNew(ItemType bukkit) {
         return CraftRegistry.bukkitToMinecraft(bukkit);
     }
 
-    public CraftItemType(NamespacedKey key, net.minecraft.world.item.Item item) {
+    public CraftItemType(NamespacedKey key, Item item) {
         this.key = key;
         this.item = item;
         this.itemMetaData = Suppliers.memoize(() -> CraftItemMetas.getItemMetaData(this));
@@ -103,28 +110,28 @@ public class CraftItemType<M extends ItemMeta> implements ItemType.Typed<M>, Han
     }
 
     @Override
-    public net.minecraft.world.item.Item getHandle() {
-        return item;
+    public Item getHandle() {
+        return this.item;
     }
 
     public M getItemMeta(net.minecraft.world.item.ItemStack itemStack) {
-        return itemMetaData.get().fromItemStack().apply(itemStack);
+        return this.itemMetaData.get().fromItemStack().apply(itemStack);
     }
 
     public M getItemMeta(ItemMeta itemMeta) {
-        return itemMetaData.get().fromItemMeta().apply(this, (CraftMetaItem) itemMeta);
+        return this.itemMetaData.get().fromItemMeta().apply(this, (CraftMetaItem) itemMeta);
     }
 
     @Override
     public boolean hasBlockType() {
-        return item instanceof net.minecraft.world.item.BlockItem;
+        return this.item instanceof BlockItem;
     }
 
     @NotNull
     @Override
     public BlockType getBlockType() {
-        if (!(item instanceof net.minecraft.world.item.BlockItem block)) {
-            throw new IllegalStateException("The item type " + getKey() + " has no corresponding block type");
+        if (!(this.item instanceof BlockItem block)) {
+            throw new IllegalStateException("The item type " + this.getKey() + " has no corresponding block type");
         }
 
         return CraftBlockType.minecraftToBukkitNew(block.getBlock());
@@ -135,7 +142,7 @@ public class CraftItemType<M extends ItemMeta> implements ItemType.Typed<M>, Han
         if (this == ItemType.AIR) {
             throw new UnsupportedOperationException("Air does not have ItemMeta");
         }
-        return itemMetaData.get().metaClass();
+        return this.itemMetaData.get().metaClass();
     }
 
     @Override
@@ -145,44 +152,44 @@ public class CraftItemType<M extends ItemMeta> implements ItemType.Typed<M>, Han
         if (this == AIR) {
             return 0;
         }
-        return item.components().getOrDefault(net.minecraft.core.component.DataComponents.MAX_STACK_SIZE, 64);
+        return this.item.components().getOrDefault(DataComponents.MAX_STACK_SIZE, 64);
     }
 
     @Override
     public short getMaxDurability() {
-        return item.components().getOrDefault(net.minecraft.core.component.DataComponents.MAX_DAMAGE, 0).shortValue();
+        return this.item.components().getOrDefault(DataComponents.MAX_DAMAGE, 0).shortValue();
     }
 
     @Override
     public boolean isEdible() {
-        return item.components().has(net.minecraft.core.component.DataComponents.FOOD);
+        return this.item.components().has(DataComponents.FOOD);
     }
 
     @Override
     public boolean isRecord() {
-        return item.components().has(net.minecraft.core.component.DataComponents.JUKEBOX_PLAYABLE);
+        return this.item.components().has(DataComponents.JUKEBOX_PLAYABLE);
     }
 
     @Override
     public boolean isFuel() {
-        return net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity.isFuel(new net.minecraft.world.item.ItemStack(item));
+        return MinecraftServer.getServer().fuelValues().isFuel(new net.minecraft.world.item.ItemStack(this.item));
     }
 
     @Override
     public boolean isCompostable() {
-        return net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.containsKey(item);
+        return ComposterBlock.COMPOSTABLES.containsKey(this.item);
     }
 
     @Override
     public float getCompostChance() {
-        Preconditions.checkArgument(isCompostable(), "The item type " + getKey() + " is not compostable");
-        return net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.getFloat(item);
+        Preconditions.checkArgument(this.isCompostable(), "The item type " + this.getKey() + " is not compostable");
+        return ComposterBlock.COMPOSTABLES.getFloat(this.item);
     }
 
     @Override
     public ItemType getCraftingRemainingItem() {
-        net.minecraft.world.item.Item expectedItem = item.getCraftingRemainingItem();
-        return expectedItem == null ? null : minecraftToBukkitNew(expectedItem);
+        net.minecraft.world.item.ItemStack expectedItem = this.item.getCraftingRemainder();
+        return expectedItem.isEmpty() ? null : CraftItemType.minecraftToBukkitNew(expectedItem.getItem());
     }
 
 //    @Override
@@ -194,10 +201,7 @@ public class CraftItemType<M extends ItemMeta> implements ItemType.Typed<M>, Han
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> defaultAttributes = ImmutableMultimap.builder();
 
-        net.minecraft.world.item.component.ItemAttributeModifiers nmsDefaultAttributes = item.components().getOrDefault(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS, net.minecraft.world.item.component.ItemAttributeModifiers.EMPTY);
-        if (nmsDefaultAttributes.modifiers().isEmpty()) {
-            nmsDefaultAttributes = item.getDefaultAttributeModifiers();
-        }
+        ItemAttributeModifiers nmsDefaultAttributes = this.item.components().getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
 
         nmsDefaultAttributes.forEach(CraftEquipmentSlot.getNMS(slot), (key, value) -> {
             Attribute attribute = CraftAttribute.minecraftToBukkit(key.value());
@@ -215,18 +219,18 @@ public class CraftItemType<M extends ItemMeta> implements ItemType.Typed<M>, Han
     @Override
     public boolean isEnabledByFeature(@NotNull World world) {
         Preconditions.checkNotNull(world, "World cannot be null");
-        return getHandle().isEnabled(((CraftWorld) world).getHandle().enabledFeatures());
+        return this.getHandle().isEnabled(((CraftWorld) world).getHandle().enabledFeatures());
     }
 
     @NotNull
     @Override
     public String getTranslationKey() {
-        return item.getDescriptionId();
+        return this.item.getDescriptionId();
     }
 
     @Override
     public NamespacedKey getKey() {
-        return key;
+        return this.key;
     }
 
     @Override

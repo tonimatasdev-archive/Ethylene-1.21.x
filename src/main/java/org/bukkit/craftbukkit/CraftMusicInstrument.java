@@ -1,32 +1,35 @@
 package org.bukkit.craftbukkit;
 
 import com.google.common.base.Preconditions;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.Instrument;
 import org.bukkit.MusicInstrument;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.craftbukkit.util.Handleable;
 import org.jetbrains.annotations.NotNull;
 
-public class CraftMusicInstrument extends MusicInstrument implements Handleable<net.minecraft.world.item.Instrument> {
+public class CraftMusicInstrument extends MusicInstrument implements Handleable<Instrument> {
 
-    public static MusicInstrument minecraftToBukkit(net.minecraft.world.item.Instrument minecraft) {
-        return CraftRegistry.minecraftToBukkit(minecraft, net.minecraft.core.registries.Registries.INSTRUMENT, Registry.INSTRUMENT);
+    public static MusicInstrument minecraftToBukkit(Instrument minecraft) {
+        return CraftRegistry.minecraftToBukkit(minecraft, Registries.INSTRUMENT, Registry.INSTRUMENT);
     }
 
-    public static MusicInstrument minecraftHolderToBukkit(net.minecraft.core.Holder<net.minecraft.world.item.Instrument> minecraft) {
-        return minecraftToBukkit(minecraft.value());
+    public static MusicInstrument minecraftHolderToBukkit(Holder<Instrument> minecraft) {
+        return CraftMusicInstrument.minecraftToBukkit(minecraft.value());
     }
 
-    public static net.minecraft.world.item.Instrument bukkitToMinecraft(MusicInstrument bukkit) {
+    public static Instrument bukkitToMinecraft(MusicInstrument bukkit) {
         return CraftRegistry.bukkitToMinecraft(bukkit);
     }
 
-    public static net.minecraft.core.Holder<net.minecraft.world.item.Instrument> bukkitToMinecraftHolder(MusicInstrument bukkit) {
+    public static Holder<Instrument> bukkitToMinecraftHolder(MusicInstrument bukkit) {
         Preconditions.checkArgument(bukkit != null);
 
-        net.minecraft.core.Registry<net.minecraft.world.item.Instrument> registry = CraftRegistry.getMinecraftRegistry(net.minecraft.core.registries.Registries.INSTRUMENT);
+        net.minecraft.core.Registry<Instrument> registry = CraftRegistry.getMinecraftRegistry(Registries.INSTRUMENT);
 
-        if (registry.wrapAsHolder(bukkitToMinecraft(bukkit)) instanceof net.minecraft.core.Holder.Reference<net.minecraft.world.item.Instrument> holder) {
+        if (registry.wrapAsHolder(CraftMusicInstrument.bukkitToMinecraft(bukkit)) instanceof Holder.Reference<Instrument> holder) {
             return holder;
         }
 
@@ -47,22 +50,22 @@ public class CraftMusicInstrument extends MusicInstrument implements Handleable<
     }
 
     private final NamespacedKey key;
-    private final net.minecraft.world.item.Instrument handle;
+    private final Instrument handle;
 
-    public CraftMusicInstrument(NamespacedKey key, net.minecraft.world.item.Instrument handle) {
+    public CraftMusicInstrument(NamespacedKey key, Instrument handle) {
         this.key = key;
         this.handle = handle;
     }
 
     @Override
-    public net.minecraft.world.item.Instrument getHandle() {
-        return handle;
+    public Instrument getHandle() {
+        return this.handle;
     }
 
     @NotNull
     @Override
     public NamespacedKey getKey() {
-        return key;
+        return this.key;
     }
 
     @Override
@@ -75,16 +78,16 @@ public class CraftMusicInstrument extends MusicInstrument implements Handleable<
             return false;
         }
 
-        return getKey().equals(((MusicInstrument) other).getKey());
+        return this.getKey().equals(((MusicInstrument) other).getKey());
     }
 
     @Override
     public int hashCode() {
-        return getKey().hashCode();
+        return this.getKey().hashCode();
     }
 
     @Override
     public String toString() {
-        return "CraftMusicInstrument{key=" + key + "}";
+        return "CraftMusicInstrument{key=" + this.key + "}";
     }
 }

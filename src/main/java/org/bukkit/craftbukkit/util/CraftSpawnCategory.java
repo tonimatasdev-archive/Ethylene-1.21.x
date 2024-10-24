@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.util;
 
+import net.minecraft.world.entity.MobCategory;
 import org.bukkit.entity.SpawnCategory;
 
 public class CraftSpawnCategory {
@@ -42,7 +43,7 @@ public class CraftSpawnCategory {
         };
     }
 
-    public static SpawnCategory toBukkit(net.minecraft.world.entity.MobCategory enumCreatureType) {
+    public static SpawnCategory toBukkit(MobCategory enumCreatureType) {
         return switch (enumCreatureType) {
             case MONSTER -> SpawnCategory.MONSTER;
             case CREATURE -> SpawnCategory.ANIMAL;
@@ -52,21 +53,21 @@ public class CraftSpawnCategory {
             case WATER_AMBIENT -> SpawnCategory.WATER_AMBIENT;
             case UNDERGROUND_WATER_CREATURE -> SpawnCategory.WATER_UNDERGROUND_CREATURE;
             case MISC -> SpawnCategory.MISC;
-            default -> throw new UnsupportedOperationException("Unknown net.minecraft.world.entity.MobCategory " + enumCreatureType + " for SpawnCategory");
+            default -> throw new UnsupportedOperationException("Unknown EnumCreatureType " + enumCreatureType + " for SpawnCategory");
         };
     }
 
-    public static net.minecraft.world.entity.MobCategory toNMS(SpawnCategory spawnCategory) {
+    public static MobCategory toNMS(SpawnCategory spawnCategory) {
         return switch (spawnCategory) {
-            case MONSTER -> net.minecraft.world.entity.MobCategory.MONSTER;
-            case ANIMAL -> net.minecraft.world.entity.MobCategory.CREATURE;
-            case AMBIENT -> net.minecraft.world.entity.MobCategory.AMBIENT;
-            case AXOLOTL -> net.minecraft.world.entity.MobCategory.AXOLOTLS;
-            case WATER_ANIMAL -> net.minecraft.world.entity.MobCategory.WATER_CREATURE;
-            case WATER_AMBIENT -> net.minecraft.world.entity.MobCategory.WATER_AMBIENT;
-            case WATER_UNDERGROUND_CREATURE -> net.minecraft.world.entity.MobCategory.UNDERGROUND_WATER_CREATURE;
-            case MISC -> net.minecraft.world.entity.MobCategory.MISC;
-            default -> throw new UnsupportedOperationException("Unknown SpawnCategory " + spawnCategory + " for net.minecraft.world.entity.MobCategory");
+            case MONSTER -> MobCategory.MONSTER;
+            case ANIMAL -> MobCategory.CREATURE;
+            case AMBIENT -> MobCategory.AMBIENT;
+            case AXOLOTL -> MobCategory.AXOLOTLS;
+            case WATER_ANIMAL -> MobCategory.WATER_CREATURE;
+            case WATER_AMBIENT -> MobCategory.WATER_AMBIENT;
+            case WATER_UNDERGROUND_CREATURE -> MobCategory.UNDERGROUND_WATER_CREATURE;
+            case MISC -> MobCategory.MISC;
+            default -> throw new UnsupportedOperationException("Unknown SpawnCategory " + spawnCategory + " for EnumCreatureType");
         };
     }
 

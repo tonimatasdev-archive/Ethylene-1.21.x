@@ -19,17 +19,17 @@ public final class CraftPitcherCrop extends org.bukkit.craftbukkit.block.data.Cr
 
     @Override
     public int getAge() {
-        return get(AGE);
+        return this.get(CraftPitcherCrop.AGE);
     }
 
     @Override
     public void setAge(int age) {
-        set(AGE, age);
+        this.set(CraftPitcherCrop.AGE, age);
     }
 
     @Override
     public int getMaximumAge() {
-        return getMax(AGE);
+        return getMax(CraftPitcherCrop.AGE);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftBisected
@@ -38,11 +38,11 @@ public final class CraftPitcherCrop extends org.bukkit.craftbukkit.block.data.Cr
 
     @Override
     public org.bukkit.block.data.Bisected.Half getHalf() {
-        return get(HALF, org.bukkit.block.data.Bisected.Half.class);
+        return this.get(CraftPitcherCrop.HALF, org.bukkit.block.data.Bisected.Half.class);
     }
 
     @Override
     public void setHalf(org.bukkit.block.data.Bisected.Half half) {
-        set(HALF, half);
+        this.set(CraftPitcherCrop.HALF, half);
     }
 }

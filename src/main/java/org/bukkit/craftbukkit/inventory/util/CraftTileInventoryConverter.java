@@ -1,5 +1,19 @@
 package org.bukkit.craftbukkit.inventory.util;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.Container;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.BlastFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
+import net.minecraft.world.level.block.entity.CrafterBlockEntity;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
+import net.minecraft.world.level.block.entity.DropperBlockEntity;
+import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
+import net.minecraft.world.level.block.entity.LecternBlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.entity.SmokerBlockEntity;
 import org.bukkit.craftbukkit.inventory.CraftInventory;
 import org.bukkit.craftbukkit.inventory.CraftInventoryBrewer;
 import org.bukkit.craftbukkit.inventory.CraftInventoryFurnace;
@@ -10,67 +24,67 @@ import org.bukkit.inventory.InventoryHolder;
 
 public abstract class CraftTileInventoryConverter implements CraftInventoryCreator.InventoryConverter {
 
-    public abstract net.minecraft.world.Container getTileEntity();
+    public abstract Container getTileEntity();
 
     @Override
     public Inventory createInventory(InventoryHolder holder, InventoryType type) {
-        return getInventory(getTileEntity());
+        return this.getInventory(this.getTileEntity());
     }
 
     @Override
     public Inventory createInventory(InventoryHolder holder, InventoryType type, String title) {
-        net.minecraft.world.Container te = getTileEntity();
-        if (te instanceof net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity) {
-            ((net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity) te).name = CraftChatMessage.fromStringOrNull(title);
+        Container te = this.getTileEntity();
+        if (te instanceof RandomizableContainerBlockEntity) {
+            ((RandomizableContainerBlockEntity) te).name = CraftChatMessage.fromStringOrNull(title);
         }
 
-        return getInventory(te);
+        return this.getInventory(te);
     }
 
-    public Inventory getInventory(net.minecraft.world.Container tileEntity) {
+    public Inventory getInventory(Container tileEntity) {
         return new CraftInventory(tileEntity);
     }
 
     public static class Furnace extends CraftTileInventoryConverter {
 
         @Override
-        public net.minecraft.world.Container getTileEntity() {
-            net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity furnace = new net.minecraft.world.level.block.entity.FurnaceBlockEntity(net.minecraft.core.BlockPos.ZERO, net.minecraft.world.level.block.Blocks.FURNACE.defaultBlockState()); // TODO: customize this if required
+        public Container getTileEntity() {
+            AbstractFurnaceBlockEntity furnace = new FurnaceBlockEntity(BlockPos.ZERO, Blocks.FURNACE.defaultBlockState()); // TODO: customize this if required
             return furnace;
         }
 
         @Override
         public Inventory createInventory(InventoryHolder owner, InventoryType type, String title) {
-            net.minecraft.world.Container tileEntity = getTileEntity();
-            ((net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity) tileEntity).name = CraftChatMessage.fromStringOrNull(title);
-            return getInventory(tileEntity);
+            Container tileEntity = this.getTileEntity();
+            ((AbstractFurnaceBlockEntity) tileEntity).name = CraftChatMessage.fromStringOrNull(title);
+            return this.getInventory(tileEntity);
         }
 
         @Override
-        public Inventory getInventory(net.minecraft.world.Container tileEntity) {
-            return new CraftInventoryFurnace((net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity) tileEntity);
+        public Inventory getInventory(Container tileEntity) {
+            return new CraftInventoryFurnace((AbstractFurnaceBlockEntity) tileEntity);
         }
     }
 
     public static class BrewingStand extends CraftTileInventoryConverter {
 
         @Override
-        public net.minecraft.world.Container getTileEntity() {
-            return new net.minecraft.world.level.block.entity.BrewingStandBlockEntity(net.minecraft.core.BlockPos.ZERO, net.minecraft.world.level.block.Blocks.BREWING_STAND.defaultBlockState());
+        public Container getTileEntity() {
+            return new BrewingStandBlockEntity(BlockPos.ZERO, Blocks.BREWING_STAND.defaultBlockState());
         }
 
         @Override
         public Inventory createInventory(InventoryHolder holder, InventoryType type, String title) {
-            // BrewingStand does not extend net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity
-            net.minecraft.world.Container tileEntity = getTileEntity();
-            if (tileEntity instanceof net.minecraft.world.level.block.entity.BrewingStandBlockEntity) {
-                ((net.minecraft.world.level.block.entity.BrewingStandBlockEntity) tileEntity).name = CraftChatMessage.fromStringOrNull(title);
+            // BrewingStand does not extend TileEntityLootable
+            Container tileEntity = this.getTileEntity();
+            if (tileEntity instanceof BrewingStandBlockEntity) {
+                ((BrewingStandBlockEntity) tileEntity).name = CraftChatMessage.fromStringOrNull(title);
             }
-            return getInventory(tileEntity);
+            return this.getInventory(tileEntity);
         }
 
         @Override
-        public Inventory getInventory(net.minecraft.world.Container tileEntity) {
+        public Inventory getInventory(Container tileEntity) {
             return new CraftInventoryBrewer(tileEntity);
         }
     }
@@ -78,56 +92,56 @@ public abstract class CraftTileInventoryConverter implements CraftInventoryCreat
     public static class Dispenser extends CraftTileInventoryConverter {
 
         @Override
-        public net.minecraft.world.Container getTileEntity() {
-            return new net.minecraft.world.level.block.entity.DispenserBlockEntity(net.minecraft.core.BlockPos.ZERO, net.minecraft.world.level.block.Blocks.DISPENSER.defaultBlockState());
+        public Container getTileEntity() {
+            return new DispenserBlockEntity(BlockPos.ZERO, Blocks.DISPENSER.defaultBlockState());
         }
     }
 
     public static class Dropper extends CraftTileInventoryConverter {
 
         @Override
-        public net.minecraft.world.Container getTileEntity() {
-            return new net.minecraft.world.level.block.entity.DropperBlockEntity(net.minecraft.core.BlockPos.ZERO, net.minecraft.world.level.block.Blocks.DROPPER.defaultBlockState());
+        public Container getTileEntity() {
+            return new DropperBlockEntity(BlockPos.ZERO, Blocks.DROPPER.defaultBlockState());
         }
     }
 
     public static class Hopper extends CraftTileInventoryConverter {
 
         @Override
-        public net.minecraft.world.Container getTileEntity() {
-            return new net.minecraft.world.level.block.entity.HopperBlockEntity(net.minecraft.core.BlockPos.ZERO, net.minecraft.world.level.block.Blocks.HOPPER.defaultBlockState());
+        public Container getTileEntity() {
+            return new HopperBlockEntity(BlockPos.ZERO, Blocks.HOPPER.defaultBlockState());
         }
     }
 
     public static class BlastFurnace extends CraftTileInventoryConverter {
 
         @Override
-        public net.minecraft.world.Container getTileEntity() {
-            return new net.minecraft.world.level.block.entity.BlastFurnaceBlockEntity(net.minecraft.core.BlockPos.ZERO, net.minecraft.world.level.block.Blocks.BLAST_FURNACE.defaultBlockState());
+        public Container getTileEntity() {
+            return new BlastFurnaceBlockEntity(BlockPos.ZERO, Blocks.BLAST_FURNACE.defaultBlockState());
         }
     }
 
     public static class Lectern extends CraftTileInventoryConverter {
 
         @Override
-        public net.minecraft.world.Container getTileEntity() {
-            return new net.minecraft.world.level.block.entity.LecternBlockEntity(net.minecraft.core.BlockPos.ZERO, net.minecraft.world.level.block.Blocks.LECTERN.defaultBlockState()).bookAccess;
+        public Container getTileEntity() {
+            return new LecternBlockEntity(BlockPos.ZERO, Blocks.LECTERN.defaultBlockState()).bookAccess;
         }
     }
 
     public static class Smoker extends CraftTileInventoryConverter {
 
         @Override
-        public net.minecraft.world.Container getTileEntity() {
-            return new net.minecraft.world.level.block.entity.SmokerBlockEntity(net.minecraft.core.BlockPos.ZERO, net.minecraft.world.level.block.Blocks.SMOKER.defaultBlockState());
+        public Container getTileEntity() {
+            return new SmokerBlockEntity(BlockPos.ZERO, Blocks.SMOKER.defaultBlockState());
         }
     }
 
     public static class Crafter extends CraftTileInventoryConverter {
 
         @Override
-        public net.minecraft.world.Container getTileEntity() {
-            return new net.minecraft.world.level.block.entity.CrafterBlockEntity(net.minecraft.core.BlockPos.ZERO, net.minecraft.world.level.block.Blocks.CRAFTER.defaultBlockState());
+        public Container getTileEntity() {
+            return new CrafterBlockEntity(BlockPos.ZERO, Blocks.CRAFTER.defaultBlockState());
         }
     }
 }

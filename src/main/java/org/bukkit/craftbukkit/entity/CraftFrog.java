@@ -2,8 +2,10 @@ package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
 import java.util.Locale;
-
-import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.animal.FrogVariant;
+import net.minecraft.world.entity.animal.frog.Frog;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.craftbukkit.CraftRegistry;
@@ -13,13 +15,13 @@ import org.bukkit.entity.Entity;
 
 public class CraftFrog extends CraftAnimals implements org.bukkit.entity.Frog {
 
-    public CraftFrog(CraftServer server, net.minecraft.world.entity.animal.frog.Frog entity) {
+    public CraftFrog(CraftServer server, Frog entity) {
         super(server, entity);
     }
 
     @Override
-    public net.minecraft.world.entity.animal.frog.Frog getHandle() {
-        return (net.minecraft.world.entity.animal.frog.Frog) entity;
+    public Frog getHandle() {
+        return (Frog) this.entity;
     }
 
     @Override
@@ -29,55 +31,55 @@ public class CraftFrog extends CraftAnimals implements org.bukkit.entity.Frog {
 
     @Override
     public Entity getTongueTarget() {
-        return getHandle().getTongueTarget().map(entity1 -> ((EthyleneEntity) entity1).getBukkitEntity()).orElse(null);
+        return this.getHandle().getTongueTarget().map(net.minecraft.world.entity.Entity::getBukkitEntity).orElse(null);
     }
 
     @Override
     public void setTongueTarget(Entity target) {
         if (target == null) {
-            getHandle().eraseTongueTarget();
+            this.getHandle().eraseTongueTarget();
         } else {
-            getHandle().setTongueTarget(((CraftEntity) target).getHandle());
+            this.getHandle().setTongueTarget(((CraftEntity) target).getHandle());
         }
     }
 
     @Override
     public Variant getVariant() {
-        return CraftVariant.minecraftHolderToBukkit(getHandle().getVariant());
+        return CraftVariant.minecraftHolderToBukkit(this.getHandle().getVariant());
     }
 
     @Override
     public void setVariant(Variant variant) {
         Preconditions.checkArgument(variant != null, "variant");
 
-        getHandle().setVariant(CraftVariant.bukkitToMinecraftHolder(variant));
+        this.getHandle().setVariant(CraftVariant.bukkitToMinecraftHolder(variant));
     }
 
-    public static class CraftVariant implements Variant, Handleable<net.minecraft.world.entity.animal.FrogVariant> {
+    public static class CraftVariant implements Variant, Handleable<FrogVariant> {
         private static int count = 0;
 
-        public static Variant minecraftToBukkit(net.minecraft.world.entity.animal.FrogVariant minecraft) {
-            return CraftRegistry.minecraftToBukkit(minecraft, net.minecraft.core.registries.Registries.FROG_VARIANT, Registry.FROG_VARIANT);
+        public static Variant minecraftToBukkit(FrogVariant minecraft) {
+            return CraftRegistry.minecraftToBukkit(minecraft, Registries.FROG_VARIANT, Registry.FROG_VARIANT);
         }
 
-        public static Variant minecraftHolderToBukkit(net.minecraft.core.Holder<net.minecraft.world.entity.animal.FrogVariant> minecraft) {
-            return minecraftToBukkit(minecraft.value());
+        public static Variant minecraftHolderToBukkit(Holder<FrogVariant> minecraft) {
+            return CraftVariant.minecraftToBukkit(minecraft.value());
         }
 
-        public static net.minecraft.world.entity.animal.FrogVariant bukkitToMinecraft(Variant bukkit) {
+        public static FrogVariant bukkitToMinecraft(Variant bukkit) {
             return CraftRegistry.bukkitToMinecraft(bukkit);
         }
 
-        public static net.minecraft.core.Holder<net.minecraft.world.entity.animal.FrogVariant> bukkitToMinecraftHolder(Variant bukkit) {
-            return CraftRegistry.bukkitToMinecraftHolder(bukkit, net.minecraft.core.registries.Registries.FROG_VARIANT);
+        public static Holder<FrogVariant> bukkitToMinecraftHolder(Variant bukkit) {
+            return CraftRegistry.bukkitToMinecraftHolder(bukkit, Registries.FROG_VARIANT);
         }
 
         private final NamespacedKey key;
-        private final net.minecraft.world.entity.animal.FrogVariant frogVariant;
+        private final FrogVariant frogVariant;
         private final String name;
         private final int ordinal;
 
-        public CraftVariant(NamespacedKey key, net.minecraft.world.entity.animal.FrogVariant frogVariant) {
+        public CraftVariant(NamespacedKey key, FrogVariant frogVariant) {
             this.key = key;
             this.frogVariant = frogVariant;
             // For backwards compatibility, minecraft values will still return the uppercase name without the namespace,
@@ -89,38 +91,38 @@ public class CraftFrog extends CraftAnimals implements org.bukkit.entity.Frog {
             } else {
                 this.name = key.toString();
             }
-            this.ordinal = count++;
+            this.ordinal = CraftVariant.count++;
         }
 
         @Override
-        public net.minecraft.world.entity.animal.FrogVariant getHandle() {
-            return frogVariant;
+        public FrogVariant getHandle() {
+            return this.frogVariant;
         }
 
         @Override
         public NamespacedKey getKey() {
-            return key;
+            return this.key;
         }
 
         @Override
         public int compareTo(Variant variant) {
-            return ordinal - variant.ordinal();
+            return this.ordinal - variant.ordinal();
         }
 
         @Override
         public String name() {
-            return name;
+            return this.name;
         }
 
         @Override
         public int ordinal() {
-            return ordinal;
+            return this.ordinal;
         }
 
         @Override
         public String toString() {
             // For backwards compatibility
-            return name();
+            return this.name();
         }
 
         @Override
@@ -133,12 +135,12 @@ public class CraftFrog extends CraftAnimals implements org.bukkit.entity.Frog {
                 return false;
             }
 
-            return getKey().equals(((Variant) other).getKey());
+            return this.getKey().equals(((Variant) other).getKey());
         }
 
         @Override
         public int hashCode() {
-            return getKey().hashCode();
+            return this.getKey().hashCode();
         }
     }
 }

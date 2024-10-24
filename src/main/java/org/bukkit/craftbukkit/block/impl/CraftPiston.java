@@ -19,12 +19,12 @@ public final class CraftPiston extends org.bukkit.craftbukkit.block.data.CraftBl
 
     @Override
     public boolean isExtended() {
-        return get(EXTENDED);
+        return this.get(CraftPiston.EXTENDED);
     }
 
     @Override
     public void setExtended(boolean extended) {
-        set(EXTENDED, extended);
+        this.set(CraftPiston.EXTENDED, extended);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftDirectional
@@ -33,16 +33,16 @@ public final class CraftPiston extends org.bukkit.craftbukkit.block.data.CraftBl
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftPiston.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftPiston.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftPiston.FACING, org.bukkit.block.BlockFace.class);
     }
 }

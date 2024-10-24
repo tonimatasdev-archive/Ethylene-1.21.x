@@ -19,16 +19,16 @@ public final class CraftHay extends org.bukkit.craftbukkit.block.data.CraftBlock
 
     @Override
     public org.bukkit.Axis getAxis() {
-        return get(AXIS, org.bukkit.Axis.class);
+        return this.get(CraftHay.AXIS, org.bukkit.Axis.class);
     }
 
     @Override
     public void setAxis(org.bukkit.Axis axis) {
-        set(AXIS, axis);
+        this.set(CraftHay.AXIS, axis);
     }
 
     @Override
     public java.util.Set<org.bukkit.Axis> getAxes() {
-        return getValues(AXIS, org.bukkit.Axis.class);
+        return this.getValues(CraftHay.AXIS, org.bukkit.Axis.class);
     }
 }

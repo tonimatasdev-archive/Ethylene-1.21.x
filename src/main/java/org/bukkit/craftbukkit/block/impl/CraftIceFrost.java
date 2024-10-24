@@ -19,16 +19,16 @@ public final class CraftIceFrost extends org.bukkit.craftbukkit.block.data.Craft
 
     @Override
     public int getAge() {
-        return get(AGE);
+        return this.get(CraftIceFrost.AGE);
     }
 
     @Override
     public void setAge(int age) {
-        set(AGE, age);
+        this.set(CraftIceFrost.AGE, age);
     }
 
     @Override
     public int getMaximumAge() {
-        return getMax(AGE);
+        return getMax(CraftIceFrost.AGE);
     }
 }

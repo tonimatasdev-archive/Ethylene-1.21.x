@@ -21,20 +21,20 @@ public final class CraftBrewingStand extends org.bukkit.craftbukkit.block.data.C
 
     @Override
     public boolean hasBottle(int bottle) {
-        return get(HAS_BOTTLE[bottle]);
+        return this.get(CraftBrewingStand.HAS_BOTTLE[bottle]);
     }
 
     @Override
     public void setBottle(int bottle, boolean has) {
-        set(HAS_BOTTLE[bottle], has);
+        this.set(CraftBrewingStand.HAS_BOTTLE[bottle], has);
     }
 
     @Override
     public java.util.Set<Integer> getBottles() {
         com.google.common.collect.ImmutableSet.Builder<Integer> bottles = com.google.common.collect.ImmutableSet.builder();
 
-        for (int index = 0; index < getMaximumBottles(); index++) {
-            if (hasBottle(index)) {
+        for (int index = 0; index < this.getMaximumBottles(); index++) {
+            if (this.hasBottle(index)) {
                 bottles.add(index);
             }
         }
@@ -44,6 +44,6 @@ public final class CraftBrewingStand extends org.bukkit.craftbukkit.block.data.C
 
     @Override
     public int getMaximumBottles() {
-        return HAS_BOTTLE.length;
+        return CraftBrewingStand.HAS_BOTTLE.length;
     }
 }

@@ -19,11 +19,11 @@ public final class CraftPressurePlateBinary extends org.bukkit.craftbukkit.block
 
     @Override
     public boolean isPowered() {
-        return get(POWERED);
+        return this.get(CraftPressurePlateBinary.POWERED);
     }
 
     @Override
     public void setPowered(boolean powered) {
-        set(POWERED, powered);
+        this.set(CraftPressurePlateBinary.POWERED, powered);
     }
 }

@@ -19,16 +19,16 @@ public final class CraftNetherWart extends org.bukkit.craftbukkit.block.data.Cra
 
     @Override
     public int getAge() {
-        return get(AGE);
+        return this.get(CraftNetherWart.AGE);
     }
 
     @Override
     public void setAge(int age) {
-        set(AGE, age);
+        this.set(CraftNetherWart.AGE, age);
     }
 
     @Override
     public int getMaximumAge() {
-        return getMax(AGE);
+        return getMax(CraftNetherWart.AGE);
     }
 }

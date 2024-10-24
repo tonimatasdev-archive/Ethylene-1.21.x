@@ -19,16 +19,16 @@ public final class CraftSoil extends org.bukkit.craftbukkit.block.data.CraftBloc
 
     @Override
     public int getMoisture() {
-        return get(MOISTURE);
+        return this.get(CraftSoil.MOISTURE);
     }
 
     @Override
     public void setMoisture(int moisture) {
-        set(MOISTURE, moisture);
+        this.set(CraftSoil.MOISTURE, moisture);
     }
 
     @Override
     public int getMaximumMoisture() {
-        return getMax(MOISTURE);
+        return getMax(CraftSoil.MOISTURE);
     }
 }

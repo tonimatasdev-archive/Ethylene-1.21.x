@@ -19,16 +19,16 @@ public final class CraftLayeredCauldron extends org.bukkit.craftbukkit.block.dat
 
     @Override
     public int getLevel() {
-        return get(LEVEL);
+        return this.get(CraftLayeredCauldron.LEVEL);
     }
 
     @Override
     public void setLevel(int level) {
-        set(LEVEL, level);
+        this.set(CraftLayeredCauldron.LEVEL, level);
     }
 
     @Override
     public int getMaximumLevel() {
-        return getMax(LEVEL);
+        return getMax(CraftLayeredCauldron.LEVEL);
     }
 }

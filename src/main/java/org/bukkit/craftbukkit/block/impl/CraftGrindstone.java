@@ -19,17 +19,17 @@ public final class CraftGrindstone extends org.bukkit.craftbukkit.block.data.Cra
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftGrindstone.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftGrindstone.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftGrindstone.FACING, org.bukkit.block.BlockFace.class);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftFaceAttachable
@@ -38,11 +38,11 @@ public final class CraftGrindstone extends org.bukkit.craftbukkit.block.data.Cra
 
     @Override
     public org.bukkit.block.data.FaceAttachable.AttachedFace getAttachedFace() {
-        return get(ATTACH_FACE, org.bukkit.block.data.FaceAttachable.AttachedFace.class);
+        return this.get(CraftGrindstone.ATTACH_FACE, org.bukkit.block.data.FaceAttachable.AttachedFace.class);
     }
 
     @Override
     public void setAttachedFace(org.bukkit.block.data.FaceAttachable.AttachedFace face) {
-        set(ATTACH_FACE, face);
+        this.set(CraftGrindstone.ATTACH_FACE, face);
     }
 }

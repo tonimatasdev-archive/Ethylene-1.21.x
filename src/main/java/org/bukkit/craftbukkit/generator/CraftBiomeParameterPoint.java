@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.generator;
 
+import net.minecraft.world.level.biome.Climate;
 import org.bukkit.generator.BiomeParameterPoint;
 
 public class CraftBiomeParameterPoint implements BiomeParameterPoint {
@@ -10,13 +11,13 @@ public class CraftBiomeParameterPoint implements BiomeParameterPoint {
     private final double erosion;
     private final double depth;
     private final double weirdness;
-    private final net.minecraft.world.level.biome.Climate.Sampler sampler;
+    private final Climate.Sampler sampler;
 
-    public static BiomeParameterPoint createBiomeParameterPoint(net.minecraft.world.level.biome.Climate.Sampler sampler, net.minecraft.world.level.biome.Climate.TargetPoint targetPoint) {
-        return new CraftBiomeParameterPoint(sampler, net.minecraft.world.level.biome.Climate.unquantizeCoord(targetPoint.temperature()), net.minecraft.world.level.biome.Climate.unquantizeCoord(targetPoint.humidity()), net.minecraft.world.level.biome.Climate.unquantizeCoord(targetPoint.continentalness()), net.minecraft.world.level.biome.Climate.unquantizeCoord(targetPoint.erosion()), net.minecraft.world.level.biome.Climate.unquantizeCoord(targetPoint.depth()), net.minecraft.world.level.biome.Climate.unquantizeCoord(targetPoint.weirdness()));
+    public static BiomeParameterPoint createBiomeParameterPoint(Climate.Sampler sampler, Climate.TargetPoint targetPoint) {
+        return new CraftBiomeParameterPoint(sampler, Climate.unquantizeCoord(targetPoint.temperature()), Climate.unquantizeCoord(targetPoint.humidity()), Climate.unquantizeCoord(targetPoint.continentalness()), Climate.unquantizeCoord(targetPoint.erosion()), Climate.unquantizeCoord(targetPoint.depth()), Climate.unquantizeCoord(targetPoint.weirdness()));
     }
 
-    private CraftBiomeParameterPoint(net.minecraft.world.level.biome.Climate.Sampler sampler, double temperature, double humidity, double continentalness, double erosion, double depth, double weirdness) {
+    private CraftBiomeParameterPoint(Climate.Sampler sampler, double temperature, double humidity, double continentalness, double erosion, double depth, double weirdness) {
         this.sampler = sampler;
         this.temperature = temperature;
         this.humidity = humidity;

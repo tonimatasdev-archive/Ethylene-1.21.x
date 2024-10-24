@@ -19,16 +19,16 @@ public final class CraftChorusFlower extends org.bukkit.craftbukkit.block.data.C
 
     @Override
     public int getAge() {
-        return get(AGE);
+        return this.get(CraftChorusFlower.AGE);
     }
 
     @Override
     public void setAge(int age) {
-        set(AGE, age);
+        this.set(CraftChorusFlower.AGE, age);
     }
 
     @Override
     public int getMaximumAge() {
-        return getMax(AGE);
+        return getMax(CraftChorusFlower.AGE);
     }
 }

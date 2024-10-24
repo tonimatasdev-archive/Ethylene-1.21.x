@@ -19,11 +19,11 @@ public final class CraftBarrier extends org.bukkit.craftbukkit.block.data.CraftB
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftBarrier.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftBarrier.WATERLOGGED, waterlogged);
     }
 }

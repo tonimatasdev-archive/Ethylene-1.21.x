@@ -19,11 +19,11 @@ public final class CraftBubbleColumn extends org.bukkit.craftbukkit.block.data.C
 
     @Override
     public boolean isDrag() {
-        return get(DRAG);
+        return this.get(CraftBubbleColumn.DRAG);
     }
 
     @Override
     public void setDrag(boolean drag) {
-        set(DRAG, drag);
+        this.set(CraftBubbleColumn.DRAG, drag);
     }
 }

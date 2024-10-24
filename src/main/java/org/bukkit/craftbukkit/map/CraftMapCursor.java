@@ -1,6 +1,9 @@
 package org.bukkit.craftbukkit.map;
 
 import java.util.Locale;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.saveddata.maps.MapDecorationType;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.craftbukkit.CraftRegistry;
@@ -9,32 +12,32 @@ import org.bukkit.map.MapCursor;
 
 public final class CraftMapCursor {
 
-    public static final class CraftType implements MapCursor.Type, Handleable<net.minecraft.world.level.saveddata.maps.MapDecorationType> {
+    public static final class CraftType implements MapCursor.Type, Handleable<MapDecorationType> {
 
         private static int count = 0;
 
-        public static MapCursor.Type minecraftToBukkit(net.minecraft.world.level.saveddata.maps.MapDecorationType minecraft) {
-            return CraftRegistry.minecraftToBukkit(minecraft, net.minecraft.core.registries.Registries.MAP_DECORATION_TYPE, Registry.MAP_DECORATION_TYPE);
+        public static MapCursor.Type minecraftToBukkit(MapDecorationType minecraft) {
+            return CraftRegistry.minecraftToBukkit(minecraft, Registries.MAP_DECORATION_TYPE, Registry.MAP_DECORATION_TYPE);
         }
 
-        public static MapCursor.Type minecraftHolderToBukkit(net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> minecraft) {
-            return minecraftToBukkit(minecraft.value());
+        public static MapCursor.Type minecraftHolderToBukkit(Holder<MapDecorationType> minecraft) {
+            return CraftType.minecraftToBukkit(minecraft.value());
         }
 
-        public static net.minecraft.world.level.saveddata.maps.MapDecorationType bukkitToMinecraft(MapCursor.Type bukkit) {
+        public static MapDecorationType bukkitToMinecraft(MapCursor.Type bukkit) {
             return CraftRegistry.bukkitToMinecraft(bukkit);
         }
 
-        public static net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> bukkitToMinecraftHolder(MapCursor.Type bukkit) {
-            return CraftRegistry.bukkitToMinecraftHolder(bukkit, net.minecraft.core.registries.Registries.MAP_DECORATION_TYPE);
+        public static Holder<MapDecorationType> bukkitToMinecraftHolder(MapCursor.Type bukkit) {
+            return CraftRegistry.bukkitToMinecraftHolder(bukkit, Registries.MAP_DECORATION_TYPE);
         }
 
         private final NamespacedKey key;
-        private final net.minecraft.world.level.saveddata.maps.MapDecorationType mapDecorationType;
+        private final MapDecorationType mapDecorationType;
         private final String name;
         private final int ordinal;
 
-        public CraftType(NamespacedKey key, net.minecraft.world.level.saveddata.maps.MapDecorationType mapDecorationType) {
+        public CraftType(NamespacedKey key, MapDecorationType mapDecorationType) {
             this.key = key;
             this.mapDecorationType = mapDecorationType;
             // For backwards compatibility, minecraft values will still return the uppercase name without the namespace,
@@ -46,38 +49,38 @@ public final class CraftMapCursor {
             } else {
                 this.name = key.toString();
             }
-            this.ordinal = count++;
+            this.ordinal = CraftType.count++;
         }
 
         @Override
-        public net.minecraft.world.level.saveddata.maps.MapDecorationType getHandle() {
-            return mapDecorationType;
+        public MapDecorationType getHandle() {
+            return this.mapDecorationType;
         }
 
         @Override
         public NamespacedKey getKey() {
-            return key;
+            return this.key;
         }
 
         @Override
         public int compareTo(MapCursor.Type type) {
-            return ordinal - type.ordinal();
+            return this.ordinal - type.ordinal();
         }
 
         @Override
         public String name() {
-            return name;
+            return this.name;
         }
 
         @Override
         public int ordinal() {
-            return ordinal;
+            return this.ordinal;
         }
 
         @Override
         public String toString() {
             // For backwards compatibility
-            return name();
+            return this.name();
         }
 
         @Override
@@ -90,17 +93,17 @@ public final class CraftMapCursor {
                 return false;
             }
 
-            return getKey().equals(((MapCursor.Type) other).getKey());
+            return this.getKey().equals(((MapCursor.Type) other).getKey());
         }
 
         @Override
         public int hashCode() {
-            return getKey().hashCode();
+            return this.getKey().hashCode();
         }
 
         @Override
         public byte getValue() {
-            return (byte) CraftRegistry.getMinecraftRegistry(net.minecraft.core.registries.Registries.MAP_DECORATION_TYPE).getId(getHandle());
+            return (byte) CraftRegistry.getMinecraftRegistry(Registries.MAP_DECORATION_TYPE).getId(this.getHandle());
         }
     }
 }

@@ -19,12 +19,12 @@ public final class CraftStepAbstract extends org.bukkit.craftbukkit.block.data.C
 
     @Override
     public org.bukkit.block.data.type.Slab.Type getType() {
-        return get(TYPE, org.bukkit.block.data.type.Slab.Type.class);
+        return this.get(CraftStepAbstract.TYPE, org.bukkit.block.data.type.Slab.Type.class);
     }
 
     @Override
     public void setType(org.bukkit.block.data.type.Slab.Type type) {
-        set(TYPE, type);
+        this.set(CraftStepAbstract.TYPE, type);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftWaterlogged
@@ -33,11 +33,11 @@ public final class CraftStepAbstract extends org.bukkit.craftbukkit.block.data.C
 
     @Override
     public boolean isWaterlogged() {
-        return get(WATERLOGGED);
+        return this.get(CraftStepAbstract.WATERLOGGED);
     }
 
     @Override
     public void setWaterlogged(boolean waterlogged) {
-        set(WATERLOGGED, waterlogged);
+        this.set(CraftStepAbstract.WATERLOGGED, waterlogged);
     }
 }

@@ -20,22 +20,22 @@ public final class CraftVault extends org.bukkit.craftbukkit.block.data.CraftBlo
 
     @Override
     public org.bukkit.block.data.type.Vault.State getTrialSpawnerState() {
-        return get(VAULT_STATE, org.bukkit.block.data.type.Vault.State.class);
+        return this.get(CraftVault.VAULT_STATE, org.bukkit.block.data.type.Vault.State.class);
     }
 
     @Override
     public void setTrialSpawnerState(org.bukkit.block.data.type.Vault.State state) {
-        set(VAULT_STATE, state);
+        this.set(CraftVault.VAULT_STATE, state);
     }
 
     @Override
     public boolean isOminous() {
-        return get(OMINOUS);
+        return this.get(CraftVault.OMINOUS);
     }
 
     @Override
     public void setOminous(boolean ominous) {
-        set(OMINOUS, ominous);
+        this.set(CraftVault.OMINOUS, ominous);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftDirectional
@@ -44,16 +44,16 @@ public final class CraftVault extends org.bukkit.craftbukkit.block.data.CraftBlo
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftVault.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftVault.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftVault.FACING, org.bukkit.block.BlockFace.class);
     }
 }

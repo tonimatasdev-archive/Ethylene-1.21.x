@@ -1,11 +1,11 @@
 package org.bukkit.craftbukkit.inventory;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import net.ethylenemc.EthyleneStatic;
-import net.ethylenemc.interfaces.world.item.crafting.EthyleneRecipeManager;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapelessRecipe;
@@ -39,11 +39,11 @@ public class CraftShapelessRecipe extends ShapelessRecipe implements CraftRecipe
     @Override
     public void addToCraftingManager() {
         List<org.bukkit.inventory.RecipeChoice> ingred = this.getChoiceList();
-        net.minecraft.core.NonNullList<net.minecraft.world.item.crafting.Ingredient> data = net.minecraft.core.NonNullList.withSize(ingred.size(), net.minecraft.world.item.crafting.Ingredient.EMPTY);
-        for (int i = 0; i < ingred.size(); i++) {
-            data.set(i, toNMS(ingred.get(i), true));
+        List<Ingredient> data = new ArrayList<>(ingred.size());
+        for (org.bukkit.inventory.RecipeChoice i : ingred) {
+            data.add(this.toNMS(i, true));
         }
 
-        ((EthyleneRecipeManager) EthyleneStatic.getServer().getRecipeManager()).addRecipe(new net.minecraft.world.item.crafting.RecipeHolder<>(CraftNamespacedKey.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.ShapelessRecipe(this.getGroup(), CraftRecipe.getCategory(this.getCategory()), CraftItemStack.asNMSCopy(this.getResult()), data)));
+        MinecraftServer.getServer().getRecipeManager().addRecipe(new RecipeHolder<>(CraftRecipe.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.ShapelessRecipe(this.getGroup(), CraftRecipe.getCategory(this.getCategory()), CraftItemStack.asNMSCopy(this.getResult()), data)));
     }
 }

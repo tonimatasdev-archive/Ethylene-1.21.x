@@ -19,16 +19,16 @@ public final class CraftStem extends org.bukkit.craftbukkit.block.data.CraftBloc
 
     @Override
     public int getAge() {
-        return get(AGE);
+        return this.get(CraftStem.AGE);
     }
 
     @Override
     public void setAge(int age) {
-        set(AGE, age);
+        this.set(CraftStem.AGE, age);
     }
 
     @Override
     public int getMaximumAge() {
-        return getMax(AGE);
+        return getMax(CraftStem.AGE);
     }
 }

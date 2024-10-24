@@ -20,21 +20,21 @@ public final class CraftTrialSpawner extends org.bukkit.craftbukkit.block.data.C
 
     @Override
     public org.bukkit.block.data.type.TrialSpawner.State getTrialSpawnerState() {
-        return get(TRIAL_SPAWNER_STATE, org.bukkit.block.data.type.TrialSpawner.State.class);
+        return this.get(CraftTrialSpawner.TRIAL_SPAWNER_STATE, org.bukkit.block.data.type.TrialSpawner.State.class);
     }
 
     @Override
     public void setTrialSpawnerState(org.bukkit.block.data.type.TrialSpawner.State state) {
-        set(TRIAL_SPAWNER_STATE, state);
+        this.set(CraftTrialSpawner.TRIAL_SPAWNER_STATE, state);
     }
 
     @Override
     public boolean isOminous() {
-        return get(OMINOUS);
+        return this.get(CraftTrialSpawner.OMINOUS);
     }
 
     @Override
     public void setOminous(boolean ominous) {
-        set(OMINOUS, ominous);
+        this.set(CraftTrialSpawner.OMINOUS, ominous);
     }
 }

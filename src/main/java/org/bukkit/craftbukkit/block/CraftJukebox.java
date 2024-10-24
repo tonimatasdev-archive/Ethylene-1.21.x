@@ -1,5 +1,9 @@
 package org.bukkit.craftbukkit.block;
 
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.JukeboxBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -9,9 +13,9 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.inventory.CraftItemType;
 import org.bukkit.inventory.JukeboxInventory;
 
-public class CraftJukebox extends CraftBlockEntityState<net.minecraft.world.level.block.entity.JukeboxBlockEntity> implements Jukebox {
+public class CraftJukebox extends CraftBlockEntityState<JukeboxBlockEntity> implements Jukebox {
 
-    public CraftJukebox(World world, net.minecraft.world.level.block.entity.JukeboxBlockEntity tileEntity) {
+    public CraftJukebox(World world, JukeboxBlockEntity tileEntity) {
         super(world, tileEntity);
     }
 
@@ -38,10 +42,10 @@ public class CraftJukebox extends CraftBlockEntityState<net.minecraft.world.leve
         boolean result = super.update(force, applyPhysics);
 
         if (result && this.isPlaced() && this.getType() == Material.JUKEBOX) {
-            getWorldHandle().setBlock(this.getPosition(), data, 3);
+            this.getWorldHandle().setBlock(this.getPosition(), this.data, 3);
 
-            net.minecraft.world.level.block.entity.BlockEntity tileEntity = this.getTileEntityFromWorld();
-            if (tileEntity instanceof net.minecraft.world.level.block.entity.JukeboxBlockEntity jukebox) {
+            BlockEntity tileEntity = this.getTileEntityFromWorld();
+            if (tileEntity instanceof JukeboxBlockEntity jukebox) {
                 jukebox.setTheItem(jukebox.getTheItem());
             }
         }
@@ -51,7 +55,7 @@ public class CraftJukebox extends CraftBlockEntityState<net.minecraft.world.leve
 
     @Override
     public Material getPlaying() {
-        return getRecord().getType();
+        return this.getRecord().getType();
     }
 
     @Override
@@ -60,49 +64,49 @@ public class CraftJukebox extends CraftBlockEntityState<net.minecraft.world.leve
             record = Material.AIR;
         }
 
-        setRecord(new org.bukkit.inventory.ItemStack(record));
+        this.setRecord(new org.bukkit.inventory.ItemStack(record));
     }
 
     @Override
     public boolean hasRecord() {
-        return getHandle().getValue(net.minecraft.world.level.block.JukeboxBlock.HAS_RECORD) && !getPlaying().isAir();
+        return this.getHandle().getValue(JukeboxBlock.HAS_RECORD) && !this.getPlaying().isAir();
     }
 
     @Override
     public org.bukkit.inventory.ItemStack getRecord() {
-        net.minecraft.world.item.ItemStack record = this.getSnapshot().getTheItem();
+        ItemStack record = this.getSnapshot().getTheItem();
         return CraftItemStack.asBukkitCopy(record);
     }
 
     @Override
     public void setRecord(org.bukkit.inventory.ItemStack record) {
-        net.minecraft.world.item.ItemStack nms = CraftItemStack.asNMSCopy(record);
+        ItemStack nms = CraftItemStack.asNMSCopy(record);
 
-        net.minecraft.world.level.block.entity.JukeboxBlockEntity snapshot = this.getSnapshot();
+        JukeboxBlockEntity snapshot = this.getSnapshot();
         snapshot.setSongItemWithoutPlaying(nms, snapshot.getSongPlayer().getTicksSinceSongStarted());
 
-        this.data = this.data.setValue(net.minecraft.world.level.block.JukeboxBlock.HAS_RECORD, !nms.isEmpty());
+        this.data = this.data.setValue(JukeboxBlock.HAS_RECORD, !nms.isEmpty());
     }
 
     @Override
     public boolean isPlaying() {
-        requirePlaced();
+        this.requirePlaced();
 
-        net.minecraft.world.level.block.entity.BlockEntity tileEntity = this.getTileEntityFromWorld();
-        return tileEntity instanceof net.minecraft.world.level.block.entity.JukeboxBlockEntity jukebox && jukebox.getSongPlayer().isPlaying();
+        BlockEntity tileEntity = this.getTileEntityFromWorld();
+        return tileEntity instanceof JukeboxBlockEntity jukebox && jukebox.getSongPlayer().isPlaying();
     }
 
     @Override
     public boolean startPlaying() {
-        requirePlaced();
+        this.requirePlaced();
 
-        net.minecraft.world.level.block.entity.BlockEntity tileEntity = this.getTileEntityFromWorld();
-        if (!(tileEntity instanceof net.minecraft.world.level.block.entity.JukeboxBlockEntity jukebox)) {
+        BlockEntity tileEntity = this.getTileEntityFromWorld();
+        if (!(tileEntity instanceof JukeboxBlockEntity jukebox)) {
             return false;
         }
 
-        net.minecraft.world.item.ItemStack record = jukebox.getTheItem();
-        if (record.isEmpty() || isPlaying()) {
+        ItemStack record = jukebox.getTheItem();
+        if (record.isEmpty() || this.isPlaying()) {
             return false;
         }
 
@@ -112,10 +116,10 @@ public class CraftJukebox extends CraftBlockEntityState<net.minecraft.world.leve
 
     @Override
     public void stopPlaying() {
-        requirePlaced();
+        this.requirePlaced();
 
-        net.minecraft.world.level.block.entity.BlockEntity tileEntity = this.getTileEntityFromWorld();
-        if (!(tileEntity instanceof net.minecraft.world.level.block.entity.JukeboxBlockEntity jukebox)) {
+        BlockEntity tileEntity = this.getTileEntityFromWorld();
+        if (!(tileEntity instanceof JukeboxBlockEntity jukebox)) {
             return;
         }
 
@@ -124,12 +128,12 @@ public class CraftJukebox extends CraftBlockEntityState<net.minecraft.world.leve
 
     @Override
     public boolean eject() {
-        ensureNoWorldGeneration();
+        this.ensureNoWorldGeneration();
 
-        net.minecraft.world.level.block.entity.BlockEntity tileEntity = this.getTileEntityFromWorld();
-        if (!(tileEntity instanceof net.minecraft.world.level.block.entity.JukeboxBlockEntity)) return false;
+        BlockEntity tileEntity = this.getTileEntityFromWorld();
+        if (!(tileEntity instanceof JukeboxBlockEntity)) return false;
 
-        net.minecraft.world.level.block.entity.JukeboxBlockEntity jukebox = (net.minecraft.world.level.block.entity.JukeboxBlockEntity) tileEntity;
+        JukeboxBlockEntity jukebox = (JukeboxBlockEntity) tileEntity;
         boolean result = !jukebox.getTheItem().isEmpty();
         jukebox.popOutTheItem();
         return result;

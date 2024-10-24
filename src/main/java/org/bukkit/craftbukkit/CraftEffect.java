@@ -1,6 +1,8 @@
 package org.bukkit.craftbukkit;
 
 import com.google.common.base.Preconditions;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import org.bukkit.Axis;
 import org.bukkit.Color;
 import org.bukkit.Effect;
@@ -22,7 +24,7 @@ public class CraftEffect {
             break;
         case RECORD_PLAY:
             Preconditions.checkArgument(data == Material.AIR || ((Material) data).isRecord(), "Invalid record type for Material %s!", data);
-            datavalue = net.minecraft.world.item.Item.getId(CraftItemType.bukkitToMinecraft((Material) data));
+            datavalue = Item.getId(CraftItemType.bukkitToMinecraft((Material) data));
             break;
         case SMOKE:
             switch ((BlockFace) data) {
@@ -56,7 +58,7 @@ public class CraftEffect {
             break;
         case STEP_SOUND:
             Preconditions.checkArgument(((Material) data).isBlock(), "Material %s is not a block!", data);
-            datavalue = net.minecraft.world.level.block.Block.getId(CraftBlockType.bukkitToMinecraft((Material) data).defaultBlockState());
+            datavalue = Block.getId(CraftBlockType.bukkitToMinecraft((Material) data).defaultBlockState());
             break;
         case COMPOSTER_FILL_ATTEMPT:
             datavalue = ((Boolean) data) ? 1 : 0;

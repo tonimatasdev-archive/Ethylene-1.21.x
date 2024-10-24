@@ -8,10 +8,25 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
-import net.ethylenemc.EthyleneStatic;
-import net.ethylenemc.interfaces.server.EthyleneMinecraftServer;
+import net.minecraft.SharedConstants;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.Bootstrap;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.util.datafix.fixes.BlockStateData;
+import net.minecraft.util.datafix.fixes.ItemIdFix;
+import net.minecraft.util.datafix.fixes.References;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.Property;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.entity.EntityType;
@@ -32,12 +47,12 @@ public final class CraftLegacy {
 
     private static final Map<Byte, Material> SPAWN_EGGS = new HashMap<>();
     private static final Set<String> whitelistedStates = new HashSet<>(Arrays.asList("explode", "check_decay", "decayable", "facing"));
-    private static final Map<MaterialData, net.minecraft.world.item.Item> materialToItem = new HashMap<>(16384);
-    private static final Map<net.minecraft.world.item.Item, MaterialData> itemToMaterial = new HashMap<>(1024);
-    private static final Map<MaterialData, net.minecraft.world.level.block.state.BlockState> materialToData = new HashMap<>(4096);
-    private static final Map<net.minecraft.world.level.block.state.BlockState, MaterialData> dataToMaterial = new HashMap<>(4096);
-    private static final Map<MaterialData, net.minecraft.world.level.block.Block> materialToBlock = new HashMap<>(4096);
-    private static final Map<net.minecraft.world.level.block.Block, MaterialData> blockToMaterial = new HashMap<>(1024);
+    private static final Map<MaterialData, Item> materialToItem = new HashMap<>(16384);
+    private static final Map<Item, MaterialData> itemToMaterial = new HashMap<>(1024);
+    private static final Map<MaterialData, BlockState> materialToData = new HashMap<>(4096);
+    private static final Map<BlockState, MaterialData> dataToMaterial = new HashMap<>(4096);
+    private static final Map<MaterialData, Block> materialToBlock = new HashMap<>(4096);
+    private static final Map<Block, MaterialData> blockToMaterial = new HashMap<>(1024);
 
     private CraftLegacy() {
         //
@@ -48,11 +63,11 @@ public final class CraftLegacy {
             return material;
         }
 
-        return toLegacyData(material).getItemType();
+        return CraftLegacy.toLegacyData(material).getItemType();
     }
 
     public static MaterialData toLegacyData(Material material) {
-        return toLegacyData(material, false);
+        return CraftLegacy.toLegacyData(material, false);
     }
 
     public static MaterialData toLegacyData(Material material, boolean itemPriority) {
@@ -60,60 +75,60 @@ public final class CraftLegacy {
         MaterialData mappedData = null;
 
         if (itemPriority) {
-            net.minecraft.world.item.Item item = CraftMagicNumbers.getItem(material);
-            mappedData = itemToMaterial.get(item);
+            Item item = CraftMagicNumbers.getItem(material);
+            mappedData = CraftLegacy.itemToMaterial.get(item);
         }
 
         if (mappedData == null && material.isBlock()) {
-            net.minecraft.world.level.block.Block block = CraftMagicNumbers.getBlock(material);
-            net.minecraft.world.level.block.state.BlockState blockData = block.defaultBlockState();
+            Block block = CraftMagicNumbers.getBlock(material);
+            BlockState blockData = block.defaultBlockState();
 
             // Try exact match first
-            mappedData = dataToMaterial.get(blockData);
+            mappedData = CraftLegacy.dataToMaterial.get(blockData);
             // Fallback to any block
             if (mappedData == null) {
-                mappedData = blockToMaterial.get(block);
+                mappedData = CraftLegacy.blockToMaterial.get(block);
                 // Fallback to matching item
                 if (mappedData == null) {
-                    mappedData = itemToMaterial.get(block.asItem());
+                    mappedData = CraftLegacy.itemToMaterial.get(block.asItem());
                 }
             }
         } else if (!itemPriority) {
-            net.minecraft.world.item.Item item = CraftMagicNumbers.getItem(material);
-            mappedData = itemToMaterial.get(item);
+            Item item = CraftMagicNumbers.getItem(material);
+            mappedData = CraftLegacy.itemToMaterial.get(item);
         }
 
         return (mappedData == null) ? new MaterialData(Material.LEGACY_AIR) : mappedData;
     }
 
-    public static net.minecraft.world.level.block.state.BlockState fromLegacyData(Material material, byte data) {
+    public static BlockState fromLegacyData(Material material, byte data) {
         Preconditions.checkArgument(material.isLegacy(), "fromLegacyData on modern Material");
 
         MaterialData materialData = new MaterialData(material, data);
 
         // Try exact match first
-        net.minecraft.world.level.block.state.BlockState converted = materialToData.get(materialData);
+        BlockState converted = CraftLegacy.materialToData.get(materialData);
         if (converted != null) {
             return converted;
         }
 
         // Fallback to any block
-        net.minecraft.world.level.block.Block convertedBlock = materialToBlock.get(materialData);
+        Block convertedBlock = CraftLegacy.materialToBlock.get(materialData);
         if (convertedBlock != null) {
             return convertedBlock.defaultBlockState();
         }
 
         // Return air
-        return net.minecraft.world.level.block.Blocks.AIR.defaultBlockState();
+        return Blocks.AIR.defaultBlockState();
     }
 
-    public static net.minecraft.world.item.Item fromLegacyData(Material material, short data) {
+    public static Item fromLegacyData(Material material, short data) {
         Preconditions.checkArgument(material.isLegacy(), "fromLegacyData on modern Material. Did you forget to define a modern (1.13+) api-version in your plugin.yml?");
 
         MaterialData materialData = new MaterialData(material, (byte) data);
 
         // First try matching item
-        net.minecraft.world.item.Item convertedItem = materialToItem.get(materialData);
+        Item convertedItem = CraftLegacy.materialToItem.get(materialData);
         if (convertedItem != null) {
             return convertedItem;
         }
@@ -121,38 +136,38 @@ public final class CraftLegacy {
         // Fallback to matching block
         if (material.isBlock()) {
             // Try exact match first
-            net.minecraft.world.level.block.state.BlockState converted = materialToData.get(materialData);
+            BlockState converted = CraftLegacy.materialToData.get(materialData);
             if (converted != null) {
                 return converted.getBlock().asItem();
             }
 
             // Fallback to any block
-            net.minecraft.world.level.block.Block convertedBlock = materialToBlock.get(materialData);
+            Block convertedBlock = CraftLegacy.materialToBlock.get(materialData);
             if (convertedBlock != null) {
                 return convertedBlock.asItem();
             }
         }
 
         // Return air
-        return net.minecraft.world.item.Items.AIR;
+        return Items.AIR;
     }
 
-    public static byte toLegacyData(net.minecraft.world.level.block.state.BlockState blockData) {
-        return toLegacy(blockData).getData();
+    public static byte toLegacyData(BlockState blockData) {
+        return CraftLegacy.toLegacy(blockData).getData();
     }
 
-    public static Material toLegacyMaterial(net.minecraft.world.level.block.state.BlockState blockData) {
-        return toLegacy(blockData).getItemType();
+    public static Material toLegacyMaterial(BlockState blockData) {
+        return CraftLegacy.toLegacy(blockData).getItemType();
     }
 
-    public static MaterialData toLegacy(net.minecraft.world.level.block.state.BlockState blockData) {
+    public static MaterialData toLegacy(BlockState blockData) {
         MaterialData mappedData;
 
         // Try exact match first
-        mappedData = dataToMaterial.get(blockData);
+        mappedData = CraftLegacy.dataToMaterial.get(blockData);
         // Fallback to any block
         if (mappedData == null) {
-            mappedData = blockToMaterial.get(blockData.getBlock());
+            mappedData = CraftLegacy.blockToMaterial.get(blockData.getBlock());
         }
 
         return (mappedData == null) ? new MaterialData(Material.LEGACY_AIR) : mappedData;
@@ -163,11 +178,11 @@ public final class CraftLegacy {
             return material;
         }
 
-        return fromLegacy(new MaterialData(material));
+        return CraftLegacy.fromLegacy(new MaterialData(material));
     }
 
     public static Material fromLegacy(MaterialData materialData) {
-        return fromLegacy(materialData, false);
+        return CraftLegacy.fromLegacy(materialData, false);
     }
 
     public static Material fromLegacy(MaterialData materialData, boolean itemPriority) {
@@ -180,7 +195,7 @@ public final class CraftLegacy {
 
         // Try item first
         if (itemPriority) {
-            net.minecraft.world.item.Item item = materialToItem.get(materialData);
+            Item item = CraftLegacy.materialToItem.get(materialData);
             if (item != null) {
                 mappedData = CraftMagicNumbers.getMaterial(item);
             }
@@ -188,14 +203,14 @@ public final class CraftLegacy {
 
         if (mappedData == null) {
             // Try exact match first
-            net.minecraft.world.level.block.state.BlockState iblock = materialToData.get(materialData);
+            BlockState iblock = CraftLegacy.materialToData.get(materialData);
             if (iblock != null) {
                 mappedData = CraftMagicNumbers.getMaterial(iblock.getBlock());
             }
 
             // Fallback to any block
             if (mappedData == null) {
-                net.minecraft.world.level.block.Block block = materialToBlock.get(materialData);
+                Block block = CraftLegacy.materialToBlock.get(materialData);
                 if (block != null) {
                     mappedData = CraftMagicNumbers.getMaterial(block);
                 }
@@ -204,7 +219,7 @@ public final class CraftLegacy {
 
         // Fallback to matching item
         if (!itemPriority && mappedData == null) {
-            net.minecraft.world.item.Item item = materialToItem.get(materialData);
+            Item item = CraftLegacy.materialToItem.get(materialData);
             if (item != null) {
                 mappedData = CraftMagicNumbers.getMaterial(item);
             }
@@ -241,7 +256,7 @@ public final class CraftLegacy {
     }
 
     public static String toString(Material material) {
-        return name(material);
+        return CraftLegacy.name(material);
     }
 
     public static void init() {
@@ -250,7 +265,7 @@ public final class CraftLegacy {
 
     static {
         System.err.println("Initializing Legacy Material Support. Unless you have legacy plugins and/or data this is a bug!");
-        if (EthyleneStatic.getServer() != null && ((EthyleneMinecraftServer) EthyleneStatic.getServer()).isDebugging()) {
+        if (MinecraftServer.getServer() != null && MinecraftServer.getServer().isDebugging()) {
             new Exception().printStackTrace();
         }
 
@@ -307,8 +322,8 @@ public final class CraftLegacy {
         SPAWN_EGGS.put((byte) EntityType.ZOMBIFIED_PIGLIN.getTypeId(), Material.ZOMBIFIED_PIGLIN_SPAWN_EGG);
         SPAWN_EGGS.put((byte) EntityType.ZOMBIE_VILLAGER.getTypeId(), Material.ZOMBIE_VILLAGER_SPAWN_EGG);
 
-        net.minecraft.SharedConstants.tryDetectVersion();
-        net.minecraft.server.Bootstrap.bootStrap();
+        SharedConstants.tryDetectVersion();
+        Bootstrap.bootStrap();
 
         for (Material material : Material.values()) {
             if (!material.isLegacy()) {
@@ -319,26 +334,26 @@ public final class CraftLegacy {
             if (isBlock(material)) { // Use custom method instead of Material#isBlock since it relies on this being already run
                 for (byte data = 0; data < 16; data++) {
                     MaterialData matData = new MaterialData(material, data);
-                    Dynamic blockTag = net.minecraft.util.datafix.fixes.BlockStateData.getTag(material.getId() << 4 | data);
-                    blockTag = net.minecraft.util.datafix.DataFixers.getDataFixer().update(net.minecraft.util.datafix.fixes.References.BLOCK_STATE, blockTag, 100, CraftMagicNumbers.INSTANCE.getDataVersion());
+                    Dynamic blockTag = BlockStateData.getTag(material.getId() << 4 | data);
+                    blockTag = DataFixers.getDataFixer().update(References.BLOCK_STATE, blockTag, 100, CraftMagicNumbers.INSTANCE.getDataVersion());
                     // TODO: better skull conversion, chests
                     if (blockTag.get("Name").asString("").contains("%%FILTER_ME%%")) {
                         continue;
                     }
 
                     String name = blockTag.get("Name").asString("");
-                    net.minecraft.world.level.block.Block block = net.minecraft.core.registries.BuiltInRegistries.BLOCK.get(net.minecraft.resources.ResourceLocation.parse(name));
+                    Block block = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(name));
                     if (block == null) {
                         continue;
                     }
-                    net.minecraft.world.level.block.state.BlockState blockData = block.defaultBlockState();
-                    net.minecraft.world.level.block.state.StateDefinition states = block.getStateDefinition();
+                    BlockState blockData = block.defaultBlockState();
+                    StateDefinition states = block.getStateDefinition();
 
-                    Optional<net.minecraft.nbt.CompoundTag> propMap = blockTag.getElement("Properties").result();
+                    Optional<CompoundTag> propMap = blockTag.getElement("Properties").result();
                     if (propMap.isPresent()) {
-                        net.minecraft.nbt.CompoundTag properties = propMap.get();
+                        CompoundTag properties = propMap.get();
                         for (String dataKey : properties.getAllKeys()) {
-                            net.minecraft.world.level.block.state.properties.Property state = states.getProperty(dataKey);
+                            Property state = states.getProperty(dataKey);
 
                             if (state == null) {
                                 Preconditions.checkArgument(whitelistedStates.contains(dataKey), "No state for %s", dataKey);
@@ -353,7 +368,7 @@ public final class CraftLegacy {
                         }
                     }
 
-                    if (block == net.minecraft.world.level.block.Blocks.AIR) {
+                    if (block == Blocks.AIR) {
                         continue;
                     }
 
@@ -382,17 +397,17 @@ public final class CraftLegacy {
                     continue;
                 }
                 // Skip non item stacks for now (18w19b)
-                if (net.minecraft.util.datafix.fixes.ItemIdFix.getItem(material.getId()) == null) {
+                if (ItemIdFix.getItem(material.getId()) == null) {
                     continue;
                 }
 
                 MaterialData matData = new MaterialData(material, data);
 
-                net.minecraft.nbt.CompoundTag stack = new net.minecraft.nbt.CompoundTag();
+                CompoundTag stack = new CompoundTag();
                 stack.putInt("id", material.getId());
                 stack.putShort("Damage", data);
 
-                Dynamic<net.minecraft.nbt.Tag> converted = net.minecraft.util.datafix.DataFixers.getDataFixer().update(net.minecraft.util.datafix.fixes.References.ITEM_STACK, new Dynamic<net.minecraft.nbt.Tag>(net.minecraft.nbt.NbtOps.INSTANCE, stack), -1, CraftMagicNumbers.INSTANCE.getDataVersion());
+                Dynamic<Tag> converted = DataFixers.getDataFixer().update(References.ITEM_STACK, new Dynamic<Tag>(NbtOps.INSTANCE, stack), -1, CraftMagicNumbers.INSTANCE.getDataVersion());
 
                 String newId = converted.get("id").asString("");
                 // Recover spawn eggs with invalid data
@@ -401,9 +416,9 @@ public final class CraftLegacy {
                 }
 
                 // Preconditions.checkState(newId.contains("minecraft:"), "Unknown new material for " + matData);
-                net.minecraft.world.item.Item newMaterial = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.parse(newId));
+                Item newMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(newId));
 
-                if (newMaterial == net.minecraft.world.item.Items.AIR) {
+                if (newMaterial == Items.AIR) {
                     continue;
                 }
 
@@ -415,7 +430,7 @@ public final class CraftLegacy {
 
             for (Map.Entry<Byte, Material> entry : SPAWN_EGGS.entrySet()) {
                 MaterialData matData = new MaterialData(Material.LEGACY_MONSTER_EGG, entry.getKey());
-                net.minecraft.world.item.Item newMaterial = CraftMagicNumbers.getItem(entry.getValue());
+                Item newMaterial = CraftMagicNumbers.getItem(entry.getValue());
 
                 materialToItem.put(matData, newMaterial);
                 itemToMaterial.put(newMaterial, matData);

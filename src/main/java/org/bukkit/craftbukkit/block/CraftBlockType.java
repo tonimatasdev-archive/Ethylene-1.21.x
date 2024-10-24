@@ -4,6 +4,20 @@ import com.google.common.base.Preconditions;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.function.Consumer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.EmptyBlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Fallable;
+import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -19,26 +33,26 @@ import org.bukkit.craftbukkit.util.Handleable;
 import org.bukkit.inventory.ItemType;
 import org.jetbrains.annotations.NotNull;
 
-public class CraftBlockType<B extends BlockData> implements BlockType.Typed<B>, Handleable<net.minecraft.world.level.block.Block> {
+public class CraftBlockType<B extends BlockData> implements BlockType.Typed<B>, Handleable<Block> {
 
     private final NamespacedKey key;
-    private final net.minecraft.world.level.block.Block block;
+    private final Block block;
     private final Class<B> blockDataClass;
     private final boolean interactable;
 
-    public static Material minecraftToBukkit(net.minecraft.world.level.block.Block block) {
+    public static Material minecraftToBukkit(Block block) {
         return CraftMagicNumbers.getMaterial(block);
     }
 
-    public static net.minecraft.world.level.block.Block bukkitToMinecraft(Material material) {
+    public static Block bukkitToMinecraft(Material material) {
         return CraftMagicNumbers.getBlock(material);
     }
 
-    public static BlockType minecraftToBukkitNew(net.minecraft.world.level.block.Block minecraft) {
-        return CraftRegistry.minecraftToBukkit(minecraft, net.minecraft.core.registries.Registries.BLOCK, Registry.BLOCK);
+    public static BlockType minecraftToBukkitNew(Block minecraft) {
+        return CraftRegistry.minecraftToBukkit(minecraft, Registries.BLOCK, Registry.BLOCK);
     }
 
-    public static net.minecraft.world.level.block.Block bukkitToMinecraftNew(BlockType bukkit) {
+    public static Block bukkitToMinecraftNew(BlockType bukkit) {
         return CraftRegistry.bukkitToMinecraft(bukkit);
     }
 
@@ -56,36 +70,36 @@ public class CraftBlockType<B extends BlockData> implements BlockType.Typed<B>, 
     }
 
     private static final Class<?>[] USE_WITHOUT_ITEM_ARGS = new Class[]{
-        net.minecraft.world.level.block.state.BlockState.class, net.minecraft.world.level.Level.class, net.minecraft.core.BlockPos.class, net.minecraft.world.entity.player.Player.class, net.minecraft.world.phys.BlockHitResult.class
+        BlockState.class, net.minecraft.world.level.Level.class, BlockPos.class, Player.class, BlockHitResult.class
     };
     private static final Class<?>[] USE_ITEM_ON_ARGS = new Class[]{
-        net.minecraft.world.item.ItemStack.class, net.minecraft.world.level.block.state.BlockState.class, net.minecraft.world.level.Level.class, net.minecraft.core.BlockPos.class, net.minecraft.world.entity.player.Player.class, net.minecraft.world.InteractionHand.class, net.minecraft.world.phys.BlockHitResult.class
+        net.minecraft.world.item.ItemStack.class, BlockState.class, net.minecraft.world.level.Level.class, BlockPos.class, Player.class, InteractionHand.class, BlockHitResult.class
     };
 
-    private static boolean isInteractable(net.minecraft.world.level.block.Block block) {
+    private static boolean isInteractable(Block block) {
         Class<?> clazz = block.getClass();
 
-        boolean hasMethod = hasMethod(clazz, USE_WITHOUT_ITEM_ARGS) || hasMethod(clazz, USE_ITEM_ON_ARGS);
+        boolean hasMethod = CraftBlockType.hasMethod(clazz, CraftBlockType.USE_WITHOUT_ITEM_ARGS) || CraftBlockType.hasMethod(clazz, CraftBlockType.USE_ITEM_ON_ARGS);
 
-        if (!hasMethod && clazz.getSuperclass() != net.minecraft.world.level.block.state.BlockBehaviour.class) {
+        if (!hasMethod && clazz.getSuperclass() != BlockBehaviour.class) {
             clazz = clazz.getSuperclass();
 
-            hasMethod = hasMethod(clazz, USE_WITHOUT_ITEM_ARGS) || hasMethod(clazz, USE_ITEM_ON_ARGS);
+            hasMethod = CraftBlockType.hasMethod(clazz, CraftBlockType.USE_WITHOUT_ITEM_ARGS) || CraftBlockType.hasMethod(clazz, CraftBlockType.USE_ITEM_ON_ARGS);
         }
 
         return hasMethod;
     }
 
-    public CraftBlockType(NamespacedKey key, net.minecraft.world.level.block.Block block) {
+    public CraftBlockType(NamespacedKey key, Block block) {
         this.key = key;
         this.block = block;
         this.blockDataClass = (Class<B>) CraftBlockData.fromData(block.defaultBlockState()).getClass().getInterfaces()[0];
-        this.interactable = isInteractable(block);
+        this.interactable = CraftBlockType.isInteractable(block);
     }
 
     @Override
-    public net.minecraft.world.level.block.Block getHandle() {
-        return block;
+    public Block getHandle() {
+        return this.block;
     }
 
     @NotNull
@@ -108,7 +122,7 @@ public class CraftBlockType<B extends BlockData> implements BlockType.Typed<B>, 
             return true;
         }
 
-        return block.asItem() != net.minecraft.world.item.Items.AIR;
+        return this.block.asItem() != Items.AIR;
     }
 
     @NotNull
@@ -118,24 +132,24 @@ public class CraftBlockType<B extends BlockData> implements BlockType.Typed<B>, 
             return ItemType.AIR;
         }
 
-        net.minecraft.world.item.Item item = block.asItem();
-        Preconditions.checkArgument(item != net.minecraft.world.item.Items.AIR, "The block type %s has no corresponding item type", getKey());
+        Item item = this.block.asItem();
+        Preconditions.checkArgument(item != Items.AIR, "The block type %s has no corresponding item type", this.getKey());
         return CraftItemType.minecraftToBukkitNew(item);
     }
 
     @Override
     public Class<B> getBlockDataClass() {
-        return blockDataClass;
+        return this.blockDataClass;
     }
 
     @Override
     public B createBlockData() {
-        return createBlockData((String) null);
+        return this.createBlockData((String) null);
     }
 
     @Override
     public B createBlockData(Consumer<? super B> consumer) {
-        B data = createBlockData();
+        B data = this.createBlockData();
 
         if (consumer != null) {
             consumer.accept(data);
@@ -151,69 +165,69 @@ public class CraftBlockType<B extends BlockData> implements BlockType.Typed<B>, 
 
     @Override
     public boolean isSolid() {
-        return block.defaultBlockState().blocksMotion();
+        return this.block.defaultBlockState().blocksMotion();
     }
 
     @Override
     public boolean isAir() {
-        return block.defaultBlockState().isAir();
+        return this.block.defaultBlockState().isAir();
     }
 
     @Override
     public boolean isEnabledByFeature(@NotNull World world) {
         Preconditions.checkNotNull(world, "World cannot be null");
-        return getHandle().isEnabled(((CraftWorld) world).getHandle().enabledFeatures());
+        return this.getHandle().isEnabled(((CraftWorld) world).getHandle().enabledFeatures());
     }
 
     @Override
     public boolean isFlammable() {
-        return block.defaultBlockState().ignitedByLava();
+        return this.block.defaultBlockState().ignitedByLava();
     }
 
     @Override
     public boolean isBurnable() {
-        return ((net.minecraft.world.level.block.FireBlock) net.minecraft.world.level.block.Blocks.FIRE).igniteOdds.getOrDefault(block, 0) > 0;
+        return ((FireBlock) Blocks.FIRE).igniteOdds.getOrDefault(this.block, 0) > 0;
     }
 
     @Override
     public boolean isOccluding() {
-        return block.defaultBlockState().isRedstoneConductor(net.minecraft.world.level.EmptyBlockGetter.INSTANCE, net.minecraft.core.BlockPos.ZERO);
+        return this.block.defaultBlockState().isRedstoneConductor(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
     }
 
     @Override
     public boolean hasGravity() {
-        return block instanceof net.minecraft.world.level.block.Fallable;
+        return this.block instanceof Fallable;
     }
 
     @Override
     public boolean isInteractable() {
-        return interactable;
+        return this.interactable;
     }
 
     @Override
     public float getHardness() {
-        return block.defaultBlockState().destroySpeed;
+        return this.block.defaultBlockState().destroySpeed;
     }
 
     @Override
     public float getBlastResistance() {
-        return block.getExplosionResistance();
+        return this.block.getExplosionResistance();
     }
 
     @Override
     public float getSlipperiness() {
-        return block.getFriction();
+        return this.block.getFriction();
     }
 
     @NotNull
     @Override
     public String getTranslationKey() {
-        return block.getDescriptionId();
+        return this.block.getDescriptionId();
     }
 
     @Override
     public NamespacedKey getKey() {
-        return key;
+        return this.key;
     }
 
     @Override

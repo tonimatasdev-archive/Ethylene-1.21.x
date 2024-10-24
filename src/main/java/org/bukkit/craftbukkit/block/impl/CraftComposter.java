@@ -19,16 +19,16 @@ public final class CraftComposter extends org.bukkit.craftbukkit.block.data.Craf
 
     @Override
     public int getLevel() {
-        return get(LEVEL);
+        return this.get(CraftComposter.LEVEL);
     }
 
     @Override
     public void setLevel(int level) {
-        set(LEVEL, level);
+        this.set(CraftComposter.LEVEL, level);
     }
 
     @Override
     public int getMaximumLevel() {
-        return getMax(LEVEL);
+        return getMax(CraftComposter.LEVEL);
     }
 }

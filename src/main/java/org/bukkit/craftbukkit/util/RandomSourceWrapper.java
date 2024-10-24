@@ -1,8 +1,10 @@
 package org.bukkit.craftbukkit.util;
 
 import java.util.Random;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.levelgen.PositionalRandomFactory;
 
-public final class RandomSourceWrapper implements net.minecraft.util.RandomSource {
+public final class RandomSourceWrapper implements RandomSource {
 
     private final Random random;
 
@@ -11,108 +13,108 @@ public final class RandomSourceWrapper implements net.minecraft.util.RandomSourc
     }
 
     @Override
-    public net.minecraft.util.RandomSource fork() {
+    public RandomSource fork() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public net.minecraft.world.level.levelgen.PositionalRandomFactory forkPositional() {
+    public PositionalRandomFactory forkPositional() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public synchronized void setSeed(long seed) {
-        random.setSeed(seed);
+        this.random.setSeed(seed);
     }
 
     @Override
     public int nextInt() {
-        return random.nextInt();
+        return this.random.nextInt();
     }
 
     @Override
     public int nextInt(int bound) {
-        return random.nextInt(bound);
+        return this.random.nextInt(bound);
     }
 
     @Override
     public long nextLong() {
-        return random.nextLong();
+        return this.random.nextLong();
     }
 
     @Override
     public boolean nextBoolean() {
-        return random.nextBoolean();
+        return this.random.nextBoolean();
     }
 
     @Override
     public float nextFloat() {
-        return random.nextFloat();
+        return this.random.nextFloat();
     }
 
     @Override
     public double nextDouble() {
-        return random.nextDouble();
+        return this.random.nextDouble();
     }
 
     @Override
     public synchronized double nextGaussian() {
-        return random.nextGaussian();
+        return this.random.nextGaussian();
     }
 
     public static final class RandomWrapper extends Random {
 
-        private final net.minecraft.util.RandomSource random;
+        private final RandomSource random;
 
-        public RandomWrapper(net.minecraft.util.RandomSource random) {
+        public RandomWrapper(RandomSource random) {
             this.random = random;
         }
 
         @Override
         public void setSeed(long l) {
-            if (random != null) {
-                random.setSeed(l);
+            if (this.random != null) {
+                this.random.setSeed(l);
             }
         }
 
         @Override
         public int nextInt() {
-            return random.nextInt();
+            return this.random.nextInt();
         }
 
         @Override
         public int nextInt(int i) {
-            return random.nextInt(i);
+            return this.random.nextInt(i);
         }
 
         @Override
         public long nextLong() {
-            return random.nextLong();
+            return this.random.nextLong();
         }
 
         @Override
         public boolean nextBoolean() {
-            return random.nextBoolean();
+            return this.random.nextBoolean();
         }
 
         @Override
         public float nextFloat() {
-            return random.nextFloat();
+            return this.random.nextFloat();
         }
 
         @Override
         public double nextDouble() {
-            return random.nextDouble();
+            return this.random.nextDouble();
         }
 
         @Override
         public double nextGaussian() {
-            return random.nextGaussian();
+            return this.random.nextGaussian();
         }
 
         @Override
         public int nextInt(int var0, int var1) {
-            return random.nextInt(var0, var1);
+            return this.random.nextInt(var0, var1);
         }
     }
 }

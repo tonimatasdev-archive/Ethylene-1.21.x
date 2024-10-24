@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.minecraft.world.item.ItemDisplayContext;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.ItemDisplay;
@@ -24,23 +25,23 @@ public class CraftItemDisplay extends CraftDisplay implements ItemDisplay {
 
     @Override
     public ItemStack getItemStack() {
-        return CraftItemStack.asBukkitCopy(getHandle().getItemStack());
+        return CraftItemStack.asBukkitCopy(this.getHandle().getItemStack());
     }
 
     @Override
     public void setItemStack(ItemStack item) {
-        getHandle().setItemStack(CraftItemStack.asNMSCopy(item));
+        this.getHandle().setItemStack(CraftItemStack.asNMSCopy(item));
     }
 
     @Override
     public ItemDisplayTransform getItemDisplayTransform() {
-        return ItemDisplayTransform.values()[getHandle().getItemTransform().ordinal()];
+        return ItemDisplayTransform.values()[this.getHandle().getItemTransform().ordinal()];
     }
 
     @Override
     public void setItemDisplayTransform(ItemDisplayTransform display) {
         Preconditions.checkArgument(display != null, "Display cannot be null");
 
-        getHandle().setItemTransform(net.minecraft.world.item.ItemDisplayContext.BY_ID.apply(display.ordinal()));
+        this.getHandle().setItemTransform(ItemDisplayContext.BY_ID.apply(display.ordinal()));
     }
 }

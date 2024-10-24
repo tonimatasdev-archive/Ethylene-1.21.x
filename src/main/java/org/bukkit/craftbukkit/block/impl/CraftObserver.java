@@ -19,17 +19,17 @@ public final class CraftObserver extends org.bukkit.craftbukkit.block.data.Craft
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftObserver.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftObserver.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftObserver.FACING, org.bukkit.block.BlockFace.class);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftPowerable
@@ -38,11 +38,11 @@ public final class CraftObserver extends org.bukkit.craftbukkit.block.data.Craft
 
     @Override
     public boolean isPowered() {
-        return get(POWERED);
+        return this.get(CraftObserver.POWERED);
     }
 
     @Override
     public void setPowered(boolean powered) {
-        set(POWERED, powered);
+        this.set(CraftObserver.POWERED, powered);
     }
 }

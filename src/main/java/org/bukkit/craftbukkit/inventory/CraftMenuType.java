@@ -3,8 +3,10 @@ package org.bukkit.craftbukkit.inventory;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Suppliers;
 import java.util.function.Supplier;
-
-import net.ethylenemc.interfaces.world.inventory.EthyleneAbstractContainerMenu;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.craftbukkit.CraftRegistry;
@@ -39,13 +41,13 @@ public class CraftMenuType<V extends InventoryView> implements MenuType.Typed<V>
         Preconditions.checkArgument(title != null, "The given title must not be null");
         Preconditions.checkArgument(player instanceof CraftHumanEntity, "The given player must be a CraftHumanEntity");
         final CraftHumanEntity craftHuman = (CraftHumanEntity) player;
-        Preconditions.checkArgument(craftHuman.getHandle() instanceof net.minecraft.server.level.ServerPlayer, "The given player must be an net.minecraft.server.level.ServerPlayer");
-        final net.minecraft.server.level.ServerPlayer serverPlayer = (net.minecraft.server.level.ServerPlayer) craftHuman.getHandle();
+        Preconditions.checkArgument(craftHuman.getHandle() instanceof ServerPlayer, "The given player must be an EntityPlayer");
+        final ServerPlayer serverPlayer = (ServerPlayer) craftHuman.getHandle();
 
-        final net.minecraft.world.inventory.AbstractContainerMenu container = typeData.get().menuBuilder().build(serverPlayer, this.handle);
-        ((EthyleneAbstractContainerMenu) container).setTitle(CraftChatMessage.fromString(title)[0]);
-        ((EthyleneAbstractContainerMenu) container).setCheckReachable(false);
-        return (V) ((EthyleneAbstractContainerMenu) container).getBukkitView();
+        final AbstractContainerMenu container = this.typeData.get().menuBuilder().build(serverPlayer, this.handle);
+        container.setTitle(CraftChatMessage.fromString(title)[0]);
+        container.checkReachable = false;
+        return (V) container.getBukkitView();
     }
 
     @Override
@@ -55,7 +57,7 @@ public class CraftMenuType<V extends InventoryView> implements MenuType.Typed<V>
 
     @Override
     public <V extends InventoryView> Typed<V> typed(Class<V> clazz) {
-        if (clazz.isAssignableFrom(typeData.get().viewClass())) {
+        if (clazz.isAssignableFrom(this.typeData.get().viewClass())) {
             return (Typed<V>) this;
         }
 
@@ -64,7 +66,7 @@ public class CraftMenuType<V extends InventoryView> implements MenuType.Typed<V>
 
     @Override
     public Class<? extends InventoryView> getInventoryViewClass() {
-        return typeData.get().viewClass();
+        return this.typeData.get().viewClass();
     }
 
     @Override
@@ -77,10 +79,10 @@ public class CraftMenuType<V extends InventoryView> implements MenuType.Typed<V>
     }
 
     public static MenuType minecraftToBukkit(net.minecraft.world.inventory.MenuType<?> minecraft) {
-        return CraftRegistry.minecraftToBukkit(minecraft, net.minecraft.core.registries.Registries.MENU, Registry.MENU);
+        return CraftRegistry.minecraftToBukkit(minecraft, Registries.MENU, Registry.MENU);
     }
 
-    public static MenuType minecraftHolderToBukkit(net.minecraft.core.Holder<net.minecraft.world.inventory.MenuType<?>> minecraft) {
-        return minecraftToBukkit(minecraft.value());
+    public static MenuType minecraftHolderToBukkit(Holder<net.minecraft.world.inventory.MenuType<?>> minecraft) {
+        return CraftMenuType.minecraftToBukkit(minecraft.value());
     }
 }

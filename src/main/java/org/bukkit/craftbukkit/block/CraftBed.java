@@ -1,13 +1,14 @@
 package org.bukkit.craftbukkit.block;
 
+import net.minecraft.world.level.block.entity.BedBlockEntity;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Bed;
 
-public class CraftBed extends CraftBlockEntityState<net.minecraft.world.level.block.entity.BedBlockEntity> implements Bed {
+public class CraftBed extends CraftBlockEntityState<BedBlockEntity> implements Bed {
 
-    public CraftBed(World world, net.minecraft.world.level.block.entity.BedBlockEntity tileEntity) {
+    public CraftBed(World world, BedBlockEntity tileEntity) {
         super(world, tileEntity);
     }
 
@@ -17,7 +18,7 @@ public class CraftBed extends CraftBlockEntityState<net.minecraft.world.level.bl
 
     @Override
     public DyeColor getColor() {
-        switch (getType()) {
+        switch (this.getType()) {
             case BLACK_BED:
                 return DyeColor.BLACK;
             case BLUE_BED:
@@ -51,7 +52,7 @@ public class CraftBed extends CraftBlockEntityState<net.minecraft.world.level.bl
             case YELLOW_BED:
                 return DyeColor.YELLOW;
             default:
-                throw new IllegalArgumentException("Unknown DyeColor for " + getType());
+                throw new IllegalArgumentException("Unknown DyeColor for " + this.getType());
         }
     }
 

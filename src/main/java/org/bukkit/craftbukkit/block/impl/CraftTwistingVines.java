@@ -19,16 +19,16 @@ public final class CraftTwistingVines extends org.bukkit.craftbukkit.block.data.
 
     @Override
     public int getAge() {
-        return get(AGE);
+        return this.get(CraftTwistingVines.AGE);
     }
 
     @Override
     public void setAge(int age) {
-        set(AGE, age);
+        this.set(CraftTwistingVines.AGE, age);
     }
 
     @Override
     public int getMaximumAge() {
-        return getMax(AGE);
+        return getMax(CraftTwistingVines.AGE);
     }
 }

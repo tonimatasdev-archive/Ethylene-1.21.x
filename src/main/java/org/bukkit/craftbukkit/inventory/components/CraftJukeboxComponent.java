@@ -5,6 +5,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.EitherHolder;
+import net.minecraft.world.item.JukeboxPlayable;
 import org.bukkit.JukeboxSong;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.SerializableAs;
@@ -14,12 +20,12 @@ import org.bukkit.craftbukkit.inventory.SerializableMeta;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.meta.components.JukeboxPlayableComponent;
 
-@SerializableAs("net.minecraft.world.item.JukeboxPlayable")
+@SerializableAs("JukeboxPlayable")
 public final class CraftJukeboxComponent implements JukeboxPlayableComponent {
 
-    private net.minecraft.world.item.JukeboxPlayable handle;
+    private JukeboxPlayable handle;
 
-    public CraftJukeboxComponent(net.minecraft.world.item.JukeboxPlayable jukebox) {
+    public CraftJukeboxComponent(JukeboxPlayable jukebox) {
         this.handle = jukebox;
     }
 
@@ -31,54 +37,54 @@ public final class CraftJukeboxComponent implements JukeboxPlayableComponent {
         String song = SerializableMeta.getObject(String.class, map, "song", false);
         Boolean showTooltip = SerializableMeta.getObject(Boolean.class, map, "show-in-tooltip", true);
 
-        this.handle = new net.minecraft.world.item.JukeboxPlayable(new net.minecraft.world.item.EitherHolder<>(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.JUKEBOX_SONG, net.minecraft.resources.ResourceLocation.parse(song))), (showTooltip != null) ? showTooltip : true);
+        this.handle = new JukeboxPlayable(new EitherHolder<>(ResourceKey.create(Registries.JUKEBOX_SONG, ResourceLocation.parse(song))), (showTooltip != null) ? showTooltip : true);
     }
 
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put("song", getSongKey().toString());
-        result.put("show-in-tooltip", isShowInTooltip());
+        result.put("song", this.getSongKey().toString());
+        result.put("show-in-tooltip", this.isShowInTooltip());
         return result;
     }
 
-    public net.minecraft.world.item.JukeboxPlayable getHandle() {
-        return handle;
+    public JukeboxPlayable getHandle() {
+        return this.handle;
     }
 
     @Override
     public JukeboxSong getSong() {
-        Optional<net.minecraft.core.Holder<net.minecraft.world.item.JukeboxSong>> song = handle.song().unwrap(CraftRegistry.getMinecraftRegistry());
+        Optional<Holder<net.minecraft.world.item.JukeboxSong>> song = this.handle.song().unwrap(CraftRegistry.getMinecraftRegistry());
         return (song.isPresent()) ? CraftJukeboxSong.minecraftHolderToBukkit(song.get()) : null;
     }
 
     @Override
     public NamespacedKey getSongKey() {
-        return CraftNamespacedKey.fromMinecraft(handle.song().key().location());
+        return CraftNamespacedKey.fromMinecraft(this.handle.song().key().location());
     }
 
     @Override
     public void setSong(JukeboxSong song) {
         Preconditions.checkArgument(song != null, "song cannot be null");
 
-        handle = new net.minecraft.world.item.JukeboxPlayable(new net.minecraft.world.item.EitherHolder<>(CraftJukeboxSong.bukkitToMinecraftHolder(song)), handle.showInTooltip());
+        this.handle = new JukeboxPlayable(new EitherHolder<>(CraftJukeboxSong.bukkitToMinecraftHolder(song)), this.handle.showInTooltip());
     }
 
     @Override
     public void setSongKey(NamespacedKey song) {
         Preconditions.checkArgument(song != null, "song cannot be null");
 
-        handle = new net.minecraft.world.item.JukeboxPlayable(new net.minecraft.world.item.EitherHolder<>(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.JUKEBOX_SONG, CraftNamespacedKey.toMinecraft(song))), handle.showInTooltip());
+        this.handle = new JukeboxPlayable(new EitherHolder<>(ResourceKey.create(Registries.JUKEBOX_SONG, CraftNamespacedKey.toMinecraft(song))), this.handle.showInTooltip());
     }
 
     @Override
     public boolean isShowInTooltip() {
-        return handle.showInTooltip();
+        return this.handle.showInTooltip();
     }
 
     @Override
     public void setShowInTooltip(boolean show) {
-        handle = new net.minecraft.world.item.JukeboxPlayable(handle.song(), show);
+        this.handle = new JukeboxPlayable(this.handle.song(), show);
     }
 
     @Override
@@ -96,7 +102,7 @@ public final class CraftJukeboxComponent implements JukeboxPlayableComponent {
         if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if (this.getClass() != obj.getClass()) {
             return false;
         }
         final CraftJukeboxComponent other = (CraftJukeboxComponent) obj;
@@ -105,6 +111,6 @@ public final class CraftJukeboxComponent implements JukeboxPlayableComponent {
 
     @Override
     public String toString() {
-        return "CraftJukeboxComponent{" + "handle=" + handle + '}';
+        return "CraftJukeboxComponent{" + "handle=" + this.handle + '}';
     }
 }

@@ -3,10 +3,10 @@ package org.bukkit.craftbukkit.inventory;
 import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.Optional;
-
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.core.component.PatchedDataComponentMap;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.ItemCost;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
@@ -18,8 +18,8 @@ public class CraftMerchantRecipe extends MerchantRecipe {
     public CraftMerchantRecipe(net.minecraft.world.item.trading.MerchantOffer merchantRecipe) {
         super(CraftItemStack.asBukkitCopy(merchantRecipe.result), 0);
         this.handle = merchantRecipe;
-        addIngredient(CraftItemStack.asBukkitCopy(merchantRecipe.baseCostA.itemStack()));
-        merchantRecipe.costB.ifPresent((costB) -> addIngredient(CraftItemStack.asBukkitCopy(costB.itemStack())));
+        this.addIngredient(CraftItemStack.asBukkitCopy(merchantRecipe.baseCostA.itemStack()));
+        merchantRecipe.costB.ifPresent((costB) -> this.addIngredient(CraftItemStack.asBukkitCopy(costB.itemStack())));
     }
 
     @Deprecated
@@ -30,7 +30,7 @@ public class CraftMerchantRecipe extends MerchantRecipe {
     public CraftMerchantRecipe(ItemStack result, int uses, int maxUses, boolean experienceReward, int experience, float priceMultiplier, int demand, int specialPrice) {
         super(result, uses, maxUses, experienceReward, experience, priceMultiplier, demand, specialPrice);
         this.handle = new net.minecraft.world.item.trading.MerchantOffer(
-                new net.minecraft.world.item.trading.ItemCost(net.minecraft.world.item.Items.AIR),
+                new ItemCost(Items.AIR),
                 Optional.empty(),
                 CraftItemStack.asNMSCopy(result),
                 uses,
@@ -46,88 +46,88 @@ public class CraftMerchantRecipe extends MerchantRecipe {
 
     @Override
     public int getSpecialPrice() {
-        return handle.getSpecialPriceDiff();
+        return this.handle.getSpecialPriceDiff();
     }
 
     @Override
     public void setSpecialPrice(int specialPrice) {
-        handle.specialPriceDiff = specialPrice;
+        this.handle.specialPriceDiff = specialPrice;
     }
 
     @Override
     public int getDemand() {
-        return handle.demand;
+        return this.handle.demand;
     }
 
     @Override
     public void setDemand(int demand) {
-        handle.demand = demand;
+        this.handle.demand = demand;
     }
 
     @Override
     public int getUses() {
-        return handle.uses;
+        return this.handle.uses;
     }
 
     @Override
     public void setUses(int uses) {
-        handle.uses = uses;
+        this.handle.uses = uses;
     }
 
     @Override
     public int getMaxUses() {
-        return handle.maxUses;
+        return this.handle.maxUses;
     }
 
     @Override
     public void setMaxUses(int maxUses) {
-        handle.maxUses = maxUses;
+        this.handle.maxUses = maxUses;
     }
 
     @Override
     public boolean hasExperienceReward() {
-        return handle.rewardExp;
+        return this.handle.rewardExp;
     }
 
     @Override
     public void setExperienceReward(boolean flag) {
-        handle.rewardExp = flag;
+        this.handle.rewardExp = flag;
     }
 
     @Override
     public int getVillagerExperience() {
-        return handle.xp;
+        return this.handle.xp;
     }
 
     @Override
     public void setVillagerExperience(int villagerExperience) {
-        handle.xp = villagerExperience;
+        this.handle.xp = villagerExperience;
     }
 
     @Override
     public float getPriceMultiplier() {
-        return handle.priceMultiplier;
+        return this.handle.priceMultiplier;
     }
 
     @Override
     public void setPriceMultiplier(float priceMultiplier) {
-        handle.priceMultiplier = priceMultiplier;
+        this.handle.priceMultiplier = priceMultiplier;
     }
 
     public net.minecraft.world.item.trading.MerchantOffer toMinecraft() {
-        List<ItemStack> ingredients = getIngredients();
+        List<ItemStack> ingredients = this.getIngredients();
         Preconditions.checkState(!ingredients.isEmpty(), "No offered ingredients");
         net.minecraft.world.item.ItemStack baseCostA = CraftItemStack.asNMSCopy(ingredients.get(0));
         DataComponentPredicate baseCostAPredicate = DataComponentPredicate.allOf(PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, baseCostA.getComponentsPatch()));
-        handle.baseCostA = new ItemCost(baseCostA.getItemHolder(), baseCostA.getCount(), baseCostAPredicate, baseCostA);
+        this.handle.baseCostA = new ItemCost(baseCostA.getItemHolder(), baseCostA.getCount(), baseCostAPredicate, baseCostA);
         if (ingredients.size() > 1) {
             net.minecraft.world.item.ItemStack costB = CraftItemStack.asNMSCopy(ingredients.get(1));
             DataComponentPredicate costBPredicate = DataComponentPredicate.allOf(PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, costB.getComponentsPatch()));
-            handle.costB = Optional.of(new ItemCost(costB.getItemHolder(), costB.getCount(), costBPredicate, costB));
+            this.handle.costB = Optional.of(new ItemCost(costB.getItemHolder(), costB.getCount(), costBPredicate, costB));
         } else {
-            handle.costB = Optional.empty();
+            this.handle.costB = Optional.empty();
         }
-        return handle;
+        return this.handle;
     }
 
     public static CraftMerchantRecipe fromBukkit(MerchantRecipe recipe) {

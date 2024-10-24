@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
-import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 import org.bukkit.Art;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftArt;
@@ -15,21 +16,21 @@ public class CraftPainting extends CraftHanging implements Painting {
 
     @Override
     public Art getArt() {
-        return CraftArt.minecraftHolderToBukkit(getHandle().getVariant());
+        return CraftArt.minecraftHolderToBukkit(this.getHandle().getVariant());
     }
 
     @Override
     public boolean setArt(Art art) {
-        return setArt(art, false);
+        return this.setArt(art, false);
     }
 
     @Override
     public boolean setArt(Art art, boolean force) {
         net.minecraft.world.entity.decoration.Painting painting = this.getHandle();
-        net.minecraft.core.Holder<net.minecraft.world.entity.decoration.PaintingVariant> oldArt = painting.getVariant();
+        Holder<PaintingVariant> oldArt = painting.getVariant();
         painting.setVariant(CraftArt.bukkitToMinecraftHolder(art));
         painting.setDirection(painting.getDirection());
-        if (!force && !((EthyleneEntity) getHandle()).getGeneration() && !painting.survives()) {
+        if (!force && !this.getHandle().generation && !painting.survives()) {
             // Revert painting since it doesn't fit
             painting.setVariant(oldArt);
             painting.setDirection(painting.getDirection());
@@ -42,7 +43,7 @@ public class CraftPainting extends CraftHanging implements Painting {
     @Override
     public boolean setFacingDirection(BlockFace face, boolean force) {
         if (super.setFacingDirection(face, force)) {
-            update();
+            this.update();
             return true;
         }
 
@@ -51,11 +52,11 @@ public class CraftPainting extends CraftHanging implements Painting {
 
     @Override
     public net.minecraft.world.entity.decoration.Painting getHandle() {
-        return (net.minecraft.world.entity.decoration.Painting) entity;
+        return (net.minecraft.world.entity.decoration.Painting) this.entity;
     }
 
     @Override
     public String toString() {
-        return "CraftPainting{art=" + getArt() + "}";
+        return "CraftPainting{art=" + this.getArt() + "}";
     }
 }

@@ -19,17 +19,17 @@ public final class CraftRedstoneTorchWall extends org.bukkit.craftbukkit.block.d
 
     @Override
     public org.bukkit.block.BlockFace getFacing() {
-        return get(FACING, org.bukkit.block.BlockFace.class);
+        return this.get(CraftRedstoneTorchWall.FACING, org.bukkit.block.BlockFace.class);
     }
 
     @Override
     public void setFacing(org.bukkit.block.BlockFace facing) {
-        set(FACING, facing);
+        this.set(CraftRedstoneTorchWall.FACING, facing);
     }
 
     @Override
     public java.util.Set<org.bukkit.block.BlockFace> getFaces() {
-        return getValues(FACING, org.bukkit.block.BlockFace.class);
+        return this.getValues(CraftRedstoneTorchWall.FACING, org.bukkit.block.BlockFace.class);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftLightable
@@ -38,11 +38,11 @@ public final class CraftRedstoneTorchWall extends org.bukkit.craftbukkit.block.d
 
     @Override
     public boolean isLit() {
-        return get(LIT);
+        return this.get(CraftRedstoneTorchWall.LIT);
     }
 
     @Override
     public void setLit(boolean lit) {
-        set(LIT, lit);
+        this.set(CraftRedstoneTorchWall.LIT, lit);
     }
 }

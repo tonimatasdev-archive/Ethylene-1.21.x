@@ -2,22 +2,31 @@ package org.bukkit.craftbukkit.block;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import net.ethylenemc.EthyleneStatic;
-import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
-import net.ethylenemc.interfaces.world.level.block.entity.EthyleneBeaconBlockEntity;
+import java.util.Collections;
+import java.util.Optional;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.component.DataComponentPredicate;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.LockCode;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BeaconBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Beacon;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.potion.CraftPotionEffectType;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class CraftBeacon extends CraftBlockEntityState<net.minecraft.world.level.block.entity.BeaconBlockEntity> implements Beacon {
+public class CraftBeacon extends CraftBlockEntityState<BeaconBlockEntity> implements Beacon {
 
-    public CraftBeacon(World world, net.minecraft.world.level.block.entity.BeaconBlockEntity tileEntity) {
+    public CraftBeacon(World world, BeaconBlockEntity tileEntity) {
         super(world, tileEntity);
     }
 
@@ -27,17 +36,17 @@ public class CraftBeacon extends CraftBlockEntityState<net.minecraft.world.level
 
     @Override
     public Collection<LivingEntity> getEntitiesInRange() {
-        ensureNoWorldGeneration();
+        this.ensureNoWorldGeneration();
 
-        net.minecraft.world.level.block.entity.BlockEntity tileEntity = this.getTileEntityFromWorld();
-        if (tileEntity instanceof net.minecraft.world.level.block.entity.BeaconBlockEntity) {
-            net.minecraft.world.level.block.entity.BeaconBlockEntity beacon = (net.minecraft.world.level.block.entity.BeaconBlockEntity) tileEntity;
+        BlockEntity tileEntity = this.getTileEntityFromWorld();
+        if (tileEntity instanceof BeaconBlockEntity) {
+            BeaconBlockEntity beacon = (BeaconBlockEntity) tileEntity;
 
-            Collection<net.minecraft.world.entity.player.Player> nms = EthyleneStatic.getHumansInRange(beacon.getLevel(), beacon.getBlockPos(), beacon.levels);
+            Collection<Player> nms = BeaconBlockEntity.getHumansInRange(beacon.getLevel(), beacon.getBlockPos(), beacon.levels);
             Collection<LivingEntity> bukkit = new ArrayList<LivingEntity>(nms.size());
 
-            for (net.minecraft.world.entity.player.Player human : nms) {
-                bukkit.add((LivingEntity) ((EthyleneEntity) human).getBukkitEntity());
+            for (Player human : nms) {
+                bukkit.add(human.getBukkitEntity());
             }
 
             return bukkit;
@@ -54,7 +63,7 @@ public class CraftBeacon extends CraftBlockEntityState<net.minecraft.world.level
 
     @Override
     public PotionEffect getPrimaryEffect() {
-        return ((EthyleneBeaconBlockEntity) this.getSnapshot()).getPrimaryEffect();
+        return this.getSnapshot().getPrimaryEffect();
     }
 
     @Override
@@ -64,7 +73,7 @@ public class CraftBeacon extends CraftBlockEntityState<net.minecraft.world.level
 
     @Override
     public PotionEffect getSecondaryEffect() {
-        return ((EthyleneBeaconBlockEntity) this.getSnapshot()).getSecondaryEffect();
+        return this.getSnapshot().getSecondaryEffect();
     }
 
     @Override
@@ -74,7 +83,7 @@ public class CraftBeacon extends CraftBlockEntityState<net.minecraft.world.level
 
     @Override
     public String getCustomName() {
-        net.minecraft.world.level.block.entity.BeaconBlockEntity beacon = this.getSnapshot();
+        BeaconBlockEntity beacon = this.getSnapshot();
         return beacon.name != null ? CraftChatMessage.fromComponent(beacon.name) : null;
     }
 
@@ -85,17 +94,33 @@ public class CraftBeacon extends CraftBlockEntityState<net.minecraft.world.level
 
     @Override
     public boolean isLocked() {
-        return !this.getSnapshot().lockKey.key().isEmpty();
+        return this.getSnapshot().lockKey != LockCode.NO_LOCK;
     }
 
     @Override
     public String getLock() {
-        return this.getSnapshot().lockKey.key();
+        Optional<? extends Component> customName = this.getSnapshot().lockKey.predicate().components().asPatch().get(DataComponents.CUSTOM_NAME);
+
+        return (customName != null) ? customName.map(CraftChatMessage::fromComponent).orElse("") : "";
     }
 
     @Override
     public void setLock(String key) {
-        this.getSnapshot().lockKey = (key == null) ? net.minecraft.world.LockCode.NO_LOCK : new net.minecraft.world.LockCode(key);
+        if (key == null) {
+            this.getSnapshot().lockKey = LockCode.NO_LOCK;
+        } else {
+            DataComponentPredicate predicate = DataComponentPredicate.builder().expect(DataComponents.CUSTOM_NAME, CraftChatMessage.fromStringOrNull(key)).build();
+            this.getSnapshot().lockKey = new LockCode(new ItemPredicate(Optional.empty(), MinMaxBounds.Ints.ANY, predicate, Collections.emptyMap()));
+        }
+    }
+
+    @Override
+    public void setLockItem(ItemStack key) {
+        if (key == null) {
+            this.getSnapshot().lockKey = LockCode.NO_LOCK;
+        } else {
+            this.getSnapshot().lockKey = new LockCode(CraftItemStack.asCriterionConditionItem(key));
+        }
     }
 
     @Override

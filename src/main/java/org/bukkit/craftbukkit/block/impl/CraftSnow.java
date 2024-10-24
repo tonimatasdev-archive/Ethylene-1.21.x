@@ -19,21 +19,21 @@ public final class CraftSnow extends org.bukkit.craftbukkit.block.data.CraftBloc
 
     @Override
     public int getLayers() {
-        return get(LAYERS);
+        return this.get(CraftSnow.LAYERS);
     }
 
     @Override
     public void setLayers(int layers) {
-        set(LAYERS, layers);
+        this.set(CraftSnow.LAYERS, layers);
     }
 
     @Override
     public int getMinimumLayers() {
-        return getMin(LAYERS);
+        return getMin(CraftSnow.LAYERS);
     }
 
     @Override
     public int getMaximumLayers() {
-        return getMax(LAYERS);
+        return getMax(CraftSnow.LAYERS);
     }
 }

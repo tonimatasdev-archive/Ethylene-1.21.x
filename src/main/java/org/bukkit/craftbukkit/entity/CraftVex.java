@@ -1,6 +1,7 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.minecraft.core.BlockPos;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.util.CraftLocation;
@@ -24,45 +25,45 @@ public class CraftVex extends CraftMonster implements Vex {
 
     @Override
     public boolean isCharging() {
-        return getHandle().isCharging();
+        return this.getHandle().isCharging();
     }
 
     @Override
     public void setCharging(boolean charging) {
-        getHandle().setIsCharging(charging);
+        this.getHandle().setIsCharging(charging);
     }
 
     @Override
     public Location getBound() {
-        net.minecraft.core.BlockPos blockPosition = getHandle().getBoundOrigin();
-        return (blockPosition == null) ? null : CraftLocation.toBukkit(blockPosition, getWorld());
+        BlockPos blockPosition = this.getHandle().getBoundOrigin();
+        return (blockPosition == null) ? null : CraftLocation.toBukkit(blockPosition, this.getWorld());
     }
 
     @Override
     public void setBound(Location location) {
         if (location == null) {
-            getHandle().setBoundOrigin(null);
+            this.getHandle().setBoundOrigin(null);
         } else {
-            Preconditions.checkArgument(getWorld().equals(location.getWorld()), "The bound world cannot be different to the entity's world.");
-            getHandle().setBoundOrigin(CraftLocation.toBlockPosition(location));
+            Preconditions.checkArgument(this.getWorld().equals(location.getWorld()), "The bound world cannot be different to the entity's world.");
+            this.getHandle().setBoundOrigin(CraftLocation.toBlockPosition(location));
         }
     }
 
     @Override
     public int getLifeTicks() {
-        return getHandle().limitedLifeTicks;
+        return this.getHandle().limitedLifeTicks;
     }
 
     @Override
     public void setLifeTicks(int lifeTicks) {
-        getHandle().setLimitedLife(lifeTicks);
+        this.getHandle().setLimitedLife(lifeTicks);
         if (lifeTicks < 0) {
-            getHandle().hasLimitedLife = false;
+            this.getHandle().hasLimitedLife = false;
         }
     }
 
     @Override
     public boolean hasLimitedLife() {
-        return getHandle().hasLimitedLife;
+        return this.getHandle().hasLimitedLife;
     }
 }

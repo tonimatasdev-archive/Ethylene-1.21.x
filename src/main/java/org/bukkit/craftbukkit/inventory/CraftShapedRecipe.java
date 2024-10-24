@@ -3,11 +3,11 @@ package org.bukkit.craftbukkit.inventory;
 import com.google.common.collect.Maps;
 import java.util.Map;
 import java.util.Objects;
-
-import net.ethylenemc.EthyleneStatic;
-import net.ethylenemc.interfaces.world.item.crafting.EthyleneRecipeManager;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
@@ -47,12 +47,12 @@ public class CraftShapedRecipe extends ShapedRecipe implements CraftRecipe {
     @Override
     public void addToCraftingManager() {
         Map<Character, org.bukkit.inventory.RecipeChoice> ingred = this.getChoiceMap();
-        String[] shape = replaceUndefinedIngredientsWithEmpty(this.getShape(), ingred);
+        String[] shape = CraftShapedRecipe.replaceUndefinedIngredientsWithEmpty(this.getShape(), ingred);
         ingred.values().removeIf(Objects::isNull);
-        Map<Character, net.minecraft.world.item.crafting.Ingredient> data = Maps.transformValues(ingred, (bukkit) -> toNMS(bukkit, false));
+        Map<Character, Ingredient> data = Maps.transformValues(ingred, (bukkit) -> this.toNMS(bukkit, false));
 
-        net.minecraft.world.item.crafting.ShapedRecipePattern pattern = net.minecraft.world.item.crafting.ShapedRecipePattern.of(data, shape);
-        ((EthyleneRecipeManager) EthyleneStatic.getServer().getRecipeManager()).addRecipe(new net.minecraft.world.item.crafting.RecipeHolder<>(CraftNamespacedKey.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.ShapedRecipe(this.getGroup(), CraftRecipe.getCategory(this.getCategory()), pattern, CraftItemStack.asNMSCopy(this.getResult()))));
+        ShapedRecipePattern pattern = ShapedRecipePattern.of(data, shape);
+        MinecraftServer.getServer().getRecipeManager().addRecipe(new RecipeHolder<>(CraftRecipe.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.ShapedRecipe(this.getGroup(), CraftRecipe.getCategory(this.getCategory()), pattern, CraftItemStack.asNMSCopy(this.getResult()))));
     }
 
     private static String[] replaceUndefinedIngredientsWithEmpty(String[] shape, Map<Character, org.bukkit.inventory.RecipeChoice> ingredients) {

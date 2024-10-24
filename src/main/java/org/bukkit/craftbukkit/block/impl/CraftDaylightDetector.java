@@ -19,12 +19,12 @@ public final class CraftDaylightDetector extends org.bukkit.craftbukkit.block.da
 
     @Override
     public boolean isInverted() {
-        return get(INVERTED);
+        return this.get(CraftDaylightDetector.INVERTED);
     }
 
     @Override
     public void setInverted(boolean inverted) {
-        set(INVERTED, inverted);
+        this.set(CraftDaylightDetector.INVERTED, inverted);
     }
 
     // org.bukkit.craftbukkit.block.data.CraftAnaloguePowerable
@@ -33,16 +33,16 @@ public final class CraftDaylightDetector extends org.bukkit.craftbukkit.block.da
 
     @Override
     public int getPower() {
-        return get(POWER);
+        return this.get(CraftDaylightDetector.POWER);
     }
 
     @Override
     public void setPower(int power) {
-        set(POWER, power);
+        this.set(CraftDaylightDetector.POWER, power);
     }
 
     @Override
     public int getMaximumPower() {
-        return getMax(POWER);
+        return getMax(CraftDaylightDetector.POWER);
     }
 }

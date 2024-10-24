@@ -1,7 +1,10 @@
 package org.bukkit.craftbukkit.block;
 
-import net.ethylenemc.interfaces.EthyleneDoubleInventory;
-import net.ethylenemc.interfaces.world.level.block.entity.EthyleneContainerOpenersCounter;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -11,9 +14,9 @@ import org.bukkit.craftbukkit.inventory.CraftInventory;
 import org.bukkit.craftbukkit.inventory.CraftInventoryDoubleChest;
 import org.bukkit.inventory.Inventory;
 
-public class CraftChest extends CraftLootable<net.minecraft.world.level.block.entity.ChestBlockEntity> implements Chest {
+public class CraftChest extends CraftLootable<ChestBlockEntity> implements Chest {
 
-    public CraftChest(World world, net.minecraft.world.level.block.entity.ChestBlockEntity tileEntity) {
+    public CraftChest(World world, ChestBlockEntity tileEntity) {
         super(world, tileEntity);
     }
 
@@ -38,46 +41,46 @@ public class CraftChest extends CraftLootable<net.minecraft.world.level.block.en
     @Override
     public Inventory getInventory() {
         CraftInventory inventory = (CraftInventory) this.getBlockInventory();
-        if (!isPlaced() || isWorldGeneration()) {
+        if (!this.isPlaced() || this.isWorldGeneration()) {
             return inventory;
         }
 
-        // The logic here is basically identical to the logic in net.minecraft.world.level.block.ChestBlock.interact
+        // The logic here is basically identical to the logic in BlockChest.interact
         CraftWorld world = (CraftWorld) this.getWorld();
 
-        net.minecraft.world.level.block.ChestBlock blockChest = (net.minecraft.world.level.block.ChestBlock) (this.getType() == Material.CHEST ? net.minecraft.world.level.block.Blocks.CHEST : net.minecraft.world.level.block.Blocks.TRAPPED_CHEST);
-        net.minecraft.world.MenuProvider nms = blockChest.getMenuProvider(data, world.getHandle(), this.getPosition(), true);
+        ChestBlock blockChest = (ChestBlock) (this.getType() == Material.CHEST ? Blocks.CHEST : Blocks.TRAPPED_CHEST);
+        MenuProvider nms = blockChest.getMenuProvider(this.data, world.getHandle(), this.getPosition(), true);
 
-        if (nms instanceof EthyleneDoubleInventory) {
-            inventory = new CraftInventoryDoubleChest((EthyleneDoubleInventory) nms);
+        if (nms instanceof ChestBlock.DoubleInventory) {
+            inventory = new CraftInventoryDoubleChest((ChestBlock.DoubleInventory) nms);
         }
         return inventory;
     }
 
     @Override
     public void open() {
-        requirePlaced();
-        if (!((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).getOpened() && getWorldHandle() instanceof net.minecraft.world.level.Level) {
-            net.minecraft.world.level.block.state.BlockState block = getTileEntity().getBlockState();
-            int openCount = getTileEntity().openersCounter.getOpenerCount();
+        this.requirePlaced();
+        if (!this.getTileEntity().openersCounter.opened && this.getWorldHandle() instanceof net.minecraft.world.level.Level) {
+            BlockState block = this.getTileEntity().getBlockState();
+            int openCount = this.getTileEntity().openersCounter.getOpenerCount();
 
-            ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).onAPIOpen((net.minecraft.world.level.Level) getWorldHandle(), getPosition(), block);
-            ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).openerAPICountChanged((net.minecraft.world.level.Level) getWorldHandle(), getPosition(), block, openCount, openCount + 1);
+            this.getTileEntity().openersCounter.onAPIOpen((net.minecraft.world.level.Level) this.getWorldHandle(), this.getPosition(), block);
+            this.getTileEntity().openersCounter.openerAPICountChanged((net.minecraft.world.level.Level) this.getWorldHandle(), this.getPosition(), block, openCount, openCount + 1);
         }
-        ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).setOpened(true);
+        this.getTileEntity().openersCounter.opened = true;
     }
 
     @Override
     public void close() {
-        requirePlaced();
-        if (((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).getOpened() && getWorldHandle() instanceof net.minecraft.world.level.Level) {
-            net.minecraft.world.level.block.state.BlockState block = getTileEntity().getBlockState();
-            int openCount = getTileEntity().openersCounter.getOpenerCount();
+        this.requirePlaced();
+        if (this.getTileEntity().openersCounter.opened && this.getWorldHandle() instanceof net.minecraft.world.level.Level) {
+            BlockState block = this.getTileEntity().getBlockState();
+            int openCount = this.getTileEntity().openersCounter.getOpenerCount();
 
-            ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).onAPIClose((net.minecraft.world.level.Level) getWorldHandle(), getPosition(), block);
-            ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).openerAPICountChanged((net.minecraft.world.level.Level) getWorldHandle(), getPosition(), block, openCount, 0);
+            this.getTileEntity().openersCounter.onAPIClose((net.minecraft.world.level.Level) this.getWorldHandle(), this.getPosition(), block);
+            this.getTileEntity().openersCounter.openerAPICountChanged((net.minecraft.world.level.Level) this.getWorldHandle(), this.getPosition(), block, openCount, 0);
         }
-        ((EthyleneContainerOpenersCounter) getTileEntity().openersCounter).setOpened(false);
+        this.getTileEntity().openersCounter.opened = false;
     }
 
     @Override

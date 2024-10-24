@@ -19,11 +19,11 @@ public final class CraftTNT extends org.bukkit.craftbukkit.block.data.CraftBlock
 
     @Override
     public boolean isUnstable() {
-        return get(UNSTABLE);
+        return this.get(CraftTNT.UNSTABLE);
     }
 
     @Override
     public void setUnstable(boolean unstable) {
-        set(UNSTABLE, unstable);
+        this.set(CraftTNT.UNSTABLE, unstable);
     }
 }
