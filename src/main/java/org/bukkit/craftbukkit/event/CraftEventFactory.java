@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
+import net.ethylenemc.interfaces.server.EthyleneMinecraftServer;
 import net.ethylenemc.interfaces.server.level.EthyleneServerPlayer;
 import net.ethylenemc.interfaces.world.damagesource.EthyleneDamageSource;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
@@ -386,7 +387,7 @@ public class CraftEventFactory {
     }
 
     public static void handleBlockDropItemEvent(Block block, BlockState state, net.minecraft.server.level.ServerPlayer player, List<net.minecraft.world.entity.item.ItemEntity> items) {
-        BlockDropItemEvent event = new BlockDropItemEvent(block, state, ((EthyleneEntity) player).getBukkitEntity(), Lists.transform(items, (item) -> (org.bukkit.entity.Item) ((EthyleneEntity) item).getBukkitEntity()));
+        BlockDropItemEvent event = new BlockDropItemEvent(block, state, (Player) ((EthyleneEntity) player).getBukkitEntity(), Lists.transform(items, (item) -> (org.bukkit.entity.Item) ((EthyleneEntity) item).getBukkitEntity()));
         Bukkit.getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
@@ -1582,7 +1583,7 @@ public class CraftEventFactory {
         BlockPhysicsEvent event = new BlockPhysicsEvent(block, block.getBlockData());
         // Suppress during worldgen
         if (world instanceof net.minecraft.world.level.Level) {
-            ((net.minecraft.world.level.Level) world).getServer().server.getPluginManager().callEvent(event);
+            ((EthyleneMinecraftServer) ((net.minecraft.world.level.Level) world).getServer()).getServer().getPluginManager().callEvent(event);
         }
         return event;
     }

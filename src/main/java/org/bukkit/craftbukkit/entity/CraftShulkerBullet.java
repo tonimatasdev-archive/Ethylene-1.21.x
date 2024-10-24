@@ -3,6 +3,7 @@ package org.bukkit.craftbukkit.entity;
 import com.google.common.base.Preconditions;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.entity.EthyleneMob;
+import net.ethylenemc.interfaces.world.entity.projectile.EthyleneShulkerBullet;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Entity;
@@ -32,17 +33,15 @@ public class CraftShulkerBullet extends AbstractProjectile implements ShulkerBul
 
     @Override
     public org.bukkit.entity.Entity getTarget() {
-        return getHandle().getTarget() != null ? getHandle().getTarget().getBukkitEntity() : null;
+        return ((EthyleneShulkerBullet) getHandle()).getTarget() != null ? ((EthyleneEntity) ((EthyleneShulkerBullet) getHandle()).getTarget()).getBukkitEntity() : null;
     }
 
     @Override
     public void setTarget(org.bukkit.entity.Entity target) {
         Preconditions.checkState(!((EthyleneEntity) getHandle()).getGeneration(), "Cannot set target during world generation");
 
-        getHandle().setTarget(target == null ? null : ((CraftEntity) target).getHandle());
+        ((EthyleneShulkerBullet) getHandle()).setTarget(target == null ? null : ((CraftEntity) target).getHandle());
     }
-
-    AbstractGolem
 
     @Override
     public String toString() {

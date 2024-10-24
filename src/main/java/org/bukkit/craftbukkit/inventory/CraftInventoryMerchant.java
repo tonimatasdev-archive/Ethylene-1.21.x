@@ -1,5 +1,7 @@
 package org.bukkit.craftbukkit.inventory;
 
+import net.ethylenemc.interfaces.world.item.trading.EthyleneMerchant;
+import net.ethylenemc.interfaces.world.item.trading.EthyleneMerchantOffer;
 import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantInventory;
 import org.bukkit.inventory.MerchantRecipe;
@@ -21,7 +23,7 @@ public class CraftInventoryMerchant extends CraftInventory implements MerchantIn
     @Override
     public MerchantRecipe getSelectedRecipe() {
         net.minecraft.world.item.trading.MerchantOffer nmsRecipe = getInventory().getActiveOffer();
-        return (nmsRecipe == null) ? null : nmsRecipe.asBukkit();
+        return (nmsRecipe == null) ? null : ((EthyleneMerchantOffer) nmsRecipe).asBukkit();
     }
 
     @Override
@@ -31,6 +33,6 @@ public class CraftInventoryMerchant extends CraftInventory implements MerchantIn
 
     @Override
     public Merchant getMerchant() {
-        return merchant.getCraftMerchant();
+        return ((EthyleneMerchant) merchant).getCraftMerchant();
     }
 }

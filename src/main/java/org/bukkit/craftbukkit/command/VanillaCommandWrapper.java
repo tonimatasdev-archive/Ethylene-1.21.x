@@ -7,6 +7,8 @@ import com.mojang.brigadier.tree.CommandNode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import net.ethylenemc.interfaces.commands.EthyleneCommands;
 import org.bukkit.Location;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
@@ -37,7 +39,7 @@ public final class VanillaCommandWrapper extends BukkitCommand {
         if (!testPermission(sender)) return true;
 
         net.minecraft.commands.CommandSourceStack icommandlistener = getListener(sender);
-        dispatcher.performPrefixedCommand(icommandlistener, toDispatcher(args, getName()), toDispatcher(args, commandLabel));
+        ((EthyleneCommands) dispatcher).performPrefixedCommand(icommandlistener, toDispatcher(args, getName()), toDispatcher(args, commandLabel));
         return true;
     }
 

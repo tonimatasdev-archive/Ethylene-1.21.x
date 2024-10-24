@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.ethylenemc.EthyleneStatic;
+import net.ethylenemc.interfaces.server.EthyleneMinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.FeatureFlag;
 import org.bukkit.Keyed;
@@ -280,7 +281,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
     @Override
     public void checkSupported(PluginDescriptionFile pdf) throws InvalidPluginException {
         ApiVersion toCheck = ApiVersion.getOrCreateVersion(pdf.getAPIVersion());
-        ApiVersion minimumVersion = EthyleneStatic.getServer().server.minimumAPI;
+        ApiVersion minimumVersion = ((EthyleneMinecraftServer) EthyleneStatic.getServer()).getServer().minimumAPI;
 
         if (toCheck.isNewerThan(ApiVersion.CURRENT)) {
             // Newer than supported

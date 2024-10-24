@@ -1,6 +1,8 @@
 package org.bukkit.craftbukkit.util;
 
 
+import net.ethylenemc.interfaces.server.EthyleneMinecraftServer;
+
 public class ServerShutdownThread extends Thread {
     private final net.minecraft.server.MinecraftServer server;
 
@@ -14,7 +16,7 @@ public class ServerShutdownThread extends Thread {
             server.close();
         } finally {
             try {
-                server.reader.getTerminal().restore();
+                ((EthyleneMinecraftServer) server).getReader().getTerminal().restore();
             } catch (Exception e) {
             }
         }

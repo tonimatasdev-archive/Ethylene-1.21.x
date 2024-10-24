@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
+import net.ethylenemc.interfaces.world.item.trading.EthyleneMerchantOffer;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantRecipe;
@@ -19,7 +20,7 @@ public interface CraftMerchant extends Merchant {
         return Collections.unmodifiableList(Lists.transform(getMerchant().getOffers(), new Function<net.minecraft.world.item.trading.MerchantOffer, MerchantRecipe>() {
             @Override
             public MerchantRecipe apply(net.minecraft.world.item.trading.MerchantOffer recipe) {
-                return recipe.asBukkit();
+                return ((EthyleneMerchantOffer) recipe).asBukkit();
             }
         }));
     }
@@ -35,7 +36,7 @@ public interface CraftMerchant extends Merchant {
 
     @Override
     default MerchantRecipe getRecipe(int i) {
-        return getMerchant().getOffers().get(i).asBukkit();
+        return ((EthyleneMerchantOffer) getMerchant().getOffers().get(i)).asBukkit();
     }
 
     @Override

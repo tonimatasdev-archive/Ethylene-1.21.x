@@ -8,6 +8,7 @@ import java.util.concurrent.CompletableFuture;
 
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import net.ethylenemc.interfaces.world.level.chunk.EthyleneChunkAccess;
+import net.ethylenemc.interfaces.world.level.chunk.EthyleneChunkGenerator;
 import net.minecraft.world.level.NoiseColumn;
 import org.bukkit.block.Biome;
 import org.bukkit.craftbukkit.CraftHeightMap;
@@ -272,7 +273,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
         int z = ichunkaccess.getPos().z;
 
         random.setSeed(net.minecraft.util.Mth.getSeed(x, "should-decoration".hashCode(), z) ^ generatoraccessseed.getSeed());
-        super.applyBiomeDecoration(generatoraccessseed, ichunkaccess, structuremanager, generator.shouldGenerateDecorations(((EthyleneLevel) this.world).getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z));
+        ((EthyleneChunkGenerator) this).applyBiomeDecoration(generatoraccessseed, ichunkaccess, structuremanager, generator.shouldGenerateDecorations(((EthyleneLevel) this.world).getWorld(), new RandomSourceWrapper.RandomWrapper(random), x, z));
     }
 
     @Override

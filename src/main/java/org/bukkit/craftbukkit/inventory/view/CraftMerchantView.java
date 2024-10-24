@@ -1,8 +1,8 @@
 package org.bukkit.craftbukkit.inventory.view;
 
+import net.ethylenemc.interfaces.world.item.trading.EthyleneMerchant;
 import org.bukkit.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantInventory;
 import org.bukkit.inventory.view.MerchantView;
@@ -20,6 +20,6 @@ public class CraftMerchantView extends CraftInventoryView<net.minecraft.world.in
     @NotNull
     @Override
     public Merchant getMerchant() {
-        return this.trader.getCraftMerchant();
+        return ((EthyleneMerchant) this.trader).getCraftMerchant();
     }
 }
