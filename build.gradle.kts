@@ -1,6 +1,5 @@
 plugins {
     id("fabric-loom") version "1.7-SNAPSHOT"
-    `maven-publish`
 }
 
 val modVersion: String by extra
@@ -13,10 +12,6 @@ group = "net.ethylenemc"
 base.archivesName.set("ethylene")
 
 loom.accessWidenerPath.set(file("src/main/resources/ethylene.accesswidener"))
-
-java {
-    withSourcesJar()
-}
 
 repositories {
     mavenCentral()

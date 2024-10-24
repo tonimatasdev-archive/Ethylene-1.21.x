@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "ethylene",
+  "version": "${modVersion}",
+  "name": "Ethylene",
+  "accessWidener": "ethylene.accesswidener",
+  "description": "Load Bukkit/Spigot plugins in Fabric.",
+  "authors": [
+    "TonimatasDEV"
+  ],
+  "contact": {
+    "repo": "https://github.com/TonimatasDEV/PacketFixer"
+  },
+  "license": "MIT",
+  "icon": "assets/ethylene/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.ethylenemc.ethylene.Ethylene"
+    ]
+  },
+  "mixins": [
+    "ethylene.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "${minecraftVersion}"
+  },
+  "custom": {
+    "loom:injected_interfaces": {
+      "net/minecraft/class_8779": ["net/ethylenemc/ethylene/interfaces/advancements/EthyAdvancementHolder"],
+      "net/minecraft/class_2186": ["net/ethylenemc/ethylene/interfaces/commands/arguments/EthyEntityArgument"],
+      "net/minecraft/class_2303": ["net/ethylenemc/ethylene/interfaces/commands/arguments/selector/EthyEntitySelectorParser"]
+    }
+  }
+}
