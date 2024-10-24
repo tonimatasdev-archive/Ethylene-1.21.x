@@ -3,6 +3,7 @@ package org.bukkit.craftbukkit.block;
 import java.util.Set;
 
 import net.ethylenemc.EthyleneStatic;
+import net.ethylenemc.interfaces.world.level.block.entity.EthyleneBlockEntity;
 import net.ethylenemc.interfaces.world.level.chunk.EthyleneChunkAccess;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -55,7 +56,7 @@ public class CraftBlockEntityState<T extends net.minecraft.world.level.block.ent
     }
 
     public Set<net.minecraft.core.component.DataComponentType<?>> applyComponents(net.minecraft.core.component.DataComponentMap datacomponentmap, net.minecraft.core.component.DataComponentPatch datacomponentpatch) {
-        Set<net.minecraft.core.component.DataComponentType<?>> result = snapshot.applyComponentsSet(datacomponentmap, datacomponentpatch);
+        Set<net.minecraft.core.component.DataComponentType<?>> result = ((EthyleneBlockEntity) snapshot).applyComponentsSet(datacomponentmap, datacomponentpatch);
         load(snapshot);
         return result;
     }

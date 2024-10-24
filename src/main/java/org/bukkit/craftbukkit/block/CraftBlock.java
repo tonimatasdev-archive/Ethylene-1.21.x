@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import net.ethylenemc.EthyleneCaptures;
+import net.ethylenemc.EthyleneStatic;
+import net.ethylenemc.interfaces.world.level.EthyleneBlockGetter;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import net.ethylenemc.interfaces.world.level.EthyleneWorldGenLevel;
 import org.bukkit.Bukkit;
@@ -454,7 +456,7 @@ public class CraftBlock implements Block {
 
         // SPIGOT-6895: Call StructureGrowEvent and BlockFertilizeEvent
         ((EthyleneLevel) world).captureTreeGeneration(true);
-        net.minecraft.world.InteractionResult result = net.minecraft.world.item.BoneMealItem.applyBonemeal(context);
+        net.minecraft.world.InteractionResult result = EthyleneStatic.applyBonemeal(context);
         ((EthyleneLevel) world).captureTreeGeneration(false);
 
         if (((EthyleneLevel) world).capturedBlockStates().size() > 0) {
@@ -564,7 +566,7 @@ public class CraftBlock implements Block {
         net.minecraft.world.phys.Vec3 startPos = CraftLocation.toVec3D(start);
         net.minecraft.world.phys.Vec3 endPos = startPos.add(dir.getX(), dir.getY(), dir.getZ());
 
-        net.minecraft.world.phys.HitResult nmsHitResult = world.clip(new net.minecraft.world.level.ClipContext(startPos, endPos, net.minecraft.world.level.ClipContext.Block.OUTLINE, CraftFluidCollisionMode.toNMS(fluidCollisionMode), net.minecraft.world.phys.shapes.CollisionContext.empty()), position);
+        net.minecraft.world.phys.HitResult nmsHitResult = ((EthyleneBlockGetter) world).clip(new net.minecraft.world.level.ClipContext(startPos, endPos, net.minecraft.world.level.ClipContext.Block.OUTLINE, CraftFluidCollisionMode.toNMS(fluidCollisionMode), net.minecraft.world.phys.shapes.CollisionContext.empty()), position);
         return CraftRayTraceResult.fromNMS(this.getWorld(), nmsHitResult);
     }
 

@@ -8,6 +8,8 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import net.ethylenemc.interfaces.server.level.EthyleneServerLevel;
+import net.ethylenemc.interfaces.world.level.EthyleneBlockGetter;
+import net.ethylenemc.interfaces.world.level.EthyleneServerLevelAccessor;
 import net.ethylenemc.interfaces.world.level.EthyleneWorldGenLevel;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
@@ -44,7 +46,7 @@ public abstract class DelegatedGeneratorAccess implements net.minecraft.world.le
     }
 
     public void addFreshEntityWithPassengers(net.minecraft.world.entity.Entity arg0, CreatureSpawnEvent.SpawnReason arg1) {
-        handle.addFreshEntityWithPassengers(arg0, arg1);
+        ((EthyleneServerLevelAccessor) handle).addFreshEntityWithPassengers(arg0, arg1);
     }
 
     @Override
@@ -540,7 +542,7 @@ public abstract class DelegatedGeneratorAccess implements net.minecraft.world.le
     }
 
     public net.minecraft.world.phys.BlockHitResult clip(net.minecraft.world.level.ClipContext arg0, net.minecraft.core.BlockPos arg1) {
-        return handle.clip(arg0, arg1);
+        return ((EthyleneBlockGetter) handle).clip(arg0, arg1);
     }
 
     @Override

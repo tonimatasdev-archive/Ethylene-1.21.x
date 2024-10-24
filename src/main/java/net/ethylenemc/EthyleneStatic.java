@@ -11,13 +11,18 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.util.Unit;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BoneMealItem;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.Bukkit;
@@ -95,5 +100,32 @@ public class EthyleneStatic {
         }
 
         return zombieVillager;
+    }
+    
+    public static InteractionResult applyBonemeal(UseOnContext useOnContext) {
+        Level level = useOnContext.getLevel();
+        BlockPos blockPos = useOnContext.getClickedPos();
+        BlockPos blockPos2 = blockPos.relative(useOnContext.getClickedFace());
+        if (BoneMealItem.growCrop(useOnContext.getItemInHand(), level, blockPos)) {
+            if (!level.isClientSide) {
+                useOnContext.getPlayer().gameEvent(GameEvent.ITEM_INTERACT_FINISH);
+                level.levelEvent(1505, blockPos, 15);
+            }
+
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        } else {
+            BlockState blockState = level.getBlockState(blockPos);
+            boolean bl = blockState.isFaceSturdy(level, blockPos, useOnContext.getClickedFace());
+            if (bl && BoneMealItem.growWaterPlant(useOnContext.getItemInHand(), level, blockPos2, useOnContext.getClickedFace())) {
+                if (!level.isClientSide) {
+                    useOnContext.getPlayer().gameEvent(GameEvent.ITEM_INTERACT_FINISH);
+                    level.levelEvent(1505, blockPos2, 15);
+                }
+
+                return InteractionResult.sidedSuccess(level.isClientSide);
+            } else {
+                return InteractionResult.PASS;
+            }
+        }
     }
 }

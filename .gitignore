@@ -1,7 +1,5 @@
 .gradle
 .idea
-.build
 run
-
-# Project exclude paths
-/build/
+build
+nms-patches
