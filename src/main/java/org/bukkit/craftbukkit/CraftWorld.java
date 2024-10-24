@@ -26,8 +26,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import net.ethylenemc.EthyleneStatic;
-import net.ethylenemc.interfaces.server.level.EthyleneServerLevel;
-import net.ethylenemc.interfaces.server.level.EthyleneServerPlayer;
+import net.ethylenemc.interfaces.server.level.*;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import net.ethylenemc.interfaces.world.level.chunk.EthyleneChunkAccess;
@@ -204,7 +203,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public boolean isChunkLoaded(int x, int z) {
-        return world.getChunkSource().isChunkLoaded(x, z);
+        return ((EthyleneServerChunkCache) world.getChunkSource()).isChunkLoaded(x, z);
     }
 
     @Override
@@ -219,7 +218,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
     @Override
     public Chunk[] getLoadedChunks() {
         Long2ObjectLinkedOpenHashMap<net.minecraft.server.level.ChunkHolder> chunks = world.getChunkSource().chunkMap.visibleChunkMap;
-        return chunks.values().stream().map(net.minecraft.server.level.ChunkHolder::getFullChunkNow).filter(Objects::nonNull).map(CraftChunk::new).toArray(Chunk[]::new);
+        return chunks.values().stream().map(chunkHolder -> ((EthyleneChunkHolder) chunkHolder).getFullChunkNow()).filter(Objects::nonNull).map(CraftChunk::new).toArray(Chunk[]::new);
     }
 
     @Override
@@ -260,7 +259,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         chunk.setUnsaved(!save); // Use method call to account for persistentDataContainer
         unloadChunkRequest(x, z);
 
-        world.getChunkSource().purgeUnload();
+        ((EthyleneServerChunkCache) world.getChunkSource()).purgeUnload();
         return !isChunkLoaded(x, z);
     }
 
@@ -380,7 +379,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
         net.minecraft.server.level.DistanceManager chunkDistanceManager = this.world.getChunkSource().chunkMap.distanceManager;
 
-        if (chunkDistanceManager.addRegionTicketAtDistance(EthyleneStatic.PLUGIN_TICKET, new net.minecraft.world.level.ChunkPos(x, z), 2, plugin)) { // keep in-line with force loading, add at level 31
+        if (((EthyleneDistanceManager) chunkDistanceManager).addRegionTicketAtDistance(EthyleneStatic.PLUGIN_TICKET, new net.minecraft.world.level.ChunkPos(x, z), 2, plugin)) { // keep in-line with force loading, add at level 31
             this.getChunkAt(x, z); // ensure loaded
             return true;
         }
@@ -393,7 +392,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         Preconditions.checkNotNull(plugin, "null plugin");
 
         net.minecraft.server.level.DistanceManager chunkDistanceManager = this.world.getChunkSource().chunkMap.distanceManager;
-        return chunkDistanceManager.removeRegionTicketAtDistance(EthyleneStatic.PLUGIN_TICKET, new net.minecraft.world.level.ChunkPos(x, z), 2, plugin); // keep in-line with force loading, remove at level 31
+        return ((EthyleneDistanceManager) chunkDistanceManager).removeRegionTicketAtDistance(EthyleneStatic.PLUGIN_TICKET, new net.minecraft.world.level.ChunkPos(x, z), 2, plugin); // keep in-line with force loading, remove at level 31
     }
 
     @Override
@@ -401,7 +400,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         Preconditions.checkNotNull(plugin, "null plugin");
 
         net.minecraft.server.level.DistanceManager chunkDistanceManager = this.world.getChunkSource().chunkMap.distanceManager;
-        chunkDistanceManager.removeAllTicketsFor(EthyleneStatic.PLUGIN_TICKET, 31, plugin); // keep in-line with force loading, remove at level 31
+        ((EthyleneDistanceManager) chunkDistanceManager).removeAllTicketsFor(EthyleneStatic.PLUGIN_TICKET, 31, plugin); // keep in-line with force loading, remove at level 31
     }
 
     @Override
@@ -1140,12 +1139,12 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public boolean getPVP() {
-        return world.pvpMode;
+        return ((EthyleneLevel) world).getPvpMode();
     }
 
     @Override
     public void setPVP(boolean pvp) {
-        world.pvpMode = pvp;
+        ((EthyleneLevel) world).setPvpMode(pvp);
     }
 
     public void playEffect(Player player, Effect effect, int data) {

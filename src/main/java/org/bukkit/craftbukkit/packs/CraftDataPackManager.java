@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import net.minecraft.world.level.storage.WorldData;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -50,7 +52,7 @@ public class CraftDataPackManager implements DataPackManager {
         Preconditions.checkArgument(world != null, "world cannot be null");
 
         CraftWorld craftWorld = ((CraftWorld) world);
-        return craftWorld.getHandle().serverLevelData.getDataConfiguration().dataPacks().getEnabled().stream().map(packName -> {
+        return ((WorldData) craftWorld.getHandle().serverLevelData).getDataConfiguration().dataPacks().getEnabled().stream().map(packName -> {
             net.minecraft.server.packs.repository.Pack resourcePackLoader = this.getHandle().getPack(packName);
             if (resourcePackLoader != null) {
                 return new CraftDataPack(resourcePackLoader);
@@ -64,7 +66,7 @@ public class CraftDataPackManager implements DataPackManager {
         Preconditions.checkArgument(world != null, "world cannot be null");
 
         CraftWorld craftWorld = ((CraftWorld) world);
-        return craftWorld.getHandle().serverLevelData.getDataConfiguration().dataPacks().getDisabled().stream().map(packName -> {
+        return ((WorldData) craftWorld.getHandle().serverLevelData).getDataConfiguration().dataPacks().getDisabled().stream().map(packName -> {
             net.minecraft.server.packs.repository.Pack resourcePackLoader = this.getHandle().getPack(packName);
             if (resourcePackLoader != null) {
                 return new CraftDataPack(resourcePackLoader);

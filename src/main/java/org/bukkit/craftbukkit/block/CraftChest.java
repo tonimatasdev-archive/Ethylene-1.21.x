@@ -1,5 +1,6 @@
 package org.bukkit.craftbukkit.block;
 
+import net.ethylenemc.interfaces.EthyleneDoubleInventory;
 import net.ethylenemc.interfaces.world.level.block.entity.EthyleneContainerOpenersCounter;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -47,8 +48,8 @@ public class CraftChest extends CraftLootable<net.minecraft.world.level.block.en
         net.minecraft.world.level.block.ChestBlock blockChest = (net.minecraft.world.level.block.ChestBlock) (this.getType() == Material.CHEST ? net.minecraft.world.level.block.Blocks.CHEST : net.minecraft.world.level.block.Blocks.TRAPPED_CHEST);
         net.minecraft.world.MenuProvider nms = blockChest.getMenuProvider(data, world.getHandle(), this.getPosition(), true);
 
-        if (nms instanceof net.minecraft.world.level.block.ChestBlock.DoubleInventory) {
-            inventory = new CraftInventoryDoubleChest((net.minecraft.world.level.block.ChestBlock.DoubleInventory) nms);
+        if (nms instanceof EthyleneDoubleInventory) {
+            inventory = new CraftInventoryDoubleChest((EthyleneDoubleInventory) nms);
         }
         return inventory;
     }

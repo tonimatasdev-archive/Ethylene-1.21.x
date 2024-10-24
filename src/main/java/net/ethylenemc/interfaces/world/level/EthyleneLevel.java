@@ -25,4 +25,8 @@ public interface EthyleneLevel {
     Map<BlockPos, CapturedBlockState> capturedBlockStates();
 
     void notifyAndUpdatePhysics(BlockPos blockposition, LevelChunk chunk, BlockState oldBlock, BlockState newBlock, BlockState actualBlock, int i, int j);
+
+    boolean getPvpMode();
+    
+    void setPvpMode(boolean value);
 }

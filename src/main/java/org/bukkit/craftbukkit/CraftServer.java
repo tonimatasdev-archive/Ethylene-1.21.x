@@ -46,6 +46,7 @@ import javax.imageio.ImageIO;
 import jline.console.ConsoleReader;
 import net.ethylenemc.EthyleneStatic;
 import net.ethylenemc.interfaces.advancements.EthyleneAdvancementHolder;
+import net.ethylenemc.interfaces.server.EthyleneMinecraftServer;
 import net.ethylenemc.interfaces.server.level.EthyleneServerLevel;
 import net.ethylenemc.interfaces.world.EthyleneContainer;
 import net.ethylenemc.interfaces.world.entity.EthyleneEntity;
@@ -53,6 +54,8 @@ import net.ethylenemc.interfaces.world.inventory.EthyleneAbstractContainerMenu;
 import net.ethylenemc.interfaces.world.item.crafting.EthyleneRecipeHolder;
 import net.ethylenemc.interfaces.world.level.EthyleneLevel;
 import net.ethylenemc.interfaces.world.level.entity.EthylenePersistentEntitySectionManager;
+import net.ethylenemc.interfaces.world.level.storage.EthylenePrimaryLevelData;
+import net.minecraft.server.MinecraftServer;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -333,11 +336,11 @@ public final class CraftServer implements Server {
     }
 
     private File getConfigFile() {
-        return (File) console.options.valueOf("bukkit-settings");
+        return (File) ((EthyleneMinecraftServer) console).getOptions().valueOf("bukkit-settings");
     }
 
     private File getCommandsConfigFile() {
-        return (File) console.options.valueOf("commands-settings");
+        return (File) ((EthyleneMinecraftServer) console).getOptions().valueOf("commands-settings");
     }
 
     private void overrideSpawnLimits() {
@@ -394,7 +397,7 @@ public final class CraftServer implements Server {
     public void loadPlugins() {
         pluginManager.registerInterface(JavaPluginLoader.class);
 
-        File pluginFolder = (File) console.options.valueOf("plugins");
+        File pluginFolder = (File) ((EthyleneMinecraftServer) console).getOptions().valueOf("plugins");
 
         if (pluginFolder.exists()) {
             Plugin[] plugins = pluginManager.loadPlugins(pluginFolder);
@@ -734,7 +737,7 @@ public final class CraftServer implements Server {
 
     @Override
     public File getUpdateFolderFile() {
-        return new File((File) console.options.valueOf("plugins"), this.configuration.getString("settings.update-folder", "update"));
+        return new File((File) ((EthyleneMinecraftServer) console).getOptions().valueOf("plugins"), this.configuration.getString("settings.update-folder", "update"));
     }
 
     @Override
@@ -854,7 +857,7 @@ public final class CraftServer implements Server {
         configuration = YamlConfiguration.loadConfiguration(getConfigFile());
         commandsConfiguration = YamlConfiguration.loadConfiguration(getCommandsConfigFile());
 
-        console.settings = new net.minecraft.server.dedicated.DedicatedServerSettings(console.options);
+        console.settings = new net.minecraft.server.dedicated.DedicatedServerSettings(((EthyleneMinecraftServer) console).getOptions());
         net.minecraft.server.dedicated.DedicatedServerProperties config = console.settings.getProperties();
 
         console.setPvpAllowed(config.pvp);
@@ -1129,12 +1132,12 @@ public final class CraftServer implements Server {
             iregistrycustom_dimension = worlddimensions_b.dimensionsRegistryAccess();
         }
         iregistry = iregistrycustom_dimension.registryOrThrow(net.minecraft.core.registries.Registries.LEVEL_STEM);
-        worlddata.customDimensions = iregistry;
-        worlddata.checkName(name);
+        ((EthylenePrimaryLevelData) worlddata).setCustomDimensions(iregistry);
+        ((EthylenePrimaryLevelData) worlddata).checkName(name);
         worlddata.setModdedInfo(console.getServerModName(), console.getModdedStatus().shouldReportAsModified());
 
-        if (console.options.has("forceUpgrade")) {
-            net.minecraft.server.Main.forceUpgrade(worldSession, net.minecraft.util.datafix.DataFixers.getDataFixer(), console.options.has("eraseCache"), () -> true, iregistrycustom_dimension, console.options.has("recreateRegionFiles"));
+        if (((EthyleneMinecraftServer) console).getOptions().has("forceUpgrade")) {
+            net.minecraft.server.Main.forceUpgrade(worldSession, net.minecraft.util.datafix.DataFixers.getDataFixer(), ((EthyleneMinecraftServer) console).getOptions().has("eraseCache"), () -> true, iregistrycustom_dimension, ((EthyleneMinecraftServer) console).getOptions().has("recreateRegionFiles"));
         }
 
         long j = net.minecraft.world.level.biome.BiomeManager.obfuscateSeed(creator.seed());
@@ -1269,7 +1272,7 @@ public final class CraftServer implements Server {
     }
 
     public ConsoleReader getReader() {
-        return console.reader;
+        return ((EthyleneMinecraftServer) console).getReader();
     }
 
     @Override
@@ -1916,7 +1919,7 @@ public final class CraftServer implements Server {
 
     @Override
     public ConsoleCommandSender getConsoleSender() {
-        return console.console;
+        return ((EthyleneMinecraftServer) console).getConsole();
     }
 
     public EntityMetadataStore getEntityMetadata() {
