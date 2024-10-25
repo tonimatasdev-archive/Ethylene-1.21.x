@@ -11,8 +11,12 @@
     "CrashReportMixin",
     "advancements.AdvancementHolderMixin",
     "advancements.AdvancementTreeMixin",
+    "commands.CommandSource$1Mixin",
+    "commands.CommandSourceMixin",
+    "commands.CommandSourceStackMixin",
     "commands.arguments.EntityArgumentMixin",
     "commands.arguments.selector.EntitySelectorMixin",
-    "commands.arguments.selector.EntitySelectorParserMixin"
+    "commands.arguments.selector.EntitySelectorParserMixin",
+    "util.datafix.fixes.DataFixersMixin"
   ]
 }
