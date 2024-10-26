@@ -457,6 +457,7 @@ accessible field net/minecraft/world/level/chunk/storage/SerializableChunkData B
 accessible field net/minecraft/commands/arguments/selector/EntitySelectorParser usesSelectors Z
 accessible field net/minecraft/core/component/DataComponentPatch$Builder map Lit/unimi/dsi/fastutil/objects/Reference2ObjectMap;
 accessible field net/minecraft/core/component/DataComponentPatch map Lit/unimi/dsi/fastutil/objects/Reference2ObjectMap;
+accessible method net/minecraft/commands/Commands finishParsing (Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;Lnet/minecraft/commands/CommandSourceStack;)Lcom/mojang/brigadier/context/ContextChain;
 
 mutable field net/minecraft/server/level/TicketType timeout J
 mutable field net/minecraft/world/level/saveddata/maps/MapItemSavedData scale B

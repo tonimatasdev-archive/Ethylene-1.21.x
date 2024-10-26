@@ -11,6 +11,7 @@
     "CrashReportMixin",
     "advancements.AdvancementHolderMixin",
     "advancements.AdvancementTreeMixin",
+    "commands.CommandsMixin",
     "commands.CommandSource$1Mixin",
     "commands.CommandSourceMixin",
     "commands.CommandSourceStackMixin",

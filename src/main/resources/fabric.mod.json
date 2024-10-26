@@ -33,7 +33,8 @@
       "net/minecraft/class_2303": ["net/ethylenemc/ethylene/interfaces/commands/arguments/selector/EthyEntitySelectorParser"],
       "net/minecraft/class_2168": ["net/ethylenemc/ethylene/interfaces/commands/EthyCommandSourceStack"],
       "net/minecraft/class_2165": ["net/ethylenemc/ethylene/interfaces/commands/EthyCommandSource"],
-      "net/minecraft/class_9326$class_9327": ["net/ethylenemc/ethylene/interfaces/core/EthyDataComponentPatch"]
+      "net/minecraft/class_9326$class_9327": ["net/ethylenemc/ethylene/interfaces/core/component/EthyDataComponentPatch"],
+      "net/minecraft/class_2170": ["net/ethylenemc/ethylene/interfaces/commands/EthyCommands"]
     }
   }
 }

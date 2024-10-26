@@ -1,4 +1,4 @@
-package net.ethylenemc.ethylene.interfaces.core;
+package net.ethylenemc.ethylene.interfaces.core.component;
 
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponentType;

@@ -1,7 +1,7 @@
 package net.ethylenemc.ethylene.mixins.core.component;
 
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
-import net.ethylenemc.ethylene.interfaces.core.EthyDataComponentPatch;
+import net.ethylenemc.ethylene.interfaces.core.component.EthyDataComponentPatch;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponentType;
 import org.spongepowered.asm.mixin.Final;
