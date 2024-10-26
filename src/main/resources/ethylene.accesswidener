@@ -455,6 +455,8 @@ accessible method net/minecraft/world/level/biome/Biome getTemperature (Lnet/min
 accessible field net/minecraft/world/level/chunk/storage/EntityStorage entityDeserializerQueue Lnet/minecraft/util/thread/ConsecutiveExecutor;
 accessible field net/minecraft/world/level/chunk/storage/SerializableChunkData BLOCK_STATE_CODEC Lcom/mojang/serialization/Codec;
 accessible field net/minecraft/commands/arguments/selector/EntitySelectorParser usesSelectors Z
+accessible field net/minecraft/core/component/DataComponentPatch$Builder map Lit/unimi/dsi/fastutil/objects/Reference2ObjectMap;
+accessible field net/minecraft/core/component/DataComponentPatch map Lit/unimi/dsi/fastutil/objects/Reference2ObjectMap;
 
 mutable field net/minecraft/server/level/TicketType timeout J
 mutable field net/minecraft/world/level/saveddata/maps/MapItemSavedData scale B

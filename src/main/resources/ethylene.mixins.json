@@ -17,6 +17,9 @@
     "commands.arguments.EntityArgumentMixin",
     "commands.arguments.selector.EntitySelectorMixin",
     "commands.arguments.selector.EntitySelectorParserMixin",
+    "core.component.DataComponentPatchMixin",
+    "stats.ServerRecipeBookMixin",
+    "stats.StatsCounterMixin",
     "util.datafix.fixes.DataFixersMixin"
   ]
 }
