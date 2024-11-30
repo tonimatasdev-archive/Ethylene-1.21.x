@@ -1,3 +1,3 @@
 # Ethylene
-- CraftBukkit commit: 18b8ae18390763d48ea292435b75c1eabf5dbff7
+- CraftBukkit commit: 1eb4d28dae3060fee412e7fdc7c49f221abf5f74
 - Patches: 29/576
